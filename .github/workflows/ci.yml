@@ -29,6 +29,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git clone --branch main https://github.com/VIRAL-UCBL1/VIRAL-UCBL1.github.io.git site
+          git clone --branch main https://github-actions[bot]:${{ secrets.GITHUB_TOKEN }}@github.com/VIRAL-UCBL1/VIRAL-UCBL1.github.io.git site
           cd site
           mkdocs gh-deploy --config-file ../mkdocs.yml --remote-branch master
