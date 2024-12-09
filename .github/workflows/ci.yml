@@ -14,6 +14,8 @@ jobs:
       pages: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
       - name: Configure Git Credentials
         run: |
           git config --global user.name github-actions[bot]
@@ -31,8 +33,8 @@ jobs:
       - run: pip install mkdocs-material
       - name: Deploy to GitHub Pages
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         run: |
-          git clone --branch main https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/VIRAL-UCBL1/VIRAL-UCBL1.github.io.git site
+          git clone --branch main https://x-access-token:${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/VIRAL-UCBL1/VIRAL-UCBL1.github.io.git site
           cd site
           mkdocs gh-deploy --force --config-file ../mkdocs.yml --remote-branch main
