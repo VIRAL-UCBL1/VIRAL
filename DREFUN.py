@@ -83,7 +83,6 @@ class DREFUN:
         self.llm.add_message(prompt)
         response = self.llm.generate_response(stream=self.isStream)
         response = self.llm.print_Generator_and_return(response)
-        response = self._get_code(response)
         reward_func = self._get_runnable_function(response)
         self.reward_functions.append(reward_func)
 
@@ -92,8 +91,8 @@ class DREFUN:
     def _get_code(self, response: str) -> str:
         cleaned_response = response.strip("```").replace("python", "").strip()
         if "def " not in cleaned_response:
-            raise ValueError(  #TODO traiter cette erreur
-                "La réponse ne contient pas de définition de fonction valide."
+            raise ValueError(
+                "The answer does not contain a valid function definition."
             )
         self.logger.info("Code nettoyé pour compilation :\n" + cleaned_response)
         return cleaned_response
@@ -103,8 +102,8 @@ class DREFUN:
             self.llm.add_message(error)
             response = self.llm.generate_response(stream=self.isStream)
             response = self.llm.print_Generator_and_return(response)
-            response = self._get_code(response)
         try:
+            response = self._get_code(response)
             reward_func = self._compile_reward_function(response)
             state, _ = self.env.reset()
             action = self.learning_method.output(state)
@@ -115,6 +114,9 @@ class DREFUN:
                 terminated=terminated,
                 truncated=truncated,
             )
+        except ValueError as e:
+            self.logger.warning(str(e))
+            return self._get_runnable_function(response, str(e))
         except SyntaxError as e:
             self.logger.warning(f"Error syntax {e}")
             return self._get_runnable_function(response, str(e))
