@@ -1,0 +1,33 @@
+name: ci 
+on:
+  push:
+    branches:
+      - main
+permissions:
+  contents: write
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure Git Credentials
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+      - uses: actions/setup-python@v5
+        with:
+          python-version: 3.11
+      - run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV 
+      - uses: actions/cache@v4
+        with:
+          key: mkdocs-material-${{ env.cache_id }}
+          path: .cache
+          restore-keys: |
+            mkdocs-material-
+      - run: pip install mkdocs-material 
+      - name: Deploy to GitHub Pages
+        run: |
+          mkdocs gh-deploy --force --remote-branch main --remote-name origin --site-dir site
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MKDOCS_GITHUB_REPO: VIRAL-UCBL1/VIRAL-UCBL1.github.io

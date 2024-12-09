@@ -328,3 +328,46 @@ def lunarlander_reward(observation, action, done=False):
 - and during the test: SR 0.0
 
 
+14:48:34 OllamaChat.py:31 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+14:48:52 OllamaChat.py:31 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+14:49:12 DREFUN.py:98 INFO
+	Code nettoyé pour compilation :
+def reward_func(observations: np.ndarray, terminated: bool, truncated: bool) -> float:
+    """Reward function for CartPole
+
+    Args:
+        observations (np.ndarray): observation on the current state
+        terminated (bool): episode is terminated due a failure
+        truncated (bool): episode is truncated due a success
+
+    Returns:
+        float: The reward for the current step
+    """
+    
+    if terminated or truncated:
+        return -10.0
+    
+    return 1.0
+
