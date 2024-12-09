@@ -31,9 +31,14 @@ jobs:
           restore-keys: |
             mkdocs-material-
       - run: pip install mkdocs-material
+      - name: Increase Git buffer size
+        run: |
+          git config --global http.postBuffer 157286400
       - name: Deploy to GitHub Pages
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          GIT_TRACE: 1
+          GIT_CURL_VERBOSE: 1
         run: |
           git clone --branch main https://x-access-token:${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/VIRAL-UCBL1/VIRAL-UCBL1.github.io.git site
           cd site
