@@ -371,3 +371,87 @@ def reward_func(observations: np.ndarray, terminated: bool, truncated: bool) -> 
     
     return 1.0
 
+23:22:13 OllamaChat.py:31 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+23:27:13 OllamaChat.py:110 ERROR
+	Connection error: 500 Server Error: Internal Server Error for url: http://localhost:11434/api/chat
+
+23:27:13 DREFUN.py:118 WARNING
+	The answer does not contain a valid function definition.
+
+23:32:13 OllamaChat.py:110 ERROR
+	Connection error: 500 Server Error: Internal Server Error for url: http://localhost:11434/api/chat
+
+23:32:13 DREFUN.py:118 WARNING
+	The answer does not contain a valid function definition.
+
+23:56:31 OllamaChat.py:31 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+23:56:39 OllamaChat.py:31 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+23:57:15 VIRAL.py:97 INFO
+	Code nettoyé pour compilation :
+def reward_func(observations: np.ndarray, terminated: bool, truncated: bool) -> float:
+    """Reward function for CartPole
+
+    Args:
+        observations (np.ndarray): observation on the current state
+        terminated (bool): episode is terminated due a failure
+        truncated (bool): episode is truncated due a success
+
+    Returns:
+        float: The reward for the current step
+    """
+    if terminated or truncated:
+        return -100
+    else:
+        return 1
+
+23:57:19 VIRAL.py:236 INFO
+	pole_angle_diff : human 0.024914441630244255 llm 0.022774767130613327
+
+23:57:19 VIRAL.py:236 INFO
+	pole_position_diff : human 0.07825243473052979 llm 0.09356202185153961
+
+23:57:19 VIRAL.py:240 INFO
+	the policy with human reward:
+- during the train: SR 0.7065217391304348, nb_ep 92
+- and during the test: SR 0.91
+
+
+23:57:19 VIRAL.py:245 INFO
+	the policy with llm reward:
+- during the train: SR 0.6838235294117647, nb_ep 136
+- and during the test: SR 0.89
+
+

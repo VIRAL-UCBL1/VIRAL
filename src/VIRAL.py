@@ -9,7 +9,7 @@ from logging import getLogger
 import logging
 
 
-class DREFUN:
+class VIRAL:
     def __init__(
         self,
         learning_method: Callable,
@@ -199,7 +199,7 @@ class DREFUN:
         self,
         objectives_metrics: List[callable] = [],
         num_episodes: int = 100,
-        visual: bool = False,  # TODO utiliser les parametre
+        visual: bool = False,
     ) -> Dict:
         """
         Evaluate policy performance for a given reward function
