@@ -7,6 +7,7 @@ from DirectSearchAlgo import PolitiqueDirectSearch
 from log.log_config import init_logger
 from ObjectivesMetrics import objective_metric_CartPole
 from RenfocementAlgo import PolitiqueRenforce
+from VIRAL import VIRAL
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
