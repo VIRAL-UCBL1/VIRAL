@@ -21,8 +21,8 @@ if __name__ == "__main__":
         init_logger("INFO")
     logger = getLogger("DREFUN")
     env = gym.make("CartPole-v1")
-    #learning_method = PolitiqueDirectSearch(env)
-    learning_method = PolitiqueRenforce(env,couche_cachee=[64])
+    learning_method = PolitiqueDirectSearch(env)
+    #learning_method = PolitiqueRenforce(env,couche_cachee=[64])
     viral = VIRAL(learning_method, env)
 
     viral.generate_reward_function(
@@ -38,7 +38,6 @@ if __name__ == "__main__":
     
     objective_metric = [objective_metric_CartPole]
     
-    print("Training...")
 
     idx = viral.evaluate_policy(objectives_metrics=objective_metric)
     viral.self_refine_reward(idx)

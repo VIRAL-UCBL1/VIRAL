@@ -178,8 +178,8 @@ class PolitiqueRenforce(nn.Module):
                 break
 
             # Affichage des progrès tous les 100 épisodes
-            #if ep % 100 == 0:
-                #print(f"Épisode: {ep}, Récompense: {sum(recompense_ep)}")
+            if ep % 100 == 0:
+                print(f"Épisode: {ep}, Récompense: {sum(recompense_ep)}")
 
         # Sauvegarde des paramètres après entraînement
         trained_state = deepcopy(self)
