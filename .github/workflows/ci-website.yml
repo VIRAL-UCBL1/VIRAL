@@ -1,0 +1,39 @@
+name: Build and Deploy MkDocs Site
+
+on:
+  push:
+    branches:
+      - main  # ou la branche principale de ton repo 1
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout le code source du repo 1
+      - name: Checkout source code
+        uses: actions/checkout@v3
+
+      # 2. Installer Python et MkDocs
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install MkDocs and dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install mkdocs mkdocs-material
+
+      # 3. Build le site avec le fichier de configuration personnalisé
+      - name: Build MkDocs Site
+        run: mkdocs build --config-file ./mkdocs.yml
+
+      # 4. Déployer le site sur le deuxième repo
+      - name: Deploy to GitHub Pages Repo
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          deploy_key: ${{ secrets.DEPLOY_KEY }}
+          publish_dir: ./site  
+          external_repository: VIRAL-UCBL1/VIRAL-UCBL1.github.io
+          publish_branch: main
