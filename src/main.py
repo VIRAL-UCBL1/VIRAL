@@ -36,4 +36,7 @@ if __name__ == "__main__":
     
     objective_metric = [objective_metric_CartPole]
 
-    viral.evaluate_policy(objectives_metrics=objective_metric)
+    policy, reward_func, performance_metrics, perso_states = viral.evaluate_policy(objectives_metrics=objective_metric)
+    viral.self_refine_reward(reward_func, performance_metrics, perso_states)
+    policy, reward_func, performance_metrics, perso_states = viral.evaluate_policy(objectives_metrics=objective_metric)
+

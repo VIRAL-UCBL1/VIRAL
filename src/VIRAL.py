@@ -3,7 +3,7 @@ from typing import Callable, Dict, Generator, List
 
 import gymnasium as gym
 import numpy as np
-
+import inspect
 from OllamaChat import OllamaChat
 from logging import getLogger
 import logging
@@ -42,6 +42,7 @@ class VIRAL:
         self.learning_method = learning_method
 
         self.reward_functions: List[Callable] = []
+        self.policy: List[Callable] = []
         self.policy_performances: List[Dict] = []
 
         self.logger = getLogger("DREFUN")
@@ -162,8 +163,8 @@ class VIRAL:
         except Exception as e:
             raise RuntimeError(f"Error during reward function execution: {e}")
 
-    def self_refine_reward(  # TODO make it work
-        self, current_reward_func: Callable, performance_metrics: Dict
+    def self_refine_reward(
+        self, current_reward_func: Callable, performance_metrics: Dict, objectives_metrics: Dict
     ) -> Callable:
         """
         Self-refinement of reward function based on performance
@@ -176,20 +177,27 @@ class VIRAL:
             Callable: Refined reward function
         """
         refinement_prompt = f"""
-        Current reward function performance:
-        {performance_metrics}
-        
-        Suggest improvements to the reward function to:
+        improve the reward function to:
         - Increase success rate
         - Optimize reward signal
         - Maintain task objectives
+
+        your best reward function:
+        {inspect.getsource(current_reward_func)}
+
+        performance:
+        {performance_metrics}
+        objectives performance:
+        {objectives_metrics}
         """
 
         self.llm.add_message(refinement_prompt)
         refined_response = self.llm.generate_response(stream=True)
         refined_response = self.llm.print_Generator_and_return(refined_response)
+        reward_func = self._get_runnable_function(refined_response)
+        self.reward_functions.append(reward_func)
 
-        return self._compile_reward_function(refined_response)
+        return reward_func
 
     def evaluate_policy(
         self,
@@ -207,9 +215,9 @@ class VIRAL:
             Dict: Performance metrics
         """
         performance_metrics = {
-            "total_rewards": [],
-            "episode_lengths": [],
-            "success_rate": 0.0,
+            "rewards_train": [],
+            "nb_episode_train": 0,
+            "success_rate_test": 0.0,
         }
         raw_policy, raw_perfs, raw_sr, raw_nb_ep = self.learning_method.train(
             save_name=f"model/raw_{self.learning_method}_{self.env.spec.name}.model",
@@ -220,17 +228,16 @@ class VIRAL:
         )
         raw_states, raw_rewards, raw_sr_test = self.test_policy(raw_policy)
         states, rewards, sr_test = self.test_policy(policy, self.reward_functions[-1])
-        # TODO penser aux métrics objective propre à l'environnment, une raison de faire une class environnement extend de celle de base ?
         perso_raw_states = []
         perso_states = []
         
         for objective_metric in objectives_metrics:
-            perso_raw_states = objective_metric(raw_states)
-            perso_states = objective_metric(states)
+            perso_raw_states.append(objective_metric(raw_states))
+            perso_states.append(objective_metric(states))
 
         for i in range(len(perso_raw_states)):
             self.logger.info(
-                f"{perso_raw_states[i][0]} : human {perso_raw_states[i][1]} llm {perso_states[i][1]}"
+                f"{perso_raw_states[i]} : human {perso_raw_states[i]} llm {perso_states[i]}"
             )
         
         self.logger.info(
@@ -244,6 +251,12 @@ class VIRAL:
             + f"\n- and during the test: SR {sr_test}\n"
         )
 
+        performance_metrics["success_rate"] = sr_test
+        performance_metrics["nb_episode_train"] = nb_ep
+        performance_metrics["total_rewards"] = perfs
+
+        return policy, self.reward_functions[-1], performance_metrics, perso_states
+
     def test_policy(
         self,
         policy,
@@ -255,7 +268,7 @@ class VIRAL:
         all_states = []
         nb_success = 0
         x_max = 0
-        x_min = float("+inf")
+        x_min = 0 # avoid div by 0
         for epi in range(1, nb_episodes + 1):
             total_reward = 0
             state, _ = self.env.reset()

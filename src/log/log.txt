@@ -503,3 +503,48 @@ def reward_func(observations: np.ndarray, terminated: bool, truncated: bool) -> 
 - and during the test: SR 0.0
 
 
+11:01:05 OllamaChat.py:31 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+11:01:57 VIRAL.py:94 INFO
+	Code nettoyé pour compilation :
+def reward_func(observations: np.ndarray, terminated: bool, truncated: bool) -> float:
+    """Reward function for CartPole
+
+    Args:
+        observations (np.ndarray): observation on the current state
+        terminated (bool): episode is terminated due a failure
+        truncated (bool): episode is truncated due a success
+
+    Returns:
+        float: The reward for the current step
+    """
+    if terminated or truncated:
+        return -1.0
+    else:
+        return 1.0
+
+11:02:06 VIRAL.py:239 INFO
+	[{'pole_angle_diff': np.float32(0.08300309)}, {np.float32(0.08571237), 'pole_position_diff'}] : human [{'pole_angle_diff': np.float32(0.08300309)}, {np.float32(0.08571237), 'pole_position_diff'}] llm [{'pole_angle_diff': np.float32(0.008955257)}, {np.float32(0.1641483), 'pole_position_diff'}]
+
+11:02:06 VIRAL.py:243 INFO
+	the policy with human reward:
+- during the train: SR 0.0002, nb_ep 5000
+- and during the test: SR 0.0
+
+
+11:02:06 VIRAL.py:248 INFO
+	the policy with llm reward:
+- during the train: SR 0.615, nb_ep 200
+- and during the test: SR 0.63
+
+
