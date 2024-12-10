@@ -1,37 +1,40 @@
-name: Deploy to GitHub Pages
+name: Build and Deploy MkDocs Site
 
 on:
   push:
     branches:
-      - main
-
-permissions:
-  contents: write
-  pages: write
+      - main  # ou la branche principale de ton repo 1
 
 jobs:
-  deploy:
+  build-deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
+      # 1. Checkout le code source du repo 1
+      - name: Checkout source code
+        uses: actions/checkout@v3
 
-      - name: Configure SSH
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
-          ssh-keyscan github.com >> ~/.ssh/known_hosts
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-      - uses: actions/setup-python@v5
+      # 2. Installer Python et MkDocs
+      - name: Setup Python
+        uses: actions/setup-python@v4
         with:
-          python-version: 3.11
+          python-version: '3.9'
 
-      - run: pip install mkdocs-material
-
-      - name: Deploy to GitHub Pages
+      - name: Install MkDocs and dependencies
         run: |
-          git clone git@github.com:VIRAL-UCBL1/VIRAL-UCBL1.github.io.git site
-          cd site
-          mkdocs gh-deploy --force --config-file ../mkdocs.yml --remote-branch main
+          python -m pip install --upgrade pip
+          pip install mkdocs mkdocs-material
+
+      # 3. Build le site avec le fichier de configuration personnalisé
+      - name: Build MkDocs Site
+        run: mkdocs build --config-file ./mkdocs.yml
+
+      # 4. Déployer le site sur le deuxième repo
+      - name: Deploy to GitHub Pages Repo
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./site  # dossier généré par MkDocs
+          external_repository: VIRAL-UCBL1/VIRAL-UCBL1.github.io
+          user_name: "your-username"
+          user_email: "your-email@example.com"
