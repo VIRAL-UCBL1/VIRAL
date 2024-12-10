@@ -3,7 +3,7 @@ name: Build and Deploy MkDocs Site
 on:
   push:
     branches:
-      - main  # ou la branche principale de ton repo 1
+      - main
 
 jobs:
   build-deploy:
@@ -27,7 +27,7 @@ jobs:
 
       # 3. Build le site avec le fichier de configuration personnalisé
       - name: Build MkDocs Site
-        run: mkdocs build --config-file ./mkdocs.yml
+        run: mkdocs build --config-file ./docs/mkdocs.yml
 
       # 4. Déployer le site sur le deuxième repo
       - name: Deploy to GitHub Pages Repo
