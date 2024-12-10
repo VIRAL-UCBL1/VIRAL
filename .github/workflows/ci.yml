@@ -33,8 +33,6 @@ jobs:
       - name: Deploy to GitHub Pages Repo
         uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./site  # dossier généré par MkDocs
+          github_token: ${{ secrets.DEPLOY_KEY }}
+          publish_dir: ./site  
           external_repository: VIRAL-UCBL1/VIRAL-UCBL1.github.io
-          user_name: "your-username"
-          user_email: "your-email@example.com"
