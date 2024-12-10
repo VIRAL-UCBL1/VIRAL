@@ -456,6 +456,7 @@ def reward_func(observations: np.ndarray, terminated: bool, truncated: bool) -> 
 
 
 09:47:20 OllamaChat.py:31 INFO
+09:58:43 OllamaChat.py:31 INFO
 	System: 
         You are an expert in Reinforcement Learning specialized in designing reward functions.
         Strict criteria:
@@ -480,7 +481,9 @@ def reward_func(observations: np.ndarray, terminated: bool, truncated: bool) -> 
         
 
 09:54:08 VIRAL.py:97 INFO
-	Code nettoyé pour compilation :
+	Code nettoyï¿½ pour compilation :
+09:59:20 VIRAL.py:97 INFO
+	Code nettoyÃ© pour compilation :
 def reward_func(observations: np.ndarray, terminated: bool, truncated: bool) -> float:
     """Reward function for CartPole
 
@@ -510,7 +513,7 @@ def reward_func(observations: np.ndarray, terminated: bool, truncated: bool) -> 
         
 
 09:55:37 VIRAL.py:97 INFO
-	Code nettoyé pour compilation :
+	Code nettoyï¿½ pour compilation :
 def reward_func(observations: np.ndarray, terminated: bool, truncated: bool) -> float:
     """Reward function for CartPole
 
@@ -555,7 +558,7 @@ def reward_func(observations: np.ndarray, terminated: bool, truncated: bool) -> 
         
 
 10:16:37 VIRAL.py:92 INFO
-	Code nettoyé pour compilation :
+	Code nettoyï¿½ pour compilation :
 import numpy as np
 
 def reward_func(observations:np.ndarray, terminated: bool, truncated: bool) -> float:
@@ -575,7 +578,7 @@ def reward_func(observations:np.ndarray, terminated: bool, truncated: bool) -> f
         return 1.0
 
 10:16:42 VIRAL.py:92 INFO
-	Code nettoyé pour compilation :
+	Code nettoyï¿½ pour compilation :
 import numpy as np
 
 def reward_func(observations:np.ndarray, terminated: bool, truncated: bool) -> float:
@@ -769,5 +772,25 @@ def reward_func(observations:np.ndarray, terminated: bool, truncated: bool) -> f
 	Reward Function 2:
 - during train: SR 0.30434782608695654, nb_ep 69
 - during test: SR 0.85
+        return -1.0  # Negative reward for failure or truncation
+    else:
+        return 1.0  # Positive reward for every step taken
+
+09:59:22 VIRAL.py:236 INFO
+	pole_angle_diff : human 0.00733053358271718 llm 0.08811056613922119
+
+09:59:22 VIRAL.py:236 INFO
+	pole_position_diff : human 0.07204452902078629 llm 0.07918893545866013
+
+09:59:22 VIRAL.py:240 INFO
+	the policy with human reward:
+- during the train: SR 0.21818181818181817, nb_ep 55
+- and during the test: SR 1.0
+
+
+09:59:22 VIRAL.py:245 INFO
+	the policy with llm reward:
+- during the train: SR 0.0, nb_ep 5000
+- and during the test: SR 0.0
 
 

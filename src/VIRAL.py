@@ -123,7 +123,7 @@ class VIRAL:
     def _compile_reward_function(self, response: str) -> Callable:
         """
         Compile the reward function from the LLM response.
-        TODO BUG avec ``` a la fin jsp pk mais on va trouver les gars !
+        TODO BUG avec ``` a la fin jsp pk mais on va trouver les gars ! Normalement réglé
 
         Args:
             response (str): LLM generated reward function.
