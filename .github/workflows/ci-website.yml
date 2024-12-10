@@ -36,3 +36,4 @@ jobs:
           deploy_key: ${{ secrets.DEPLOY_KEY }}
           publish_dir: ./site  
           external_repository: VIRAL-UCBL1/VIRAL-UCBL1.github.io
+          publish_branch: main
