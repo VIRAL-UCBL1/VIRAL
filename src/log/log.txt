@@ -455,3 +455,103 @@ def reward_func(observations: np.ndarray, terminated: bool, truncated: bool) -> 
 - and during the test: SR 0.89
 
 
+09:11:17 OllamaChat.py:31 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+09:11:19 OllamaChat.py:110 ERROR
+	Connection error: 404 Client Error: Not Found for url: http://localhost:11434/api/chat
+
+09:11:19 VIRAL.py:118 WARNING
+	The answer does not contain a valid function definition.
+
+09:11:21 OllamaChat.py:110 ERROR
+	Connection error: 404 Client Error: Not Found for url: http://localhost:11434/api/chat
+
+09:11:21 VIRAL.py:118 WARNING
+	The answer does not contain a valid function definition.
+
+09:11:23 OllamaChat.py:110 ERROR
+	Connection error: 404 Client Error: Not Found for url: http://localhost:11434/api/chat
+
+09:11:23 VIRAL.py:118 WARNING
+	The answer does not contain a valid function definition.
+
+09:25:18 OllamaChat.py:31 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+09:25:27 VIRAL.py:97 INFO
+	Code nettoyé pour compilation :
+def reward_func(observations: np.ndarray, terminated: bool, truncated: bool) -> float:
+    if terminated or truncated:
+        return -10.0  # Penalize failure or truncation
+    else:
+        return 1.0  # Reward for each step taken
+
+09:31:25 OllamaChat.py:31 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+09:31:34 VIRAL.py:97 INFO
+	Code nettoyé pour compilation :
+import numpy as np
+
+def reward_func(observations:np.ndarray, terminated: bool, truncated: bool) -> float:
+    """Reward function for CartPole
+
+    Args:
+        observations (np.ndarray): observation on the current state
+        terminated (bool): episode is terminated due a failure
+        truncated (bool): episode is truncated due a success
+
+    Returns:
+        float: The reward for the current step
+    """
+    if terminated or truncated:
+        return -1.0
+    else:
+        return 1.0
+
+09:31:42 VIRAL.py:236 INFO
+	pole_angle_diff : human 0.003606785221608446 llm 0.004778475072799705
+
+09:31:42 VIRAL.py:236 INFO
+	pole_position_diff : human 0.04115236331559631 llm 0.03575036470006316
+
+09:31:42 VIRAL.py:240 INFO
+	the policy with human reward:
+- during the train: SR 0.005145167217934583, nb_ep 2721
+- and during the test: SR 1.0
+
+
+09:31:42 VIRAL.py:245 INFO
+	the policy with llm reward:
+- during the train: SR 0.4074074074074074, nb_ep 27
+- and during the test: SR 1.0
+
+

@@ -1,11 +1,11 @@
+import argparse
 from logging import getLogger
 
 import gymnasium as gym
-import argparse
 
-from VIRAL import VIRAL
+from DirectSearchAlgo import PolitiqueDirectSearch
 from log.log_config import init_logger
-from RLalgo import PolitiqueDirectSearch
+from VIRAL import VIRAL
 
 
 def objective_metric_CartPole(states):
