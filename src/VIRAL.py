@@ -77,13 +77,12 @@ class VIRAL:
             
         """
 
-        self.llm.add_message(prompt)
-        response = self.llm.generate_response(stream=True)
-        response = self.llm.print_Generator_and_return(response)
-        reward_func = self._get_runnable_function(response)
-        self.reward_functions.append(reward_func)
-
-        return reward_func
+        for i in range(2):
+            self.llm.add_message(prompt)
+            response = self.llm.generate_response(stream=True)
+            response = self.llm.print_Generator_and_return(response, i)
+            reward_func = self._get_runnable_function(response)
+            self.reward_functions.append(reward_func)
 
     def _get_code(self, response: str) -> str:
         cleaned_response = response.strip("```").replace("python", "").strip()
@@ -91,7 +90,7 @@ class VIRAL:
             raise ValueError(
                 "The answer does not contain a valid function definition."
             )
-        self.logger.info("Code nettoyé pour compilation :\n" + cleaned_response)
+        self.logger.debug("Code nettoyé pour compilation :\n" + cleaned_response)
         return cleaned_response
 
     def _get_runnable_function(self, response: str, error: str = None) -> Callable:
@@ -206,56 +205,68 @@ class VIRAL:
         visual: bool = False,
     ) -> Dict:
         """
-        Evaluate policy performance for a given reward function
+        Evaluate policy performance for multiple reward functions
 
         Args:
+            objectives_metrics (List[callable]): Custom objective metrics
             num_episodes (int): Number of evaluation episodes
 
         Returns:
-            Dict: Performance metrics
+            Dict: Performance metrics for multiple reward functions
         """
-        performance_metrics = {
-            "rewards_train": [],
-            "nb_episode_train": 0,
-            "success_rate_test": 0.0,
-        }
+        if len(self.reward_functions) < 2:
+            self.logger.error("At least two reward functions are required.")
+
+        performance_results = []
+
         raw_policy, raw_perfs, raw_sr, raw_nb_ep = self.learning_method.train(
             save_name=f"model/raw_{self.learning_method}_{self.env.spec.name}.model",
         )
-        policy, perfs, sr, nb_ep = self.learning_method.train(
-            self.reward_functions[-1],
-            save_name=f"model/{self.learning_method}_{self.env.spec.name}{len(self.reward_functions)}.model",
-        )
         raw_states, raw_rewards, raw_sr_test = self.test_policy(raw_policy)
-        states, rewards, sr_test = self.test_policy(policy, self.reward_functions[-1])
-        perso_raw_states = []
-        perso_states = []
-        
-        for objective_metric in objectives_metrics:
-            perso_raw_states.append(objective_metric(raw_states))
-            perso_states.append(objective_metric(states))
 
-        for i in range(len(perso_raw_states)):
-            self.logger.info(
-                f"{perso_raw_states[i]} : human {perso_raw_states[i]} llm {perso_states[i]}"
+        for i, reward_func in enumerate(self.reward_functions[-2:], 1):
+            policy, perfs, sr, nb_ep = self.learning_method.train(
+                reward_func,
+                save_name=f"model/{self.learning_method}_{self.env.spec.name}_reward{i}.model",
             )
-        
-        self.logger.info(
-            "the policy with human reward:"
-            + f"\n- during the train: SR {raw_sr}, nb_ep {raw_nb_ep}"
-            + f"\n- and during the test: SR {raw_sr_test}\n"
-        )
-        self.logger.info(
-            "the policy with llm reward:"
-            + f"\n- during the train: SR {sr}, nb_ep {nb_ep}"
-            + f"\n- and during the test: SR {sr_test}\n"
-        )
+            
+            states, rewards, sr_test = self.test_policy(policy, reward_func)
 
-        performance_metrics["success_rate"] = sr_test
-        performance_metrics["nb_episode_train"] = nb_ep
-        performance_metrics["total_rewards"] = perfs
+            perso_raw_states = []
+            perso_states = []
+            
+            for objective_metric in objectives_metrics:
+                perso_raw_states.append(objective_metric(raw_states))
+                perso_states.append(objective_metric(states))
 
-        return policy, self.reward_functions[-1], performance_metrics, perso_states
+            self.logger.info(f"Reward Function {i} Performance:")
+            for j in range(len(perso_raw_states)):
+                self.logger.info(
+                    f"{perso_raw_states[j]} : human {perso_raw_states[j]} llm {perso_states[j]}"
+                )
+            
+            performance_results.append({
+                'reward_function': reward_func,
+                'train_success_rate': sr,
+                'train_episodes': nb_ep,
+                'test_success_rate': sr_test,
+                'custom_metrics': perso_states
+            })
+
+            self.logger.info(
+                f"Reward Function {i}:"
+                f"\n- during train: SR {sr}, nb_ep {nb_ep}"
+                f"\n- during test: SR {sr_test}\n"
+            )
+
+        return {
+            'raw_policy': {
+                'train_success_rate': raw_sr,
+                'train_episodes': raw_nb_ep,
+                'test_success_rate': raw_sr_test
+            },
+            'reward_functions_performance': performance_results
+        }
 
     def test_policy(
         self,
