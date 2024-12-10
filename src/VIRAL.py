@@ -202,7 +202,6 @@ class VIRAL:
         Args:
             objectives_metrics (List[callable]): Custom objective metrics
             num_episodes (int): Number of evaluation episodes
-            visual (bool): Whether to visualize the evaluation
 
         Returns:
             Dict: Performance metrics for multiple reward functions
