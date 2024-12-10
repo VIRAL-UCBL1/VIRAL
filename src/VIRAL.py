@@ -1,10 +1,10 @@
 import logging
 from logging import getLogger
 from typing import Callable, Dict, Generator, List
-
+from State import State
 import gymnasium as gym
 import numpy as np
-
+import inspect
 from OllamaChat import OllamaChat
 
 
@@ -39,9 +39,7 @@ class VIRAL:
 
         self.env = env
         self.learning_method = learning_method
-
-        self.reward_functions: List[Callable] = []
-        self.policy_performances: List[Dict] = []
+        self.memory: List[State] = []
 
         self.logger = getLogger("DREFUN")
 
@@ -83,8 +81,8 @@ class VIRAL:
             self.llm.add_message(prompt)
             response = self.llm.generate_response(stream=True, additional_options=additional_options)
             response = self.llm.print_Generator_and_return(response, i)
-            reward_func = self._get_runnable_function(response)
-            self.reward_functions.append(reward_func)
+            reward_func, response = self._get_runnable_function(response)
+            self.memory.append(State(i, reward_func,response))
 
     def _get_code(self, response: str) -> str:
         cleaned_response = response.strip("```").replace("python", "").strip()
@@ -121,7 +119,8 @@ class VIRAL:
         except RuntimeError as e:
             self.logger.warning(f"Error execution {e}")
             return self._get_runnable_function(response, str(e))
-        return reward_func
+        
+        return reward_func, response
 
     def _compile_reward_function(self, response: str) -> Callable:
         """
@@ -164,8 +163,8 @@ class VIRAL:
         except Exception as e:
             raise RuntimeError(f"Error during reward function execution: {e}")
 
-    def self_refine_reward(  # TODO make it work
-        self, current_reward_func: Callable, performance_metrics: Dict
+    def self_refine_reward(
+        self, idx: int
     ) -> Callable:
         """
         Self-refinement of reward function based on performance
@@ -178,20 +177,25 @@ class VIRAL:
             Callable: Refined reward function
         """
         refinement_prompt = f"""
-        Current reward function performance:
-        {performance_metrics}
-        
-        Suggest improvements to the reward function to:
+        improve the reward function to:
         - Increase success rate
         - Optimize reward signal
         - Maintain task objectives
+
+        your best reward function:
+        {self.memory[idx].reward_func_str}
+
+        performance:
+        {self.memory[idx].performances}
         """
 
         self.llm.add_message(refinement_prompt)
         refined_response = self.llm.generate_response(stream=True)
         refined_response = self.llm.print_Generator_and_return(refined_response)
+        reward_func, refined_response = self._get_runnable_function(refined_response)
+        self.memory.append(State(len(self.memory)+1, reward_func, refined_response))
 
-        return self._compile_reward_function(refined_response)
+        return reward_func
 
     def evaluate_policy(
         self,
@@ -210,69 +214,58 @@ class VIRAL:
         Returns:
             Dict: Performance metrics for multiple reward functions
         """
-        performance_metrics = {
-            "total_rewards": [],
-            "episode_lengths": [],
-            "success_rate": 0.0,
-        }
-        raw_policy, raw_perfs, raw_sr, raw_nb_ep = self.learning_method.train(
-            save_name=f"model/raw_{self.learning_method}_{self.env.spec.name}.model",
-        )
-        
-        policy, perfs, sr, nb_ep = self.learning_method.train(
-            reward_func=self.reward_functions[-1],
-            save_name=f"model/{self.learning_method}_{self.env.spec.name}{len(self.reward_functions)}.model",
-        )
-        if len(self.reward_functions) < 2:
+        if len(self.memory) < 2:
             self.logger.error("At least two reward functions are required.")
 
         performance_results = []
 
-        raw_states, raw_rewards, raw_sr_test = self.test_policy(raw_policy)
+        raw_policy, raw_perfs, raw_sr, raw_nb_ep = self.learning_method.train(  # TODO le faire que une fois dans une fonction à part
+            save_name=f"model/raw_{self.learning_method}_{self.env.spec.name}.model",
+        )
+        raw_observations, raw_rewards, raw_sr_test = self.test_policy(raw_policy)
 
-        for i, reward_func in enumerate(self.reward_functions[-2:], 1):
+        for i, state in enumerate(self.memory[-2:], 1):
             policy, perfs, sr, nb_ep = self.learning_method.train(
-                reward_func,
+                state.reward_func,
                 save_name=f"model/{self.learning_method}_{self.env.spec.name}_reward{i}.model",
             )
+            state.policy = policy
             
-            states, rewards, sr_test = self.test_policy(policy, reward_func)
+            observations, rewards, sr_test = self.test_policy(policy, state.reward_func)
 
-            perso_raw_states = []
-            perso_states = []
+            perso_raw_observations = []
+            perso_observations = []
             
             for objective_metric in objectives_metrics:
-                perso_raw_states = objective_metric(raw_states)
-                perso_states = objective_metric(states)
+                perso_raw_observations.append(objective_metric(raw_observations))
+                perso_observations.append(objective_metric(observations))
 
             self.logger.info(f"Reward Function {i} Performance:")
-            for j in range(len(perso_raw_states)):
+            for j in range(len(perso_raw_observations)):
                 self.logger.info(
-                    f"{perso_raw_states[j][0]} : human {perso_raw_states[j][1]} llm {perso_states[j][1]}"
+                    f"{perso_raw_observations[j]} : human {perso_raw_observations[j]} llm {perso_observations[j]}"
                 )
             
             performance_results.append({
-                'reward_function': reward_func,
                 'train_success_rate': sr,
                 'train_episodes': nb_ep,
                 'test_success_rate': sr_test,
-                'custom_metrics': perso_states
+                'custom_metrics': perso_observations
             })
+
+            state.performances = {
+                'train_success_rate': sr,
+                'train_episodes': nb_ep,
+                'test_success_rate': sr_test,
+                'custom_metrics': perso_observations
+            }
 
             self.logger.info(
                 f"Reward Function {i}:"
                 f"\n- during train: SR {sr}, nb_ep {nb_ep}"
                 f"\n- during test: SR {sr_test}\n"
             )
-
-        return {
-            'raw_policy': {
-                'train_success_rate': raw_sr,
-                'train_episodes': raw_nb_ep,
-                'test_success_rate': raw_sr_test
-            },
-            'reward_functions_performance': performance_results
-        }
+        return 0  # TODO faire une fonction qui compare les evaluations de politique
 
     def test_policy(
         self,
@@ -285,7 +278,7 @@ class VIRAL:
         all_states = []
         nb_success = 0
         x_max = 0
-        x_min = float("+inf")
+        x_min = 0 # avoid div by 0
         for epi in range(1, nb_episodes + 1):
             total_reward = 0
             state, _ = self.env.reset()

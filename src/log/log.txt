@@ -794,6 +794,7 @@ def reward_func(observations:np.ndarray, terminated: bool, truncated: bool) -> f
 - and during the test: SR 0.0
 
 
+11:01:05 OllamaChat.py:31 INFO
 09:11:17 OllamaChat.py:31 INFO
 	System: 
         You are an expert in Reinforcement Learning specialized in designing reward functions.
@@ -806,6 +807,8 @@ def reward_func(observations:np.ndarray, terminated: bool, truncated: bool) -> f
         - STOP immediately your completion after the last return
         
 
+11:01:57 VIRAL.py:94 INFO
+	Code nettoyé pour compilation :
 09:11:19 OllamaChat.py:110 ERROR
 	Connection error: 404 Client Error: Not Found for url: http://localhost:11434/api/chat
 
@@ -924,6 +927,22 @@ def reward_func(observations: np.ndarray, terminated: bool, truncated: bool) -> 
     else:
         return 1.0
 
+11:02:06 VIRAL.py:239 INFO
+	[{'pole_angle_diff': np.float32(0.08300309)}, {np.float32(0.08571237), 'pole_position_diff'}] : human [{'pole_angle_diff': np.float32(0.08300309)}, {np.float32(0.08571237), 'pole_position_diff'}] llm [{'pole_angle_diff': np.float32(0.008955257)}, {np.float32(0.1641483), 'pole_position_diff'}]
+
+11:02:06 VIRAL.py:243 INFO
+	the policy with human reward:
+- during the train: SR 0.0002, nb_ep 5000
+- and during the test: SR 0.0
+
+
+11:02:06 VIRAL.py:248 INFO
+	the policy with llm reward:
+- during the train: SR 0.615, nb_ep 200
+- and during the test: SR 0.63
+
+
+11:54:02 OllamaChat.py:31 INFO
 10:19:14 OllamaChat.py:31 INFO
 	System: 
         You are an expert in Reinforcement Learning specialized in designing reward functions.
@@ -935,6 +954,39 @@ def reward_func(observations: np.ndarray, terminated: bool, truncated: bool) -> 
         - Take into the observation of the state, the terminated and truncated boolean
         - STOP immediately your completion after the last return
         
+
+11:54:15 OllamaChat.py:125 INFO
+	Response 0:
+
+11:55:02 OllamaChat.py:125 INFO
+	Response 1:
+
+11:55:43 VIRAL.py:239 INFO
+	Reward Function 1 Performance:
+
+11:55:43 VIRAL.py:241 INFO
+	[{'pole_angle_diff': np.float32(0.0041119624)}, {np.float32(0.18960077), 'pole_position_diff'}] : human [{'pole_angle_diff': np.float32(0.0041119624)}, {np.float32(0.18960077), 'pole_position_diff'}] llm [{'pole_angle_diff': np.float32(0.08076181)}, {np.float32(0.03353782), 'pole_position_diff'}]
+
+11:55:43 VIRAL.py:259 INFO
+	Reward Function 1:
+- during train: SR 0.0, nb_ep 5000
+- during test: SR 0.0
+
+
+11:55:44 VIRAL.py:239 INFO
+	Reward Function 2 Performance:
+
+11:55:44 VIRAL.py:241 INFO
+	[{'pole_angle_diff': np.float32(0.0041119624)}, {np.float32(0.18960077), 'pole_position_diff'}] : human [{'pole_angle_diff': np.float32(0.0041119624)}, {np.float32(0.18960077), 'pole_position_diff'}] llm [{'pole_angle_diff': np.float32(0.025016842)}, {np.float32(0.18748301), 'pole_position_diff'}]
+
+11:55:44 VIRAL.py:259 INFO
+	Reward Function 2:
+- during train: SR 0.44, nb_ep 25
+- during test: SR 1.0
+
+
+11:55:48 OllamaChat.py:125 INFO
+	Response 1:
 
 10:19:18 VIRAL.py:93 INFO
 	Code nettoy� pour compilation :
@@ -1412,7 +1464,11 @@ def reward_func(observations: np.ndarray, terminated: bool, truncated: bool) -> 
 - during test: SR 0.79
 
 
+<<<<<<< HEAD
 12:01:02 OllamaChat.py:31 INFO
+=======
+12:04:24 OllamaChat.py:31 INFO
+>>>>>>> 5e0813ec37fe601ecfafa24078950c9d0e2ac6ce
 	System: 
         You are an expert in Reinforcement Learning specialized in designing reward functions.
         Strict criteria:
@@ -1431,6 +1487,13 @@ def reward_func(observations: np.ndarray, terminated: bool, truncated: bool) -> 
 	Response 1:
 
 12:04:15 OllamaChat.py:31 INFO
+12:04:32 OllamaChat.py:125 INFO
+	Response 0:
+
+12:04:36 OllamaChat.py:125 INFO
+	Response 1:
+
+12:06:33 OllamaChat.py:31 INFO
 	System: 
         You are an expert in Reinforcement Learning specialized in designing reward functions.
         Strict criteria:
@@ -1449,6 +1512,13 @@ def reward_func(observations: np.ndarray, terminated: bool, truncated: bool) -> 
 	Response 1:
 
 12:06:40 OllamaChat.py:31 INFO
+12:06:35 OllamaChat.py:125 INFO
+	Response 0:
+
+12:06:39 OllamaChat.py:125 INFO
+	Response 1:
+
+12:07:50 OllamaChat.py:31 INFO
 	System: 
         You are an expert in Reinforcement Learning specialized in designing reward functions.
         Strict criteria:
@@ -1467,6 +1537,13 @@ def reward_func(observations: np.ndarray, terminated: bool, truncated: bool) -> 
 	Response 1:
 
 12:07:19 OllamaChat.py:31 INFO
+12:07:52 OllamaChat.py:125 INFO
+	Response 0:
+
+12:07:57 OllamaChat.py:125 INFO
+	Response 1:
+
+12:08:51 OllamaChat.py:31 INFO
 	System: 
         You are an expert in Reinforcement Learning specialized in designing reward functions.
         Strict criteria:
@@ -1485,6 +1562,13 @@ def reward_func(observations: np.ndarray, terminated: bool, truncated: bool) -> 
 	Response 1:
 
 12:10:18 OllamaChat.py:31 INFO
+12:08:54 OllamaChat.py:125 INFO
+	Response 0:
+
+12:08:58 OllamaChat.py:125 INFO
+	Response 1:
+
+12:09:43 OllamaChat.py:31 INFO
 	System: 
         You are an expert in Reinforcement Learning specialized in designing reward functions.
         Strict criteria:
@@ -1503,6 +1587,13 @@ def reward_func(observations: np.ndarray, terminated: bool, truncated: bool) -> 
 	Response 1:
 
 12:12:52 OllamaChat.py:31 INFO
+12:09:45 OllamaChat.py:125 INFO
+	Response 0:
+
+12:09:49 OllamaChat.py:125 INFO
+	Response 1:
+
+12:11:12 OllamaChat.py:31 INFO
 	System: 
         You are an expert in Reinforcement Learning specialized in designing reward functions.
         Strict criteria:
@@ -1537,4 +1628,61 @@ def reward_func(observations: np.ndarray, terminated: bool, truncated: bool) -> 
 
 12:13:19 OllamaChat.py:125 INFO
 	Response 1:
+
+12:11:15 OllamaChat.py:125 INFO
+	Response 0:
+
+12:11:19 OllamaChat.py:125 INFO
+	Response 1:
+
+12:11:27 VIRAL.py:239 INFO
+	Reward Function 1 Performance:
+
+12:11:27 VIRAL.py:241 INFO
+	[{'pole_angle_diff': 0.0074340482058035005}, {0.26162220531584723, 'pole_position_diff'}] : human [{'pole_angle_diff': 0.0074340482058035005}, {0.26162220531584723, 'pole_position_diff'}] llm [{'pole_angle_diff': 0.02115558526554367}, {0.058499092838677415, 'pole_position_diff'}]
+
+12:11:27 VIRAL.py:259 INFO
+	Reward Function 1:
+- during train: SR 0.2894736842105263, nb_ep 38
+- during test: SR 1.0
+
+
+12:11:30 VIRAL.py:239 INFO
+	Reward Function 2 Performance:
+
+12:11:30 VIRAL.py:241 INFO
+	[{'pole_angle_diff': 0.0074340482058035005}, {0.26162220531584723, 'pole_position_diff'}] : human [{'pole_angle_diff': 0.0074340482058035005}, {0.26162220531584723, 'pole_position_diff'}] llm [{'pole_angle_diff': 0.00976684491341366}, {0.22359816287595455, 'pole_position_diff'}]
+
+12:11:30 VIRAL.py:259 INFO
+	Reward Function 2:
+- during train: SR 0.2926829268292683, nb_ep 41
+- during test: SR 0.98
+
+
+12:11:32 OllamaChat.py:125 INFO
+	Response 1:
+
+12:11:41 VIRAL.py:239 INFO
+	Reward Function 1 Performance:
+
+12:11:41 VIRAL.py:241 INFO
+	[{'pole_angle_diff': 0.004947061923984595}, {'pole_position_diff', 0.012782591227565287}] : human [{'pole_angle_diff': 0.004947061923984595}, {'pole_position_diff', 0.012782591227565287}] llm [{'pole_angle_diff': 0.013081455546716263}, {0.18764051013398672, 'pole_position_diff'}]
+
+12:11:41 VIRAL.py:259 INFO
+	Reward Function 1:
+- during train: SR 0.3684210526315789, nb_ep 38
+- during test: SR 0.7
+
+
+12:11:45 VIRAL.py:239 INFO
+	Reward Function 2 Performance:
+
+12:11:45 VIRAL.py:241 INFO
+	[{'pole_angle_diff': 0.004947061923984595}, {'pole_position_diff', 0.012782591227565287}] : human [{'pole_angle_diff': 0.004947061923984595}, {'pole_position_diff', 0.012782591227565287}] llm [{'pole_angle_diff': 0.009939885149503312}, {0.19629905986350707, 'pole_position_diff'}]
+
+12:11:45 VIRAL.py:259 INFO
+	Reward Function 2:
+- during train: SR 0.5816326530612245, nb_ep 98
+- during test: SR 0.69
+
 

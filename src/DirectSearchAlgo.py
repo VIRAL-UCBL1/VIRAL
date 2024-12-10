@@ -96,7 +96,8 @@ class PolitiqueDirectSearch:
             if perf >= meilleur_perf:
                 meilleur_perf = perf
                 meilleur_poid = self.get_poids()
-                nb_best_perf = 0
+                if perf > meilleur_perf:
+                    nb_best_perf = 0
                 # reduction de la variance du bruit
                 bruit_std = max(1e-3, bruit_std / 2)
             else:
@@ -106,8 +107,8 @@ class PolitiqueDirectSearch:
             bruit = np.random.normal(0, bruit_std, self.dim_entree * self.dim_sortie)
             # Reshape le bruit pour qu'il ait la même taille que les poids
             bruit = bruit.reshape(self.dim_entree, self.dim_sortie)
-            # if i_episode % 20 == 0:
-            #     print(f"Episode {i_episode}, perf = {perf}, best perf = {meilleur_perf}, bruit = {bruit_std}")
+            if i_episode % 100 == 0:
+                print(f"Épisode: {i_episode}, Récompense: {perf}")
             # On ajoute le bruit aux poids
             self.set_poids(meilleur_poid + bruit)
         if save_name is not None:

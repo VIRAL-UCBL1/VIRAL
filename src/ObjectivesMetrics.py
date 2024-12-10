@@ -22,7 +22,7 @@ def objective_metric_CartPole(states):
        pole_position_diff += abs(pole_position)
     pole_position_diff = pole_position_diff / len(states)
     
-    result = [("pole_angle_diff", pole_angle_diff), ("pole_position_diff", pole_position_diff)]
+    result = [{"pole_angle_diff": pole_angle_diff}, {"pole_position_diff", pole_position_diff}]
     
     return result
     
