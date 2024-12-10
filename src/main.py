@@ -23,7 +23,7 @@ if __name__ == "__main__":
     learning_method = PolitiqueDirectSearch(env)
     viral = VIRAL(learning_method, env)
 
-    reward_func = viral.generate_reward_function(
+    viral.generate_reward_function(
         task_description="""Balance a pole on a cart, 
         Num Observation Min Max
         0 Cart Position -4.8 4.8
@@ -36,7 +36,7 @@ if __name__ == "__main__":
     
     objective_metric = [objective_metric_CartPole]
 
-    policy, reward_func, performance_metrics, perso_states = viral.evaluate_policy(objectives_metrics=objective_metric)
-    viral.self_refine_reward(reward_func, performance_metrics, perso_states)
-    policy, reward_func, performance_metrics, perso_states = viral.evaluate_policy(objectives_metrics=objective_metric)
+    idx = viral.evaluate_policy(objectives_metrics=objective_metric)
+    viral.self_refine_reward(idx)
+    idx = viral.evaluate_policy(objectives_metrics=objective_metric)
 
