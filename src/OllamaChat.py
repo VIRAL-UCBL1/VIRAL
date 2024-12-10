@@ -113,7 +113,8 @@ class OllamaChat:
 
     def print_Generator_and_return(
             self, 
-            response: Generator | str):
+            response: Generator | str,
+            number : int = 1):
         """
         Print the response if it's a generator
         Args:
@@ -121,6 +122,7 @@ class OllamaChat:
         Returns:
             - the response formalized if is was a generator, the response itself otherwise.
         """
+        self.logger.info(f"Response {number}:")
         if isinstance(response, Generator):
             response_gen = response
             response = ""

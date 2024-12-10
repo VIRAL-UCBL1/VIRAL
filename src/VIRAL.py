@@ -75,13 +75,12 @@ class VIRAL:
             
         """
 
-        self.llm.add_message(prompt)
-        response = self.llm.generate_response(stream=True)
-        response = self.llm.print_Generator_and_return(response)
-        reward_func = self._get_runnable_function(response)
-        self.reward_functions.append(reward_func)
-
-        return reward_func
+        for i in range(2):
+            self.llm.add_message(prompt)
+            response = self.llm.generate_response(stream=True)
+            response = self.llm.print_Generator_and_return(response, i)
+            reward_func = self._get_runnable_function(response)
+            self.reward_functions.append(reward_func)
 
     def _get_code(self, response: str) -> str:
         cleaned_response = response.strip("```").replace("python", "").strip()
@@ -89,7 +88,7 @@ class VIRAL:
             raise ValueError(
                 "The answer does not contain a valid function definition."
             )
-        self.logger.info("Code nettoyé pour compilation :\n" + cleaned_response)
+        self.logger.debug("Code nettoyé pour compilation :\n" + cleaned_response)
         return cleaned_response
 
     def _get_runnable_function(self, response: str, error: str = None) -> Callable:
@@ -123,7 +122,7 @@ class VIRAL:
     def _compile_reward_function(self, response: str) -> Callable:
         """
         Compile the reward function from the LLM response.
-        TODO BUG avec ``` a la fin jsp pk mais on va trouver les gars !
+        TODO BUG avec ``` a la fin jsp pk mais on va trouver les gars ! Normalement réglé
 
         Args:
             response (str): LLM generated reward function.
@@ -198,53 +197,78 @@ class VIRAL:
         visual: bool = False,
     ) -> Dict:
         """
-        Evaluate policy performance for a given reward function
+        Evaluate policy performance for multiple reward functions
 
         Args:
+            objectives_metrics (List[callable]): Custom objective metrics
             num_episodes (int): Number of evaluation episodes
 
         Returns:
-            Dict: Performance metrics
+            Dict: Performance metrics for multiple reward functions
         """
         performance_metrics = {
             "total_rewards": [],
             "episode_lengths": [],
             "success_rate": 0.0,
         }
-        print("training 1")
         raw_policy, raw_perfs, raw_sr, raw_nb_ep = self.learning_method.train(
             save_name=f"model/raw_{self.learning_method}_{self.env.spec.name}.model",
         )
-        print("training 2")
+        
         policy, perfs, sr, nb_ep = self.learning_method.train(
             reward_func=self.reward_functions[-1],
             save_name=f"model/{self.learning_method}_{self.env.spec.name}{len(self.reward_functions)}.model",
         )
-        raw_states, raw_rewards, raw_sr_test = self.test_policy(raw_policy)
-        states, rewards, sr_test = self.test_policy(policy, self.reward_functions[-1])
-        # TODO penser aux métrics objective propre à l'environnment, une raison de faire une class environnement extend de celle de base ?
-        perso_raw_states = []
-        perso_states = []
-        
-        for objective_metric in objectives_metrics:
-            perso_raw_states = objective_metric(raw_states)
-            perso_states = objective_metric(states)
+        if len(self.reward_functions) < 2:
+            self.logger.error("At least two reward functions are required.")
 
-        for i in range(len(perso_raw_states)):
-            self.logger.info(
-                f"{perso_raw_states[i][0]} : human {perso_raw_states[i][1]} llm {perso_states[i][1]}"
+        performance_results = []
+
+        raw_states, raw_rewards, raw_sr_test = self.test_policy(raw_policy)
+
+        for i, reward_func in enumerate(self.reward_functions[-2:], 1):
+            policy, perfs, sr, nb_ep = self.learning_method.train(
+                reward_func,
+                save_name=f"model/{self.learning_method}_{self.env.spec.name}_reward{i}.model",
             )
-        
-        self.logger.info(
-            "the policy with human reward:"
-            + f"\n- during the train: SR {raw_sr}, nb_ep {raw_nb_ep}"
-            + f"\n- and during the test: SR {raw_sr_test}\n"
-        )
-        self.logger.info(
-            "the policy with llm reward:"
-            + f"\n- during the train: SR {sr}, nb_ep {nb_ep}"
-            + f"\n- and during the test: SR {sr_test}\n"
-        )
+            
+            states, rewards, sr_test = self.test_policy(policy, reward_func)
+
+            perso_raw_states = []
+            perso_states = []
+            
+            for objective_metric in objectives_metrics:
+                perso_raw_states = objective_metric(raw_states)
+                perso_states = objective_metric(states)
+
+            self.logger.info(f"Reward Function {i} Performance:")
+            for j in range(len(perso_raw_states)):
+                self.logger.info(
+                    f"{perso_raw_states[j][0]} : human {perso_raw_states[j][1]} llm {perso_states[j][1]}"
+                )
+            
+            performance_results.append({
+                'reward_function': reward_func,
+                'train_success_rate': sr,
+                'train_episodes': nb_ep,
+                'test_success_rate': sr_test,
+                'custom_metrics': perso_states
+            })
+
+            self.logger.info(
+                f"Reward Function {i}:"
+                f"\n- during train: SR {sr}, nb_ep {nb_ep}"
+                f"\n- during test: SR {sr_test}\n"
+            )
+
+        return {
+            'raw_policy': {
+                'train_success_rate': raw_sr,
+                'train_episodes': raw_nb_ep,
+                'test_success_rate': raw_sr_test
+            },
+            'reward_functions_performance': performance_results
+        }
 
     def test_policy(
         self,
