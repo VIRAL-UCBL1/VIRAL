@@ -81,9 +81,15 @@ class VIRAL:
         Returns:
             Callable: Generated reward function
         """
-        prompt = f"""
+        #TODO a regarder de plus pres
+        additional_options = {
+            "temperature": 1,
+        }
+
+        for i in range(2):
+            prompt = f"""
         Complete the reward function for a {self.env.spec.name} environment.
-        Task Description: {task_description}
+        Task Description: {task_description} Iteration {i+1}/{2}
 
         complete this sentence:
         def reward_func(observations:np.ndarray, terminated: bool, truncated: bool) -> float:
@@ -103,7 +109,7 @@ class VIRAL:
         first_states: List = []
         for i in range(1, 3): # TODO éviter qu'il fasse deux fois la même fonction
             self.llm.add_message(prompt)
-            response = self.llm.generate_response(stream=True)
+            response = self.llm.generate_response(stream=True, additional_options=additional_options)
             response = self.llm.print_Generator_and_return(response, i)
             reward_func, response = self._get_runnable_function(response)
             first_states.append(State(i, reward_func, response))
