@@ -1,3 +1,4 @@
+import logging
 from logging import getLogger
 from typing import Callable, Dict, Generator, List
 from State import State
@@ -5,8 +6,6 @@ import gymnasium as gym
 import numpy as np
 import inspect
 from OllamaChat import OllamaChat
-from logging import getLogger
-import logging
 
 
 class VIRAL:
@@ -196,6 +195,7 @@ class VIRAL:
 
     def evaluate_policy(
         self,
+        score_max: int = 500,
         objectives_metrics: List[callable] = [],
         num_episodes: int = 100,
         visual: bool = False,
