@@ -45,10 +45,6 @@ class VIRAL:
         self.policy_performances: List[Dict] = []
 
         self.logger = getLogger("DREFUN")
-        if logging.getLevelName(self.logger.level) == "DEBUG":
-            self.isStream = True
-        else:
-            self.isStream = False
 
     def generate_reward_function(self, task_description: str) -> Callable:
         """
@@ -81,7 +77,7 @@ class VIRAL:
         """
 
         self.llm.add_message(prompt)
-        response = self.llm.generate_response(stream=self.isStream)
+        response = self.llm.generate_response(stream=True)
         response = self.llm.print_Generator_and_return(response)
         reward_func = self._get_runnable_function(response)
         self.reward_functions.append(reward_func)
@@ -100,7 +96,7 @@ class VIRAL:
     def _get_runnable_function(self, response: str, error: str = None) -> Callable:
         if error is not None:
             self.llm.add_message(error)
-            response = self.llm.generate_response(stream=self.isStream)
+            response = self.llm.generate_response(stream=True)
             response = self.llm.print_Generator_and_return(response)
         try:
             response = self._get_code(response)
@@ -190,7 +186,7 @@ class VIRAL:
         """
 
         self.llm.add_message(refinement_prompt)
-        refined_response = self.llm.generate_response(stream=self.isStream)
+        refined_response = self.llm.generate_response(stream=True)
         refined_response = self.llm.print_Generator_and_return(refined_response)
 
         return self._compile_reward_function(refined_response)
