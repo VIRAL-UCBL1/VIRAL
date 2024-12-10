@@ -65,7 +65,7 @@ def init_logger(
             }
         },
         "loggers": {
-            "DREFUN": {
+            "VIRAL": {
                 "handlers": ["console", "file"],
                 "level": LOG_LEVEL,
                 # "propagate": False

@@ -25,7 +25,7 @@ class OllamaChat:
         self.messages: List[Dict[str, str]] = []
         self.options = options or {}
 
-        self.logger = getLogger('DREFUN')
+        self.logger = getLogger('VIRAL')
         
         if system_prompt:
             self.logger.info(f"System: {system_prompt}")

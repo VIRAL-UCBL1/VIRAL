@@ -4,7 +4,7 @@ from logging import getLogger
 import numpy as np
 import torch
 
-logger = getLogger("DREFUN")
+logger = getLogger("VIRAL")
 
 class PolitiqueDirectSearch:
     def __init__(self, env, det=True):
