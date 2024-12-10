@@ -1,3 +1,4 @@
+import logging
 from logging import getLogger
 from typing import Callable, Dict, Generator, List
 
@@ -5,8 +6,6 @@ import gymnasium as gym
 import numpy as np
 
 from OllamaChat import OllamaChat
-from logging import getLogger
-import logging
 
 
 class VIRAL:
@@ -193,6 +192,7 @@ class VIRAL:
 
     def evaluate_policy(
         self,
+        score_max: int = 500,
         objectives_metrics: List[callable] = [],
         num_episodes: int = 100,
         visual: bool = False,
@@ -211,11 +211,13 @@ class VIRAL:
             "episode_lengths": [],
             "success_rate": 0.0,
         }
+        print("training 1")
         raw_policy, raw_perfs, raw_sr, raw_nb_ep = self.learning_method.train(
             save_name=f"model/raw_{self.learning_method}_{self.env.spec.name}.model",
         )
+        print("training 2")
         policy, perfs, sr, nb_ep = self.learning_method.train(
-            self.reward_functions[-1],
+            reward_func=self.reward_functions[-1],
             save_name=f"model/{self.learning_method}_{self.env.spec.name}{len(self.reward_functions)}.model",
         )
         raw_states, raw_rewards, raw_sr_test = self.test_policy(raw_policy)

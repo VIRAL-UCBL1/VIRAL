@@ -5,6 +5,7 @@ import gymnasium as gym
 
 from DirectSearchAlgo import PolitiqueDirectSearch
 from log.log_config import init_logger
+from RenfocementAlgo import PolitiqueRenforce
 from VIRAL import VIRAL
 
 
@@ -53,11 +54,12 @@ if __name__ == "__main__":
         init_logger("INFO")
     logger = getLogger("DREFUN")
     env = gym.make("CartPole-v1")
-    learning_method = PolitiqueDirectSearch(env)
+    #learning_method = PolitiqueDirectSearch(env)
+    learning_method = PolitiqueRenforce(env,couche_cachee=[64])
     viral = VIRAL(learning_method, env)
 
     reward_func = viral.generate_reward_function(
-        task_description="""Balance a pole on a cart, 
+        task_description="""Balance a pole on a cart,
         Num Observation Min Max
         0 Cart Position -4.8 4.8
         1 Cart Velocity -Inf Inf
@@ -68,5 +70,7 @@ if __name__ == "__main__":
     )
     
     objective_metric = [objective_metric_CartPole]
+    
+    print("Training...")
 
     viral.evaluate_policy(objectives_metrics=objective_metric)

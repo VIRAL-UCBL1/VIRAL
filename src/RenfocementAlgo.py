@@ -15,6 +15,7 @@ class PolitiqueRenforce(nn.Module):
         env: Environnement Gymnasium
         couche_cachee: Liste des tailles des couches cachées (exemple [64, 32])
         gamma: Facteur de discount pour le calcul des retours cumulés
+        det: Si la politique est déterministe ou stochastique
         """
         super(PolitiqueRenforce, self).__init__()
         self.dim_entree = env.observation_space.shape[0]
@@ -61,6 +62,14 @@ class PolitiqueRenforce(nn.Module):
         action = m.sample()
         log_proba = m.log_prob(action)
         return action.item(), log_proba
+    
+    def output(self, etat: np.ndarray) -> int:
+        """
+        Calcul l'action à exécuter dans l'état.
+        """
+        # Nous utilisons une fonction d'activation soft max pour que les poids soient à la même échelle
+        action, _ = self.action(etat)
+        return action
 
     def trajectoire(self, env, reward_fonc, max_t: int = 1000) -> list[list, list, bool]:
         """
@@ -77,7 +86,7 @@ class PolitiqueRenforce(nn.Module):
             action, log_proba = self.action(etat)
             etat_suivant, recompense, fini, truncated, _ = env.step(action)
             if reward_fonc is not None:
-                recompense = reward_fonc(etat, action, recompense, etat_suivant, fini)
+                recompense = reward_fonc(etat_suivant, fini, truncated)
             recompenses.append(recompense)
             log_probas.append(log_proba)
             if fini:
@@ -113,34 +122,76 @@ class PolitiqueRenforce(nn.Module):
         return torch.cat(loss).sum()
 
     def train(
-        self, score_max, reward_func=None, nb_episodes: int = 5000, max_t: int = 1000, save_name: str = "model/modelRenforce.pth"
-    ) -> list:
+        self, reward_func=None, nb_episodes: int = 5000, max_t: int = 1000, save_name: str = "model/modelRenforce.pth"
+    ) -> tuple[dict, list, float, int]:
         """
-        Entraîne la politique en utilisant l'algorithme REINFORCE.
+        Entraîne la politique en utilisant l'algorithme REINFORCE tout en restaurant les paramètres initiaux.
+        
+        Args:
+            reward_func (callable, optional): Fonction de récompense personnalisée.
+            nb_episodes (int): Nombre maximum d'épisodes.
+            max_t (int): Nombre maximum de pas par épisode.
+            save_name (str): Chemin pour sauvegarder le modèle.
+
+        Returns:
+            tuple: (Paramètres entraînés, Historique des récompenses, Taux de succès, Nombre d'épisodes exécutés).
         """
+        # Sauvegarde des paramètres initiaux
+        original = deepcopy(self.state_dict())
+        
+        # Initialisation des métriques
         recompenses = []
         a_la_suite = 0
         nb_success = 0
-        for _ in range(nb_episodes):
+        score_max = 0
+
+        for ep in range(nb_episodes):
             self.optimizer.zero_grad()
-            recompense_ep, log_proba_ep, success = self.trajectoire(self.env,reward_func, max_t)
+
+            # Génération de trajectoire et calcul des récompenses
+            recompense_ep, log_proba_ep, success = self.trajectoire(self.env, reward_func, max_t)
             nb_success += success
+
+            # Calcul des retours cumulés
             retours_cum = self.calcul_retours_cumules(recompense_ep)
             recompenses.append(sum(recompense_ep))
+
+            # Calcul et application du gradient
             loss = self.loss(log_proba_ep, retours_cum)
             loss.backward()
             self.optimizer.step()
+    
 
-            if recompenses[-1] >= score_max:
+            # Condition d'arrêt si le score maximum est atteint plusieurs fois consécutivement
+            if recompenses[-1] == score_max:
                 a_la_suite += 1
+                score_max = recompenses[-1]
             else:
                 a_la_suite = 0
+            
+            if recompenses[-1] > score_max:
+                score_max = recompenses[-1]
+                a_la_suite = 0
+
             if a_la_suite == 10:
                 self.save(save_name)
                 break
-            #if ep % 100 == 0:
-                #print(f"Épisode: {ep}, Récompense: {sum(recompense_ep)}")
-        return recompenses
+
+            # Affichage des progrès tous les 100 épisodes
+            if ep % 100 == 0:
+                print(f"Épisode: {ep}, Récompense: {sum(recompense_ep)}")
+
+        # Sauvegarde des paramètres après entraînement
+        trained_state = deepcopy(self)
+
+        # Restauration des paramètres initiaux
+        self.load_state_dict(original)
+
+        # Calcul du taux de succès
+        taux_success = nb_success / nb_episodes
+
+        return trained_state, recompenses, taux_success, ep + 1
+
 
     def save(self, file: str):
         """
