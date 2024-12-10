@@ -1416,3 +1416,51 @@ def reward_func(observations: np.ndarray, terminated: bool, truncated: bool) -> 
 - and during the test: SR 0.64
 
 
+11:27:27 OllamaChat.py:31 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+11:27:35 OllamaChat.py:125 INFO
+	Response 0:
+
+11:27:39 OllamaChat.py:125 INFO
+	Response 1:
+
+11:35:10 VIRAL.py:244 INFO
+	Reward Function 1 Performance:
+
+11:35:10 VIRAL.py:246 INFO
+	pole_angle_diff : human 0.055114940825831155 llm 0.04918705071973414
+
+11:35:10 VIRAL.py:246 INFO
+	pole_position_diff : human 0.36497062372680494 llm 0.2400656832473256
+
+11:35:10 VIRAL.py:258 INFO
+	Reward Function 1:
+- during train: SR 0.0262, nb_ep 2003
+- during test: SR 0.84
+
+
+11:37:38 VIRAL.py:244 INFO
+	Reward Function 2 Performance:
+
+11:37:38 VIRAL.py:246 INFO
+	pole_angle_diff : human 0.055114940825831155 llm 0.05488831719901514
+
+11:37:38 VIRAL.py:246 INFO
+	pole_position_diff : human 0.36497062372680494 llm 0.3534762068419799
+
+11:37:38 VIRAL.py:258 INFO
+	Reward Function 2:
+- during train: SR 0.019, nb_ep 2086
+- during test: SR 0.79
+
+
