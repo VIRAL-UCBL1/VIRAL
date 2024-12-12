@@ -39,7 +39,6 @@ class VIRAL:
         """,
             options=options,
         )
-
         self.env = env
         self.objectives_metrics = objectives_metrics
         self.learning_method = learning_method
@@ -47,8 +46,10 @@ class VIRAL:
         self.logger = getLogger("VIRAL")
         self.stops_threads = threading.Event()
         self.lock = threading.Lock()
-        self.threads:list[threading.Thread] = []
-        self.threads.append(threading.Thread(target=self._learning, args=[self.memory[0]]))
+        self.threads: list[threading.Thread] = []
+        self.threads.append(
+            threading.Thread(target=self._learning, args=[self.memory[0]])
+        )
         self.threads[0].start()
         signal.signal(signal.SIGTERM, self.sigterm_handler)
         signal.signal(signal.SIGINT, self.sigterm_handler)
@@ -58,14 +59,16 @@ class VIRAL:
         for thread in self.threads:
             if thread.is_alive():
                 thread.join()
-        if len(threading.enumerate())>1:
+        if len(threading.enumerate()) > 1:
             for thread in threading.enumerate():
                 self.logger.error(f"{thread.name},({thread.ident}) is alive")
         else:
             self.logger.debug("end of main thread")
         sys.exit(0)
 
-    def generate_reward_function(self, task_description: str) -> Callable:
+    def generate_reward_function(
+        self, task_description: str, iterations: int = 1
+    ) -> List[State]:
         """
         Generate reward function using LLM
 
@@ -76,11 +79,11 @@ class VIRAL:
         Returns:
             Callable: Generated reward function
         """
-        #TODO a regarder de plus pres
+        # TODO a regarder de plus pres
         additional_options = {
             "temperature": 1,
         }
-
+        ### INIT STAGE ###
         for i in [1, 2]:
             prompt = f"""
         Complete the reward function for a {self.env.spec.name} environment.
@@ -100,17 +103,26 @@ class VIRAL:
             \"\"\"
         """
             self.llm.add_message(prompt)
-            response = self.llm.generate_response(stream=True, additional_options=additional_options)
+            response = self.llm.generate_response(
+                stream=True, additional_options=additional_options
+            )
             response = self.llm.print_Generator_and_return(response, i)
             reward_func, response = self._get_runnable_function(response)
             self.memory.append(State(i, reward_func, response))
+        best_idx, worst_idx = self.evaluate_policy(1, 2)
+        self.logger.debug(f"state to refine: {worst_idx}")
+        new_idx = self.self_refine_reward(worst_idx)
+        ### SECOND STAGE ###
+        for n in range(iterations - 1):
+            best_idx, worst_idx = self.evaluate_policy(best_idx, new_idx)
+            self.logger.debug(f"state to refine: {worst_idx}")
+            new_idx = self.self_refine_reward(worst_idx)
+        return self.memory
 
     def _get_code(self, response: str) -> str:
         cleaned_response = response.strip("```").replace("python", "").strip()
         if "def " not in cleaned_response:
-            raise ValueError(
-                "The answer does not contain a valid function definition."
-            )
+            raise ValueError("The answer does not contain a valid function definition.")
         self.logger.debug("Code nettoyé pour compilation :\n" + cleaned_response)
         return cleaned_response
 
@@ -124,7 +136,7 @@ class VIRAL:
             reward_func = self._compile_reward_function(response)
             state, _ = self.env.reset()
             action = self.learning_method.output(state)
-            next_observation, _ , terminated, truncated, _ = self.env.step(action)
+            next_observation, _, terminated, truncated, _ = self.env.step(action)
             self._test_reward_function(
                 reward_func,
                 observations=next_observation,
@@ -140,7 +152,7 @@ class VIRAL:
         except RuntimeError as e:
             self.logger.warning(f"Error execution {e}")
             return self._get_runnable_function(response, str(e))
-        
+
         return reward_func, response
 
     def _compile_reward_function(self, response: str) -> Callable:
@@ -182,9 +194,7 @@ class VIRAL:
         except Exception as e:
             raise RuntimeError(f"Error during reward function execution: {e}")
 
-    def self_refine_reward(
-        self, idx: int
-    ) -> Callable:
+    def self_refine_reward(self, idx: int) -> Callable:
         """
         Self-refinement of reward function based on performance
 
@@ -212,38 +222,36 @@ class VIRAL:
         refined_response = self.llm.generate_response(stream=True)
         refined_response = self.llm.print_Generator_and_return(refined_response)
         reward_func, refined_response = self._get_runnable_function(refined_response)
-        self.memory.append(State(len(self.memory)+1, reward_func, refined_response))
+        self.memory.append(State(len(self.memory), reward_func, refined_response))
 
-        return reward_func
-    
+        return len(self.memory) - 1
+
     def _learning(self, state: State) -> None:
-        """train a policy on an environment
-        """
-        self.logger.debug(f'state {state.idx} begin is learning')
-    
-        policy, perfs, sr, nb_ep = self.learning_method.train(reward_func=state.reward_func,
-            save_name=f"model/{self.learning_method}_{self.env.spec.name}{state.idx}.model", stop=self.stops_threads
+        """train a policy on an environment"""
+        self.logger.debug(f"state {state.idx} begin is learning")
+
+        policy, perfs, sr, nb_ep = self.learning_method.train(
+            reward_func=state.reward_func,
+            save_name=f"model/{self.learning_method}_{self.env.spec.name}{state.idx}.model",
+            stop=self.stops_threads,
         )
         self.memory[state.idx].set_policy(policy)
         observations, rewards, sr_test = self.test_policy(policy)
         perso_observations = []
         for objective_metric in self.objectives_metrics:
             perso_observations.append(objective_metric(observations))
-        self.memory[state.idx].set_performances({
-                'train_success_rate': sr,
-                'train_episodes': nb_ep,
-                'test_success_rate': sr_test,
-                'test_rewards': rewards,
-                'custom_metrics': perso_observations
-        })  # TODO maybe add in the chat this state
-        self.logger.debug(f'state {state.idx} as finished is learning')
+        self.memory[state.idx].set_performances(
+            {
+                "train_success_rate": sr,
+                "train_episodes": nb_ep,
+                "test_success_rate": sr_test,
+                "test_rewards": rewards,
+                "custom_metrics": perso_observations,
+            }
+        )  # TODO maybe add in to chat this state
+        self.logger.debug(f"state {state.idx} as finished is learning")
 
-    def evaluate_policy(
-        self,
-        score_max: int = 500,
-        num_episodes: int = 100,
-        visual: bool = False,
-    ) -> Dict:
+    def evaluate_policy(self, idx1: int, idx2: int) -> int:
         """
         Evaluate policy performance for multiple reward functions
 
@@ -256,18 +264,24 @@ class VIRAL:
         """
         if len(self.memory) < 2:
             self.logger.error("At least two reward functions are required.")
-
-        for i, state in enumerate(self.memory[-2:], 1):
-            self.threads.append(threading.Thread(target=self._learning, args=[state]))
-            self.threads[-1].start()
-        self.threads[-1].join()
-        self.threads[-2].join()
-        #TODO comparaison sur le success rate pour l'instant
-        if self.memory[-1].performances['test_success_rate'] > self.memory[-2].performances['test_success_rate']:
-            return len(self.memory) - 1
+        to_join: int = []
+        for i in [idx1, idx2]:
+            if self.memory[i].performances is None:
+                self.threads.append(
+                    threading.Thread(target=self._learning, args=[self.memory[i]])
+                )
+                self.threads[-1].start()
+                to_join.append(i)
+        for t in to_join:
+            self.threads[t].join()
+        # TODO comparaison sur le success rate pour l'instant
+        if (
+            self.memory[idx1].performances["test_success_rate"]
+            > self.memory[idx2].performances["test_success_rate"]
+        ):
+            return idx1, idx2
         else:
-            return len(self.memory) - 2
-
+            return idx2, idx1
 
     def test_policy(
         self,
@@ -280,7 +294,7 @@ class VIRAL:
         all_states = []
         nb_success = 0
         x_max = 0
-        x_min = 0 # avoid div by 0
+        x_min = 0  # avoid div by 0
         for epi in range(1, nb_episodes + 1):
             if self.stops_threads.is_set():
                 break

@@ -10,19 +10,29 @@ import torch.optim as optim
 from torch.distributions import Categorical
 
 
-class PolitiqueRenforce(nn.Module):
-    def __init__(self, env, couche_cachee: list, gamma: float = 0.99):
+class Reinforce(nn.Module):
+    def __init__(
+        self,
+        env,
+        couche_cachee: list,
+        nb_episodes: int = 2000,
+        max_t: int = 1000,
+        gamma: float = 0.99,
+    ):
         """
         env: Environnement Gymnasium
         couche_cachee: Liste des tailles des couches cachées (exemple [64, 32])
         gamma: Facteur de discount pour le calcul des retours cumulés
         det: Si la politique est déterministe ou stochastique
         """
-        super(PolitiqueRenforce, self).__init__()
+        super(Reinforce, self).__init__()
         self.dim_entree = env.observation_space.shape[0]
         self.dim_sortie = env.action_space.n
         self.gamma = gamma
         self.env = env
+
+        self.nb_episodes = nb_episodes
+        self.max_t = max_t
 
         # Créer dynamiquement les couches cachées
         self.couches_cachees = []
@@ -35,7 +45,7 @@ class PolitiqueRenforce(nn.Module):
         # La dernière couche qui produit la sortie
         self.fc_out = nn.Linear(input_size, self.dim_sortie)
         self.optimizer = optim.Adam(self.parameters(), lr=1e-3)
-        
+
     def __repr__(self):
         return "PolitiqueRenforce"
 
@@ -48,7 +58,9 @@ class PolitiqueRenforce(nn.Module):
         for layer in self.couches_cachees:
             x = F.relu(layer(x))
         x = self.fc_out(x)
-        return F.softmax(x, dim=1)  # Softmax pour obtenir une distribution de probabilité
+        return F.softmax(
+            x, dim=1
+        )  # Softmax pour obtenir une distribution de probabilité
 
     def action(self, etat: np.ndarray) -> tuple[int, torch.Tensor]:
         """
@@ -57,13 +69,15 @@ class PolitiqueRenforce(nn.Module):
         return: action à exécuter et la log-proba de cette action
         """
         if isinstance(etat, np.ndarray):
-            etat = torch.tensor(etat, dtype=torch.float).unsqueeze(0)  # Ajouter une dimension pour le batch
+            etat = torch.tensor(etat, dtype=torch.float).unsqueeze(
+                0
+            )  # Ajouter une dimension pour le batch
         proba = self.forward(etat)
         m = Categorical(proba)
         action = m.sample()
         log_proba = m.log_prob(action)
         return action.item(), log_proba
-    
+
     def output(self, etat: np.ndarray) -> int:
         """
         Calcul l'action à exécuter dans l'état.
@@ -72,29 +86,29 @@ class PolitiqueRenforce(nn.Module):
         action, _ = self.action(etat)
         return action
 
-    def trajectoire(self, env, reward_fonc, max_t: int = 1000) -> list[list, list, bool]:
+    def trajectoire(self, reward_fonc) -> list[list, list, bool]:
         """
         Simule une trajectoire dans l'environnement en utilisant la politique.
         env: Environnement Gymnasium
         max_t: nombre max de pas de la trajectoire
         return: liste des récompenses et liste des log-probas des actions prises et si la trajectoire est tronquée
         """
-        etat, _ = env.reset(seed=random.randint(0, 5000))
+        etat, _ = self.env.reset(seed=random.randint(0, 5000))
         recompenses = []
         log_probas = []
         is_success = False
-        for t in range(max_t):
+        for t in range(self.max_t):
             action, log_proba = self.action(etat)
-            etat_suivant, recompense, fini, truncated, _ = env.step(action)
+            etat_suivant, recompense, fini, truncated, _ = self.env.step(action)
             if reward_fonc is not None:
                 recompense = reward_fonc(etat_suivant, fini, truncated)
             recompenses.append(recompense)
             log_probas.append(log_proba)
             if fini:
-                return recompenses,log_probas, is_success
+                return recompenses, log_probas, is_success
             if truncated:
                 is_success = True
-                return recompenses,log_probas, is_success
+                return recompenses, log_probas, is_success
             etat = etat_suivant
 
         return recompenses, log_probas, is_success
@@ -119,15 +133,20 @@ class PolitiqueRenforce(nn.Module):
         retours_cumules: liste des retours cumulés pondérés
         return: perte
         """
-        loss = [-log_prob * retour for log_prob, retour in zip(log_probs, retours_cumules)]
+        loss = [
+            -log_prob * retour for log_prob, retour in zip(log_probs, retours_cumules)
+        ]
         return torch.cat(loss).sum()
 
     def train(
-        self, reward_func=None, nb_episodes: int = 5000, max_t: int = 1000, save_name: str = "model/modelRenforce.pth", stop: threading.Event|None = None
+        self,
+        reward_func=None,
+        save_name: str = "model/modelRenforce.pth",
+        stop: threading.Event | None = None,
     ) -> tuple[dict, list, float, int]:
         """
         Entraîne la politique en utilisant l'algorithme REINFORCE tout en restaurant les paramètres initiaux.
-        
+
         Args:
             reward_func (callable, optional): Fonction de récompense personnalisée.
             nb_episodes (int): Nombre maximum d'épisodes.
@@ -146,14 +165,14 @@ class PolitiqueRenforce(nn.Module):
         nb_success = 0
         score_max = 0
 
-        for ep in range(nb_episodes):
+        for ep in range(self.nb_episodes):
             if stop is not None:
                 if stop.is_set():
                     break
             self.optimizer.zero_grad()
 
             # Génération de trajectoire et calcul des récompenses
-            recompense_ep, log_proba_ep, success = cp_policy.trajectoire(cp_policy.env, reward_func, max_t)
+            recompense_ep, log_proba_ep, success = cp_policy.trajectoire(reward_func)
             nb_success += success
 
             # Calcul des retours cumulés
@@ -164,7 +183,6 @@ class PolitiqueRenforce(nn.Module):
             loss = cp_policy.loss(log_proba_ep, retours_cum)
             loss.backward()
             cp_policy.optimizer.step()
-    
 
             # Condition d'arrêt si le score maximum est atteint plusieurs fois consécutivement
             if recompenses[-1] == score_max:
@@ -172,7 +190,7 @@ class PolitiqueRenforce(nn.Module):
                 score_max = recompenses[-1]
             else:
                 a_la_suite = 0
-            
+
             if recompenses[-1] > score_max:
                 score_max = recompenses[-1]
                 a_la_suite = 0
@@ -182,10 +200,9 @@ class PolitiqueRenforce(nn.Module):
                 break
 
         # Calcul du taux de succès
-        taux_success = nb_success / nb_episodes
+        taux_success = nb_success / ep
 
         return cp_policy, recompenses, taux_success, ep + 1
-
 
     def save(self, file: str):
         """
