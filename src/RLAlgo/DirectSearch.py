@@ -1,6 +1,7 @@
 from copy import deepcopy
 from logging import getLogger
 
+import threading
 import numpy as np
 import torch
 
@@ -73,7 +74,7 @@ class PolitiqueDirectSearch:
         return total_rec, is_success
 
     def train(
-        self, reward_func=None, nb_episodes=5000, max_t=1000, save_name=""
+        self, reward_func=None, nb_episodes=5000, max_t=1000, save_name="", stop: threading.Event|None = None
     ) -> tuple[list, np.ndarray]:
         original_state: PolitiqueDirectSearch = deepcopy(self)
         bruit_std = 1e-2
@@ -83,6 +84,8 @@ class PolitiqueDirectSearch:
         nb_best_perf = 0
         nb_success = 0
         for i_episode in range(1, nb_episodes + 1):
+            if stop.is_set():
+                break
             perf, success = self.rollout(reward_func, max_t)
             nb_success += success
             perf_by_episode.append(perf)

@@ -3,10 +3,10 @@ from logging import getLogger
 
 import gymnasium as gym
 
-from DirectSearchAlgo import PolitiqueDirectSearch
+from RLAlgo.DirectSearch import PolitiqueDirectSearch
 from log.log_config import init_logger
 from ObjectivesMetrics import objective_metric_CartPole
-from RenfocementAlgo import PolitiqueRenforce
+from RLAlgo.Reinforce import PolitiqueRenforce
 from VIRAL import VIRAL
 
 if __name__ == "__main__":
@@ -21,8 +21,8 @@ if __name__ == "__main__":
         init_logger("INFO")
     logger = getLogger("VIRAL")
     env = gym.make("CartPole-v1")
-    #learning_method = PolitiqueDirectSearch(env)
-    learning_method = PolitiqueRenforce(env,couche_cachee=[64])
+    learning_method = PolitiqueDirectSearch(env)
+    #learning_method = PolitiqueRenforce(env,couche_cachee=[64])
     objectives_metrics = [objective_metric_CartPole]
     viral = VIRAL(learning_method, env, objectives_metrics)
     viral.generate_reward_function(

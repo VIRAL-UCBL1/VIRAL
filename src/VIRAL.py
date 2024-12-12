@@ -1,8 +1,11 @@
+import signal
+import sys
 import threading
 from logging import getLogger
 from typing import Callable, Dict, List
 
 import numpy as np
+from regex import D
 
 from OllamaChat import OllamaChat
 from State import State
@@ -42,11 +45,19 @@ class VIRAL:
         self.objectives_metrics = objectives_metrics
         self.learning_method = learning_method
         self.logger = getLogger("VIRAL")
-
-        self.lock = threading.Lock()  # TODO discust how to properly interrupt the tread
+        self.stops_threads = threading.Event()
+        self.lock = threading.Lock()
         self.initial_learning_thread = threading.Thread(target=self._initial_learning)
         self.initial_learning_thread.start()
         self.memory: List[State] = []
+        signal.signal(signal.SIGTERM, self.sigterm_handler)
+        signal.signal(signal.SIGINT, self.sigterm_handler)
+
+    def sigterm_handler(self, signal, frame):
+        self.stops_threads.set()
+        self.initial_learning_thread.join()
+        self.logger.debug("end of main thread")
+        sys.exit(0)
 
     def _initial_learning(self) -> None:
         """train a policy on a raw environment
@@ -55,7 +66,7 @@ class VIRAL:
         state = State(0)
         with self.lock:
             raw_policy, raw_perfs, raw_sr, raw_nb_ep = self.learning_method.train(
-                save_name=f"model/raw_{self.learning_method}_{self.env.spec.name}.model",
+                save_name=f"model/raw_{self.learning_method}_{self.env.spec.name}.model", stop=self.stops_threads
             )
             state.set_policy(raw_policy)
             raw_observations, raw_rewards, raw_sr_test = self.test_policy(raw_policy)
