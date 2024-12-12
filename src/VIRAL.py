@@ -1,9 +1,12 @@
+import threading
 from logging import getLogger
 from typing import Callable, Dict, List
-from State import State
+
 import numpy as np
-import threading
+
 from OllamaChat import OllamaChat
+from State import State
+
 
 class VIRAL:
     def __init__(
@@ -107,12 +110,30 @@ class VIRAL:
         """
 
         first_states: List = []
-        for i in range(1, 3): # TODO éviter qu'il fasse deux fois la même fonction
+        i = 1
+        same = False
+        while i < 3: 
+            if i != 1 and not(same):
+                prompt = f"Pleases notice that you already have generated a function for this task. it looks like this: {first_states[-1].reward_func_str}. Generate a diferent one."
             self.llm.add_message(prompt)
             response = self.llm.generate_response(stream=True, additional_options=additional_options)
             response = self.llm.print_Generator_and_return(response, i)
             reward_func, response = self._get_runnable_function(response)
-            first_states.append(State(i, reward_func, response))
+
+            if i == 1:
+                first_states.append(State(i, reward_func, response))
+                i += 1
+                same = False
+            else:
+                #regarder si la fonction générer est déjà dans la mémoire
+                for state in first_states:
+                    if state.reward_func_str == response:
+                        prompt = f"Function already generated, please provide a new one. Iteration {i+1}/{2}"
+                        same = True
+                    else:
+                        first_states.append(State(i, reward_func, response))
+                        i += 1
+                        same = False
         self.initial_learning_thread.join()
         self.memory.extend(first_states)
 
@@ -157,8 +178,6 @@ class VIRAL:
     def _compile_reward_function(self, response: str) -> Callable:
         """
         Compile the reward function from the LLM response.
-        TODO BUG avec ``` a la fin jsp pk mais on va trouver les gars ! Normalement réglé
-
         Args:
             response (str): LLM generated reward function.
 
@@ -265,7 +284,12 @@ class VIRAL:
                 'test_rewards': rewards,
                 'custom_metrics': perso_observations
             })
-        return 0  # TODO faire une fonction qui compare les evaluations de politiques
+        #TODO comparaison sur le success rate pour l'instant
+        if self.memory[-1].performances['test_success_rate'] > self.memory[-2].performances['test_success_rate']:
+            return len(self.memory) - 1
+        else:
+            return len(self.memory) - 2
+
 
     def test_policy(
         self,
@@ -306,41 +330,3 @@ class VIRAL:
             x - x_min / x_max - x_min for x in all_rewards
         ]  # Min-Max normalized
         return all_states, all_rewards, (nb_success / nb_episodes)
-
-    # def run_benchmark(
-    #     self, environments: List[gym.Env], num_iterations: int = 5
-    # ):  # TODO pas dans cette class
-    #     """
-    #     Run benchmark across multiple environments
-
-    #     Args:
-    #         environments (List[gym.Env]): List of environments to test
-    #         num_iterations (int): Number of iterations per environment
-    #     """
-    #     benchmark_results = {}
-
-    #     for env in environments:
-    #         env_results = []
-
-    #         for _ in range(num_iterations):
-    #             reward_func = self.generate_reward_function(
-    #                 task_description=env.unwrapped.spec.id, environment_type=""
-    #             )
-
-    #             # Evaluate and refine
-    #             performance = self.evaluate_policy(env, reward_func)
-    #             # performance = 0
-    #             refined_reward = self.self_refine_reward(reward_func, performance)
-
-    #             env_results.append(
-    #                 {
-    #                     "initial_performance": performance,
-    #                     "refined_performance": self.evaluate_policy(
-    #                         env, refined_reward
-    #                     ),
-    #                 }
-    #             )
-
-    #         benchmark_results[env.unwrapped.spec.id] = env_results
-
-    #     return benchmark_results

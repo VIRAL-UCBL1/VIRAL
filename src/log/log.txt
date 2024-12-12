@@ -2623,3 +2623,338 @@ def reward_func(observations:np.ndarray, terminated: bool, truncated: bool) -> f
 
  have this performances: {'train_success_rate': 0.3632, 'train_episodes': 5000, 'test_success_rate': 0.0, 'test_rewards': [np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf), np.float32(inf)], 'custom_metrics': [[{'pole_angle_diff': np.float32(0.0835332)}, {np.float32(0.07827401), 'pole_position_diff'}]]} with the policy DirectSearch
 
+14:26:19 OllamaChat.py:31 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+14:26:59 OllamaChat.py:125 INFO
+	Response 1:
+
+14:28:01 OllamaChat.py:125 INFO
+	Response 2:
+
+14:28:36 main.py:40 INFO
+	state 0: 
+reward function: 
+
+None
+
+ have this performances: {'train_success_rate': 0.4375, 'train_episodes': 48, 'test_success_rate': 0.8, 'test_rewards': [500.0, 500.0, 500.0, 500.0, 475.0, 500.0, 500.0, 496.0, 500.0, 430.0, 500.0, 450.0, 420.0, 467.0, 420.0, 500.0, 500.0, 485.0, 500.0, 500.0, 500.0, 500.0, 429.0, 436.0, 500.0, 446.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 393.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 494.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 380.0, 500.0, 394.0, 500.0, 500.0, 500.0, 500.0, 456.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 488.0, 500.0, 500.0, 500.0, 500.0, 464.0, 500.0, 427.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 458.0, 500.0, 500.0, 500.0, 500.0], 'custom_metrics': [[{'pole_angle_diff': 0.010270856688079534}, {0.30533161316926455, 'pole_position_diff'}]]} with the policy DirectSearch
+
+14:28:36 main.py:40 INFO
+	state 1: 
+reward function: 
+
+import numpy as np
+
+def reward_func(observations:np.ndarray, terminated: bool, truncated: bool) -> float:
+    """Reward function for CartPole
+
+    Args:
+        observations (np.ndarray): observation on the current state
+        terminated (bool): episode is terminated due a failure
+        truncated (bool): episode is truncated due a success
+
+    Returns:
+        float: The reward for the current step
+    """
+    if terminated or truncated:
+        return -1.0  # Penalize termination or truncation
+    else:
+        return 1.0  # Reward for every step taken
+
+ have this performances: {'train_success_rate': 0.24444444444444444, 'train_episodes': 45, 'test_success_rate': 0.99, 'test_rewards': [498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 464.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0], 'custom_metrics': [[{'pole_angle_diff': 0.04586870375226631}, {0.1140700102823953, 'pole_position_diff'}]]} with the policy DirectSearch
+
+14:28:36 main.py:40 INFO
+	state 2: 
+reward function: 
+
+import numpy as np
+
+def reward_func(observations:np.ndarray, terminated: bool, truncated: bool) -> float:
+    """Reward function for CartPole
+
+    Args:
+        observations (np.ndarray): observation on the current state
+        terminated (bool): episode is terminated due a failure
+        truncated (bool): episode is truncated due a success
+
+    Returns:
+        float: The reward for the current step
+    """
+    if terminated or truncated:
+        return -1.0  # Penalize termination or truncation
+    else:
+        return 1.0  # Reward for every step taken
+
+ have this performances: {'train_success_rate': 0.4482758620689655, 'train_episodes': 29, 'test_success_rate': 1.0, 'test_rewards': [498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0], 'custom_metrics': [[{'pole_angle_diff': 0.004499742607521624}, {0.03218219914174506, 'pole_position_diff'}]]} with the policy DirectSearch
+
+14:33:53 OllamaChat.py:31 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+14:34:00 OllamaChat.py:125 INFO
+	Response 1:
+
+14:34:02 OllamaChat.py:125 INFO
+	Response 2:
+
+14:34:09 main.py:40 INFO
+	state 0: 
+reward function: 
+
+None
+
+ have this performances: {'train_success_rate': 0.0880503144654088, 'train_episodes': 159, 'test_success_rate': 0.98, 'test_rewards': [500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 396.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 349.0, 500.0, 500.0], 'custom_metrics': [[{'pole_angle_diff': 0.007182186389475127}, {0.31868399678478476, 'pole_position_diff'}]]} with the policy DirectSearch
+
+14:34:09 main.py:40 INFO
+	state 1: 
+reward function: 
+
+def reward_func(observations: np.ndarray, terminated: bool, truncated: bool) -> float:
+    """Reward function for CartPole
+
+    Args:
+        observations (np.ndarray): observation on the current state
+        terminated (bool): episode is terminated due a failure
+        truncated (bool): episode is truncated due to a success
+
+    Returns:
+        float: The reward for the current step
+    """
+    if terminated or truncated:
+        return -1.0
+    else:
+        return 1.0
+
+ have this performances: {'train_success_rate': 0.20754716981132076, 'train_episodes': 53, 'test_success_rate': 1.0, 'test_rewards': [498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0], 'custom_metrics': [[{'pole_angle_diff': 0.008721574517015022}, {0.034671929604632466, 'pole_position_diff'}]]} with the policy DirectSearch
+
+14:34:09 main.py:40 INFO
+	state 2: 
+reward function: 
+
+def reward_func(observations: np.ndarray, terminated: bool, truncated: bool) -> float:
+    """Reward function for CartPole
+
+    Args:
+        observations (np.ndarray): observation on the current state
+        terminated (bool): episode is terminated due a failure
+        truncated (bool): episode is truncated due to a success
+
+    Returns:
+        float: The reward for the current step
+    """
+    if terminated or truncated:
+        return -1.0
+    else:
+        return 1.0
+
+ have this performances: {'train_success_rate': 0.2558139534883721, 'train_episodes': 43, 'test_success_rate': 0.99, 'test_rewards': [498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 493.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0], 'custom_metrics': [[{'pole_angle_diff': 0.023208941859675723}, {0.2554463315627292, 'pole_position_diff'}]]} with the policy DirectSearch
+
+14:34:20 OllamaChat.py:31 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+14:34:21 OllamaChat.py:125 INFO
+	Response 1:
+
+14:34:22 OllamaChat.py:125 INFO
+	Response 2:
+
+14:38:42 main.py:40 INFO
+	state 0: 
+reward function: 
+
+None
+
+ have this performances: {'train_success_rate': 0.017, 'train_episodes': 963, 'test_success_rate': 0.65, 'test_rewards': [500.0, 136.0, 162.0, 500.0, 500.0, 500.0, 500.0, 254.0, 500.0, 256.0, 500.0, 398.0, 234.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 321.0, 500.0, 340.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 104.0, 500.0, 500.0, 241.0, 166.0, 500.0, 500.0, 222.0, 383.0, 500.0, 179.0, 500.0, 500.0, 500.0, 428.0, 309.0, 500.0, 500.0, 500.0, 500.0, 410.0, 495.0, 500.0, 500.0, 391.0, 500.0, 500.0, 263.0, 500.0, 237.0, 401.0, 500.0, 500.0, 251.0, 500.0, 500.0, 500.0, 138.0, 334.0, 500.0, 500.0, 500.0, 298.0, 500.0, 500.0, 333.0, 500.0, 500.0, 500.0, 224.0, 204.0, 500.0, 500.0, 500.0, 500.0, 500.0, 452.0, 500.0, 473.0, 407.0, 380.0, 500.0, 500.0, 380.0, 465.0], 'custom_metrics': [[{'pole_angle_diff': 0.05397724633980757}, {0.44032130993577934, 'pole_position_diff'}]]} with the policy PolitiqueRenforce
+
+14:38:42 main.py:40 INFO
+	state 1: 
+reward function: 
+
+def reward_func(observations: np.ndarray, terminated: bool, truncated: bool) -> float:
+    if terminated or truncated:
+        return -1.0
+    else:
+        return 1.0
+
+ have this performances: {'train_success_rate': 0.021, 'train_episodes': 1957, 'test_success_rate': 0.81, 'test_rewards': [498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 152.0, 498.0, 498.0, 498.0, 498.0, 232.0, 498.0, 498.0, 498.0, 498.0, 438.0, 318.0, 208.0, 405.0, 498.0, 498.0, 498.0, 498.0, 139.0, 214.0, 498.0, 498.0, 498.0, 498.0, 193.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 372.0, 498.0, 498.0, 498.0, 421.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 440.0, 498.0, 498.0, 498.0, 498.0, 498.0, 114.0, 416.0, 498.0, 463.0, 498.0, 498.0, 276.0, 498.0, 498.0, 498.0, 498.0, 328.0, 498.0, 498.0, 498.0, 498.0, 498.0, 139.0, 498.0, 498.0, 410.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0], 'custom_metrics': [[{'pole_angle_diff': 0.050137994243591257}, {0.491773197243604, 'pole_position_diff'}]]} with the policy PolitiqueRenforce
+
+14:38:42 main.py:40 INFO
+	state 2: 
+reward function: 
+
+def reward_func(observations: np.ndarray, terminated: bool, truncated: bool) -> float:
+    if terminated or truncated:
+        return -1.0
+    else:
+        return 1.0
+
+ have this performances: {'train_success_rate': 0.013, 'train_episodes': 2345, 'test_success_rate': 0.84, 'test_rewards': [228.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 281.0, 379.0, 498.0, 498.0, 498.0, 408.0, 498.0, 471.0, 321.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 63.0, 498.0, 498.0, 330.0, 255.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 374.0, 498.0, 204.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 350.0, 498.0, 473.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 121.0, 498.0, 498.0, 498.0, 498.0, 493.0, 280.0, 498.0, 498.0, 498.0, 498.0], 'custom_metrics': [[{'pole_angle_diff': 0.04124242753070511}, {0.41113919671860494, 'pole_position_diff'}]]} with the policy PolitiqueRenforce
+
+15:07:52 OllamaChat.py:31 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+15:07:55 OllamaChat.py:125 INFO
+	Response 1:
+
+15:07:56 OllamaChat.py:125 INFO
+	Response 2:
+
+15:12:48 main.py:40 INFO
+	state 0: 
+reward function: 
+
+None
+
+ have this performances: {'train_success_rate': 0.0296, 'train_episodes': 1001, 'test_success_rate': 0.89, 'test_rewards': [500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 466.0, 500.0, 500.0, 500.0, 258.0, 413.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 209.0, 500.0, 500.0, 500.0, 500.0, 500.0, 490.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 300.0, 500.0, 500.0, 500.0, 500.0, 253.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 318.0, 500.0, 500.0, 500.0, 413.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 349.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 447.0, 500.0, 500.0, 500.0], 'custom_metrics': [[{'pole_angle_diff': 0.0479135517088513}, {0.34031999039808575, 'pole_position_diff'}]]} with the policy PolitiqueRenforce
+
+15:12:48 main.py:40 INFO
+	state 1: 
+reward function: 
+
+def reward_func(observations:np.ndarray, terminated: bool, truncated: bool) -> float:
+    if terminated or truncated:
+        return -100.0
+    else:
+        return 1.0
+
+ have this performances: {'train_success_rate': 0.017, 'train_episodes': 1901, 'test_success_rate': 0.65, 'test_rewards': [427.0701754385965, 427.0701754385965, 427.0701754385965, 242.0701754385965, 427.0701754385965, 175.0701754385965, 213.0701754385965, 427.0701754385965, 427.0701754385965, 200.0701754385965, 285.0701754385965, 237.0701754385965, 427.0701754385965, 427.0701754385965, 427.0701754385965, 427.0701754385965, 427.0701754385965, 427.0701754385965, 427.0701754385965, 165.0701754385965, 277.0701754385965, 427.0701754385965, 40.07017543859649, 47.07017543859649, 427.0701754385965, 427.0701754385965, 427.0701754385965, 427.0701754385965, 427.0701754385965, 427.0701754385965, 427.0701754385965, 414.0701754385965, 427.0701754385965, 427.0701754385965, 427.0701754385965, 409.0701754385965, 344.0701754385965, 427.0701754385965, 427.0701754385965, 17.070175438596493, 427.0701754385965, 54.07017543859649, 412.0701754385965, 316.0701754385965, 410.0701754385965, 427.0701754385965, 223.0701754385965, 427.0701754385965, 427.0701754385965, 301.0701754385965, 427.0701754385965, 427.0701754385965, 95.0701754385965, 365.0701754385965, 427.0701754385965, 427.0701754385965, 427.0701754385965, 427.0701754385965, 427.0701754385965, 427.0701754385965, 427.0701754385965, 233.0701754385965, 427.0701754385965, 427.0701754385965, 425.0701754385965, 427.0701754385965, 427.0701754385965, 202.0701754385965, 276.0701754385965, 427.0701754385965, 427.0701754385965, 206.0701754385965, 427.0701754385965, 427.0701754385965, 0.07017543859648967, 427.0701754385965, 427.0701754385965, 427.0701754385965, 427.0701754385965, 427.0701754385965, 427.0701754385965, 427.0701754385965, 427.0701754385965, 122.0701754385965, 427.0701754385965, 427.0701754385965, 427.0701754385965, 151.0701754385965, 427.0701754385965, 427.0701754385965, 112.0701754385965, 427.0701754385965, 427.0701754385965, 284.0701754385965, 382.0701754385965, 425.0701754385965, 81.0701754385965, 427.0701754385965, 427.0701754385965, 427.0701754385965], 'custom_metrics': [[{'pole_angle_diff': 0.05322886357888126}, {0.31915937912819825, 'pole_position_diff'}]]} with the policy PolitiqueRenforce
+
+15:12:48 main.py:40 INFO
+	state 2: 
+reward function: 
+
+def reward_func(observations:np.ndarray, terminated: bool, truncated: bool) -> float:
+    """Reward function for CartPole
+
+    Args:
+        observations (np.ndarray): observation on the current state
+        terminated (bool): episode is terminated due a failure
+        truncated (bool): episode is truncated due a success
+
+    Returns:
+        float: The reward for the current step
+    """
+    if terminated or truncated:
+        return -10.0  # Higher penalty for failure
+    else:
+        return 1.0  # Reward for each step taken
+
+ have this performances: {'train_success_rate': 0.0146, 'train_episodes': 2366, 'test_success_rate': 0.79, 'test_rewards': [489.0, 489.0, 292.0, 489.0, 489.0, 489.0, 489.0, 489.0, 489.0, 489.0, 489.0, 489.0, 489.0, 489.0, 489.0, 316.0, 489.0, 489.0, 489.0, 429.0, 489.0, 489.0, 489.0, 489.0, 489.0, 489.0, 489.0, 489.0, 489.0, 489.0, 489.0, 300.0, 489.0, 387.0, 489.0, 489.0, 489.0, 262.0, 489.0, 489.0, 489.0, 489.0, 489.0, 118.0, 489.0, 397.0, 423.0, 489.0, 489.0, 489.0, 489.0, 489.0, 489.0, 489.0, 489.0, 489.0, 334.0, 489.0, 489.0, 489.0, 430.0, 489.0, 489.0, 489.0, 263.0, 489.0, 489.0, 489.0, 489.0, 457.0, 489.0, 489.0, 489.0, 331.0, 402.0, 489.0, 489.0, 489.0, 489.0, 489.0, 451.0, 489.0, 489.0, 262.0, 489.0, 489.0, 489.0, 489.0, 401.0, 232.0, 489.0, 489.0, 435.0, 489.0, 489.0, 489.0, 489.0, 489.0, 489.0, 489.0], 'custom_metrics': [[{'pole_angle_diff': 0.050339445072405786}, {0.49670241965893897, 'pole_position_diff'}]]} with the policy PolitiqueRenforce
+
+15:19:04 OllamaChat.py:31 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+15:19:06 OllamaChat.py:125 INFO
+	Response 1:
+
+15:19:10 OllamaChat.py:125 INFO
+	Response 2:
+
+15:30:36 main.py:40 INFO
+	state 0: 
+reward function: 
+
+None
+
+ have this performances: {'train_success_rate': 0.0288, 'train_episodes': 816, 'test_success_rate': 0.8, 'test_rewards': [500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 435.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 388.0, 500.0, 317.0, 400.0, 500.0, 484.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 489.0, 500.0, 359.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 441.0, 434.0, 500.0, 500.0, 336.0, 500.0, 500.0, 476.0, 183.0, 500.0, 500.0, 481.0, 500.0, 500.0, 319.0, 424.0, 500.0, 500.0, 500.0, 178.0, 500.0, 490.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 167.0, 500.0, 166.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 302.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0], 'custom_metrics': [[{'pole_angle_diff': 0.05156778786952125}, {0.4457524300293248, 'pole_position_diff'}]]} with the policy PolitiqueRenforce
+
+15:30:36 main.py:40 INFO
+	state 1: 
+reward function: 
+
+import numpy as np
+
+def reward_func(observations:np.ndarray, terminated: bool, truncated: bool) -> float:
+    """Reward function for CartPole
+
+    Args:
+        observations (np.ndarray): observation on the current state
+        terminated (bool): episode is terminated due a failure
+        truncated (bool): episode is truncated due a success
+
+    Returns:
+        float: The reward for the current step
+    """
+    if terminated or truncated:
+        return -1.0  # Penalize termination or truncation
+    
+    return 1.0  # Reward for every other step
+
+ have this performances: {'train_success_rate': 0.0218, 'train_episodes': 2370, 'test_success_rate': 0.8, 'test_rewards': [498.0, 498.0, 498.0, 498.0, 498.0, 456.0, 436.0, 498.0, 300.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 250.0, 498.0, 498.0, 498.0, 498.0, 498.0, 415.0, 199.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 411.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 487.0, 498.0, 498.0, 402.0, 498.0, 498.0, 498.0, 498.0, 498.0, 137.0, 498.0, 498.0, 498.0, 498.0, 181.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 308.0, 498.0, 498.0, 388.0, 268.0, 498.0, 498.0, 498.0, 244.0, 498.0, 498.0, 498.0, 498.0, 498.0, 245.0, 498.0, 179.0, 498.0, 498.0, 498.0, 498.0, 498.0, 498.0, 357.0, 498.0, 87.0, 498.0, 498.0, 498.0, 391.0, 498.0, 498.0], 'custom_metrics': [[{'pole_angle_diff': 0.05147558339552308}, {0.4477612257357635, 'pole_position_diff'}]]} with the policy PolitiqueRenforce
+
+15:30:36 main.py:40 INFO
+	state 2: 
+reward function: 
+
+import numpy as np
+
+def reward_func(observations:np.ndarray, terminated: bool, truncated: bool) -> float:
+    """Reward function for CartPole
+
+    Args:
+        observations (np.ndarray): observation on the current state
+        terminated (bool): episode is terminated due a failure
+        truncated (bool): episode is truncated due a success
+
+    Returns:
+        float: The reward for the current step
+    """
+    if terminated or truncated:
+        return -1.0  # Penalize termination or truncation
+    
+    cart_position = observations[0]
+    pole_angle = observations[2]
+
+    # Reward based on how close to center and upright the cart is
+    position_reward = max(0, (4.8 - abs(cart_position)) / 9.6)
+    angle_reward = max(0, (np.pi/12 - abs(pole_angle)) / (np.pi/6))
+    
+    return 0.5 * position_reward + 0.5 * angle_reward
+
+ have this performances: {'train_success_rate': 0.293, 'train_episodes': 5000, 'test_success_rate': 0.98, 'test_rewards': [221.4122736167432, 220.23071828675128, 210.3464705835981, 227.09073082140162, 215.8048054855218, 226.21734303069945, 227.14510405707114, 213.12015226074644, 210.97180792955584, 219.15743498791764, 224.28853190369946, 226.35455902329517, 221.64495586457676, 227.18430050242523, 212.46430664869865, 217.32885957242124, 213.96735957377544, 198.49947429214745, 222.43081699781547, 226.39765812278551, 211.17181667220171, 216.69537187307796, 224.3086034928488, 218.58493046415612, 215.17919353979084, 187.77619286000936, 222.46367729443057, 219.31623285511344, 218.18522243927518, 222.44875435543975, 209.46421109476097, 217.5267285725286, 218.66584214357752, 215.43782733827163, 224.45660779881376, 222.16575175381902, 219.48533897281825, 215.30332374712788, 218.5069158775751, 209.03164817424403, 222.01788556885367, 225.41614317726055, 220.25746397346646, 202.05729896456958, 217.10436461587315, 221.85616559596386, 208.62716644738254, 221.40387801049184, 226.68100277130296, 222.52863313563674, 214.55497352259783, 223.29952919230516, 222.90575950009804, 212.05791040344636, 206.5346950648388, 214.0191272934526, 229.08035898909992, 219.30266479373194, 207.76495086048112, 212.28208004310852, 220.45891836883735, 209.13947426124236, 203.26486909252412, 215.30225268395282, 225.03639856955962, 220.0637112509122, 216.0463927428943, 213.5367610067931, 226.08566464133816, 222.1676316308628, 233.71521751610592, 222.8521534788946, 222.80289512022452, 220.08246759425788, 224.46542810200546, 213.7494730069345, 230.11352305675422, 214.78407099350432, 220.35301648054178, 215.30699905372842, 220.4668329280276, 227.14294773823593, 216.62816505814493, 209.84880544659086, 222.13112276011637, 215.64465962709875, 213.23221185933585, 216.95654958149785, 212.93913127891702, 213.98455222112173, 221.0588404705968, 225.69258201119408, 225.99550400740017, 200.5268161923147, 226.3126767605407, 220.49850754340068, 212.7084182590191, 226.11084334598272, 217.8877770192117, 215.0419960644913], 'custom_metrics': [[{'pole_angle_diff': 0.03478633610715524}, {0.5275800339823457, 'pole_position_diff'}]]} with the policy PolitiqueRenforce
+
