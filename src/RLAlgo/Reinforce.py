@@ -138,7 +138,7 @@ class PolitiqueRenforce(nn.Module):
             tuple: (Paramètres entraînés, Historique des récompenses, Taux de succès, Nombre d'épisodes exécutés).
         """
         # Sauvegarde des paramètres initiaux
-        original = deepcopy(self.state_dict())
+        cp_policy = deepcopy(self)
 
         # Initialisation des métriques
         recompenses = []
@@ -153,17 +153,17 @@ class PolitiqueRenforce(nn.Module):
             self.optimizer.zero_grad()
 
             # Génération de trajectoire et calcul des récompenses
-            recompense_ep, log_proba_ep, success = self.trajectoire(self.env, reward_func, max_t)
+            recompense_ep, log_proba_ep, success = cp_policy.trajectoire(cp_policy.env, reward_func, max_t)
             nb_success += success
 
             # Calcul des retours cumulés
-            retours_cum = self.calcul_retours_cumules(recompense_ep)
+            retours_cum = cp_policy.calcul_retours_cumules(recompense_ep)
             recompenses.append(sum(recompense_ep))
 
             # Calcul et application du gradient
-            loss = self.loss(log_proba_ep, retours_cum)
+            loss = cp_policy.loss(log_proba_ep, retours_cum)
             loss.backward()
-            self.optimizer.step()
+            cp_policy.optimizer.step()
     
 
             # Condition d'arrêt si le score maximum est atteint plusieurs fois consécutivement
@@ -178,23 +178,13 @@ class PolitiqueRenforce(nn.Module):
                 a_la_suite = 0
 
             if a_la_suite == 10:
-                self.save(save_name)
+                cp_policy.save(save_name)
                 break
-
-            # Affichage des progrès tous les 100 épisodes
-            if ep % 100 == 0:
-                print(f"Épisode: {ep}, Récompense: {sum(recompense_ep)}")
-
-        # Sauvegarde des paramètres après entraînement
-        trained_state = deepcopy(self)
-
-        # Restauration des paramètres initiaux
-        self.load_state_dict(original)
 
         # Calcul du taux de succès
         taux_success = nb_success / nb_episodes
 
-        return trained_state, recompenses, taux_success, ep + 1
+        return cp_policy, recompenses, taux_success, ep + 1
 
 
     def save(self, file: str):

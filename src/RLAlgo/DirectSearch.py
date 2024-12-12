@@ -52,7 +52,7 @@ class PolitiqueDirectSearch:
         self.poids = param[0]
         self.det = param[1]
 
-    def rollout(self, reward_func, max_t=1000) -> int:
+    def rollout(self, policy, reward_func, max_t=1000) -> int:
         """
         execute un episode sur l'environnement env avec la politique et renvoie la somme des recompenses obtenues sur l'épisode
         """
@@ -76,10 +76,10 @@ class PolitiqueDirectSearch:
     def train(
         self, reward_func=None, nb_episodes=5000, max_t=1000, save_name="", stop: threading.Event|None = None
     ) -> tuple[list, np.ndarray]:
-        original_state: PolitiqueDirectSearch = deepcopy(self)
+        cp_policy: PolitiqueDirectSearch = deepcopy(self)
         bruit_std = 1e-2
         meilleur_perf = 0
-        meilleur_poid = self.get_poids()
+        meilleur_poid = cp_policy.get_poids()
         perf_by_episode = list()
         nb_best_perf = 0
         nb_success = 0
@@ -87,7 +87,7 @@ class PolitiqueDirectSearch:
             if stop is not None:
                 if stop.is_set():
                     break
-            perf, success = self.rollout(reward_func, max_t)
+            perf, success = cp_policy.rollout(reward_func, max_t)
             nb_success += success
             perf_by_episode.append(perf)
 
@@ -99,7 +99,7 @@ class PolitiqueDirectSearch:
                 break
             if perf >= meilleur_perf:
                 meilleur_perf = perf
-                meilleur_poid = self.get_poids()
+                meilleur_poid = cp_policy.get_poids()
                 if perf > meilleur_perf:
                     nb_best_perf = 0
                 # reduction de la variance du bruit
@@ -108,15 +108,11 @@ class PolitiqueDirectSearch:
                 # augmentation de la variance du bruit
                 bruit_std = min(2, bruit_std * 2)
             # On calcule le bruit en fonction de la variance
-            bruit = np.random.normal(0, bruit_std, self.dim_entree * self.dim_sortie)
+            bruit = np.random.normal(0, bruit_std, cp_policy.dim_entree * cp_policy.dim_sortie)
             # Reshape le bruit pour qu'il ait la même taille que les poids
-            bruit = bruit.reshape(self.dim_entree, self.dim_sortie)
-            if i_episode % 100 == 0:
-                print(f"Épisode: {i_episode}, Récompense: {perf}")
+            bruit = bruit.reshape(cp_policy.dim_entree, cp_policy.dim_sortie)
             # On ajoute le bruit aux poids
-            self.set_poids(meilleur_poid + bruit)
+            cp_policy.set_poids(meilleur_poid + bruit)
         if save_name is not None:
-            self.save(save_name)
-        trained_policy: PolitiqueDirectSearch = deepcopy(self)
-        self.__dict__.update(original_state.__dict__)
-        return trained_policy, perf_by_episode, (nb_success / i_episode), i_episode
+            cp_policy.save(save_name)
+        return cp_policy, perf_by_episode, (nb_success / i_episode), i_episode

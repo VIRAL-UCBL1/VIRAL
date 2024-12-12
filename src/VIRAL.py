@@ -56,35 +56,14 @@ class VIRAL:
     def sigterm_handler(self, signal, frame):
         self.stops_threads.set()
         for thread in self.threads:
-            thread.join()
+            if thread.is_alive():
+                thread.join()
         if len(threading.enumerate())>1:
             for thread in threading.enumerate():
                 self.logger.error(f"{thread.name},({thread.ident}) is alive")
         else:
             self.logger.debug("end of main thread")
         sys.exit(0)
-
-    def _learning(self, state: State) -> None:
-        """train a policy on an environment
-        """
-        self.logger.debug('learning begin')
-    
-        policy, perfs, sr, nb_ep = self.learning_method.train(reward_func=state.reward_func,
-            save_name=f"model/{self.learning_method}_{self.env.spec.name}{state.idx}.model", stop=self.stops_threads
-        )
-        self.memory[state.idx].set_policy(policy)
-        observations, rewards, sr_test = self.test_policy(policy)
-        perso_observations = []
-        for objective_metric in self.objectives_metrics:
-            perso_observations.append(objective_metric(observations))
-        self.memory[state.idx].set_performances({
-                'train_success_rate': sr,
-                'train_episodes': nb_ep,
-                'test_success_rate': sr_test,
-                'test_rewards': rewards,
-                'custom_metrics': perso_observations
-        })  # TODO maybe add in the chat this state
-        self.logger.debug('end of learning')
 
     def generate_reward_function(self, task_description: str) -> Callable:
         """
@@ -236,6 +215,28 @@ class VIRAL:
         self.memory.append(State(len(self.memory)+1, reward_func, refined_response))
 
         return reward_func
+    
+    def _learning(self, state: State) -> None:
+        """train a policy on an environment
+        """
+        self.logger.debug(f'state {state.idx} begin is learning')
+    
+        policy, perfs, sr, nb_ep = self.learning_method.train(reward_func=state.reward_func,
+            save_name=f"model/{self.learning_method}_{self.env.spec.name}{state.idx}.model", stop=self.stops_threads
+        )
+        self.memory[state.idx].set_policy(policy)
+        observations, rewards, sr_test = self.test_policy(policy)
+        perso_observations = []
+        for objective_metric in self.objectives_metrics:
+            perso_observations.append(objective_metric(observations))
+        self.memory[state.idx].set_performances({
+                'train_success_rate': sr,
+                'train_episodes': nb_ep,
+                'test_success_rate': sr_test,
+                'test_rewards': rewards,
+                'custom_metrics': perso_observations
+        })  # TODO maybe add in the chat this state
+        self.logger.debug(f'state {state.idx} as finished is learning')
 
     def evaluate_policy(
         self,
@@ -257,7 +258,10 @@ class VIRAL:
             self.logger.error("At least two reward functions are required.")
 
         for i, state in enumerate(self.memory[-2:], 1):
-            self._learning(state)
+            self.threads.append(threading.Thread(target=self._learning, args=[state]))
+            self.threads[-1].start()
+        self.threads[-1].join()
+        self.threads[-2].join()
         #TODO comparaison sur le success rate pour l'instant
         if self.memory[-1].performances['test_success_rate'] > self.memory[-2].performances['test_success_rate']:
             return len(self.memory) - 1

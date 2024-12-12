@@ -38,6 +38,6 @@ if __name__ == "__main__":
     idx = viral.evaluate_policy()
     for states in viral.memory:
         logger.info(states)
-    # viral.self_refine_reward(idx)
-    # idx = viral.evaluate_policy(objectives_metrics=objective_metric)
+    viral.self_refine_reward(idx)
+    idx = viral.evaluate_policy()
 
