@@ -1,5 +1,6 @@
 import random
 from copy import deepcopy
+import threading
 
 import numpy as np
 import torch
@@ -122,7 +123,7 @@ class PolitiqueRenforce(nn.Module):
         return torch.cat(loss).sum()
 
     def train(
-        self, reward_func=None, nb_episodes: int = 5000, max_t: int = 1000, save_name: str = "model/modelRenforce.pth"
+        self, reward_func=None, nb_episodes: int = 5000, max_t: int = 1000, save_name: str = "model/modelRenforce.pth", stop: threading.Event|None = None
     ) -> tuple[dict, list, float, int]:
         """
         Entraîne la politique en utilisant l'algorithme REINFORCE tout en restaurant les paramètres initiaux.
@@ -138,7 +139,7 @@ class PolitiqueRenforce(nn.Module):
         """
         # Sauvegarde des paramètres initiaux
         original = deepcopy(self.state_dict())
-        
+
         # Initialisation des métriques
         recompenses = []
         a_la_suite = 0
@@ -146,6 +147,9 @@ class PolitiqueRenforce(nn.Module):
         score_max = 0
 
         for ep in range(nb_episodes):
+            if stop is not None:
+                if stop.is_set():
+                    break
             self.optimizer.zero_grad()
 
             # Génération de trajectoire et calcul des récompenses

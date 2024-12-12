@@ -5,7 +5,6 @@ from logging import getLogger
 from typing import Callable, Dict, List
 
 import numpy as np
-from regex import D
 
 from OllamaChat import OllamaChat
 from State import State
@@ -40,49 +39,52 @@ class VIRAL:
         """,
             options=options,
         )
-        
+
         self.env = env
         self.objectives_metrics = objectives_metrics
         self.learning_method = learning_method
+        self.memory: List[State] = [State(0)]
         self.logger = getLogger("VIRAL")
         self.stops_threads = threading.Event()
         self.lock = threading.Lock()
-        self.initial_learning_thread = threading.Thread(target=self._initial_learning)
-        self.initial_learning_thread.start()
-        self.memory: List[State] = []
+        self.threads:list[threading.Thread] = []
+        self.threads.append(threading.Thread(target=self._learning, args=[self.memory[0]]))
+        self.threads[0].start()
         signal.signal(signal.SIGTERM, self.sigterm_handler)
         signal.signal(signal.SIGINT, self.sigterm_handler)
 
     def sigterm_handler(self, signal, frame):
         self.stops_threads.set()
-        self.initial_learning_thread.join()
-        self.logger.debug("end of main thread")
+        for thread in self.threads:
+            thread.join()
+        if len(threading.enumerate())>1:
+            for thread in threading.enumerate():
+                self.logger.error(f"{thread.name},({thread.ident}) is alive")
+        else:
+            self.logger.debug("end of main thread")
         sys.exit(0)
 
-    def _initial_learning(self) -> None:
-        """train a policy on a raw environment
+    def _learning(self, state: State) -> None:
+        """train a policy on an environment
         """
-        self.logger.debug('initial learning begin')
-        state = State(0)
-        with self.lock:
-            raw_policy, raw_perfs, raw_sr, raw_nb_ep = self.learning_method.train(
-                save_name=f"model/raw_{self.learning_method}_{self.env.spec.name}.model", stop=self.stops_threads
-            )
-            state.set_policy(raw_policy)
-            raw_observations, raw_rewards, raw_sr_test = self.test_policy(raw_policy)
-            perso_observations = []
-            for objective_metric in self.objectives_metrics:
-                perso_observations.append(objective_metric(raw_observations))
-            state.set_performances({
-                    'train_success_rate': raw_sr,
-                    'train_episodes': raw_nb_ep,
-                    'test_success_rate': raw_sr_test,
-                    'test_rewards': raw_rewards,
-                    'custom_metrics': perso_observations
-            })
-            self.memory.append(state)  # TODO maybe add in the chat this state
-        self.logger.debug('end of initial learning')
-
+        self.logger.debug('learning begin')
+    
+        policy, perfs, sr, nb_ep = self.learning_method.train(reward_func=state.reward_func,
+            save_name=f"model/{self.learning_method}_{self.env.spec.name}{state.idx}.model", stop=self.stops_threads
+        )
+        self.memory[state.idx].set_policy(policy)
+        observations, rewards, sr_test = self.test_policy(policy)
+        perso_observations = []
+        for objective_metric in self.objectives_metrics:
+            perso_observations.append(objective_metric(observations))
+        self.memory[state.idx].set_performances({
+                'train_success_rate': sr,
+                'train_episodes': nb_ep,
+                'test_success_rate': sr_test,
+                'test_rewards': rewards,
+                'custom_metrics': perso_observations
+        })  # TODO maybe add in the chat this state
+        self.logger.debug('end of learning')
 
     def generate_reward_function(self, task_description: str) -> Callable:
         """
@@ -100,7 +102,7 @@ class VIRAL:
             "temperature": 1,
         }
 
-        for i in range(2):
+        for i in [1, 2]:
             prompt = f"""
         Complete the reward function for a {self.env.spec.name} environment.
         Task Description: {task_description} Iteration {i+1}/{2}
@@ -117,36 +119,12 @@ class VIRAL:
             Returns:
                 float: The reward for the current step
             \"\"\"
-            
         """
-
-        first_states: List = []
-        i = 1
-        same = False
-        while i < 3: 
-            if i != 1 and not(same):
-                prompt = f"Pleases notice that you already have generated a function for this task. it looks like this: {first_states[-1].reward_func_str}. Generate a diferent one."
             self.llm.add_message(prompt)
             response = self.llm.generate_response(stream=True, additional_options=additional_options)
             response = self.llm.print_Generator_and_return(response, i)
             reward_func, response = self._get_runnable_function(response)
-
-            if i == 1:
-                first_states.append(State(i, reward_func, response))
-                i += 1
-                same = False
-            else:
-                #regarder si la fonction générer est déjà dans la mémoire
-                for state in first_states:
-                    if state.reward_func_str == response:
-                        prompt = f"Function already generated, please provide a new one. Iteration {i+1}/{2}"
-                        same = True
-                    else:
-                        first_states.append(State(i, reward_func, response))
-                        i += 1
-                        same = False
-        self.initial_learning_thread.join()
-        self.memory.extend(first_states)
+            self.memory.append(State(i, reward_func, response))
 
     def _get_code(self, response: str) -> str:
         cleaned_response = response.strip("```").replace("python", "").strip()
@@ -279,22 +257,7 @@ class VIRAL:
             self.logger.error("At least two reward functions are required.")
 
         for i, state in enumerate(self.memory[-2:], 1):
-            policy, perfs, sr, nb_ep = self.learning_method.train(
-                state.reward_func,
-                save_name=f"model/{self.learning_method}_{self.env.spec.name}_reward{i}.model",
-            )
-            state.set_policy(policy)
-            observations, rewards, sr_test = self.test_policy(policy, state.reward_func)
-            perso_observations = []
-            for objective_metric in self.objectives_metrics:
-                perso_observations.append(objective_metric(observations))
-            state.set_performances({
-                'train_success_rate': sr,
-                'train_episodes': nb_ep,
-                'test_success_rate': sr_test,
-                'test_rewards': rewards,
-                'custom_metrics': perso_observations
-            })
+            self._learning(state)
         #TODO comparaison sur le success rate pour l'instant
         if self.memory[-1].performances['test_success_rate'] > self.memory[-2].performances['test_success_rate']:
             return len(self.memory) - 1
@@ -315,6 +278,8 @@ class VIRAL:
         x_max = 0
         x_min = 0 # avoid div by 0
         for epi in range(1, nb_episodes + 1):
+            if self.stops_threads.is_set():
+                break
             total_reward = 0
             state, _ = self.env.reset()
             for i in range(1, max_t + 1):

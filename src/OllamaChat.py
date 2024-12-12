@@ -122,7 +122,7 @@ class OllamaChat:
         Returns:
             - the response formalized if is was a generator, the response itself otherwise.
         """
-        self.logger.info(f"Response {number}:")
+        self.logger.debug(f"Response {number}:")
         if isinstance(response, Generator):
             response_gen = response
             response = ""

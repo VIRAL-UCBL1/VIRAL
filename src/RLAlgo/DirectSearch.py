@@ -84,8 +84,9 @@ class PolitiqueDirectSearch:
         nb_best_perf = 0
         nb_success = 0
         for i_episode in range(1, nb_episodes + 1):
-            if stop.is_set():
-                break
+            if stop is not None:
+                if stop.is_set():
+                    break
             perf, success = self.rollout(reward_func, max_t)
             nb_success += success
             perf_by_episode.append(perf)
