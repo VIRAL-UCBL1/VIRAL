@@ -46,8 +46,8 @@ class Reinforce(nn.Module):
         self.fc_out = nn.Linear(input_size, self.dim_sortie)
         self.optimizer = optim.Adam(self.parameters(), lr=1e-3)
 
-    def __repr__(self):
-        return "PolitiqueRenforce"
+    def __repr__(self) -> str:
+        return "PolitiqueReinforce"
 
     def forward(self, etat: torch.Tensor) -> torch.Tensor:
         """
@@ -141,7 +141,7 @@ class Reinforce(nn.Module):
     def train(
         self,
         reward_func=None,
-        save_name: str = "model/modelRenforce.pth",
+        save_name: str = "",
         stop: threading.Event | None = None,
     ) -> tuple[dict, list, float, int]:
         """
@@ -206,12 +206,12 @@ class Reinforce(nn.Module):
 
     def save(self, file: str):
         """
-        Sauvegarde le modèle.
+        save the model.
         """
         torch.save(self.state_dict(), file)
 
     def load(self, file: str):
         """
-        Charge un modèle sauvegardé.
+        load the model form file
         """
         self.load_state_dict(torch.load(file))
