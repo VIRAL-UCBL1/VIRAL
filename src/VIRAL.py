@@ -1,3 +1,4 @@
+import random
 import signal
 import sys
 import threading
@@ -82,8 +83,31 @@ class VIRAL:
         # TODO a regarder de plus pres
         additional_options = {
             "temperature": 1,
+            #"num_predict": 3, # l'impression que ça change rien a creuser
+            
+            #"mirostat" : 1,
+            #"mirostat_eta" : 0.01, #gère la vitesse de réponses du model (0.1 par défaut) plus c'est petit plus c'est lent
+            #"mirostat_tau" : 4.0, #gère la balance entre la diversité et la coherence des réponses (5.0 par défaut) plus c'est petit plus c'est focus et cohérent
+            
+            #num_ctx": 2048, # nombre de tokens contextuels (2048 par défaut peut être pas nécessaire de changer)
+            
+            #repeat_last_n": 64, # combien le model regarde en arrière pour éviter de répéter les réponses (64 par défaut large pour nous)
+            
+            "repeat_penalty": 1.5, # pénalité pour éviter de répéter les réponses (1.1 par défaut au mac 1.5 intéressant a modificer je pense)
+            
+            #"stop": "stop you here" # pour stopper la génération de texte pas intéressant pour nous
+            
+            "tfs_z": 1.2, #reduire l'impacte des token les moins "pertinents" (1.0 par défaut pour désactiver 2.0 max)
+            
+            #"top_k": 30, #reduit la probabilité de générer des non-sens (40 par défaut, 100 pour générer des réponses plus diverses, 10 pour des réponses plus "conservatrices")
+            #"top_p": 0.95, #marche avec le top_k une forte valeur pour des texte plus diverses (0.9 par défaut)
+            #"min_p": 0.05, #alternative au top_p, vise a s'aéssurer de la balance entre qualité et diversité (0.0 par défaut)
+            
+            #"seed": 42, # a utiliser pour la reproductibilité des résultats (important si publication)
         }
         ### INIT STAGE ###
+        if (additional_options.get("seed") is None):
+            additional_options["seed"] = random.randint(0, 1000000)
         for i in [1, 2]:
             prompt = f"""
         Complete the reward function for a {self.env.spec.name} environment.
@@ -106,17 +130,17 @@ class VIRAL:
             response = self.llm.generate_response(
                 stream=True, additional_options=additional_options
             )
+            self.logger.info(f"additional options: {additional_options}")
             response = self.llm.print_Generator_and_return(response, i)
             reward_func, response = self._get_runnable_function(response)
             self.memory.append(State(i, reward_func, response))
         best_idx, worst_idx = self.evaluate_policy(1, 2)
         self.logger.debug(f"state to refine: {worst_idx}")
-        new_idx = self.self_refine_reward(worst_idx)
         ### SECOND STAGE ###
         for n in range(iterations - 1):
+            new_idx = self.self_refine_reward(worst_idx)
             best_idx, worst_idx = self.evaluate_policy(best_idx, new_idx)
             self.logger.debug(f"state to refine: {worst_idx}")
-            new_idx = self.self_refine_reward(worst_idx)
         return self.memory
 
     def _get_code(self, response: str) -> str:

@@ -3,9 +3,9 @@ from logging import getLogger
 
 import gymnasium as gym
 
-from RLAlgo.DirectSearch import DirectSearch
 from log.log_config import init_logger
 from ObjectivesMetrics import objective_metric_CartPole
+from RLAlgo.DirectSearch import DirectSearch
 from RLAlgo.Reinforce import Reinforce
 from VIRAL import VIRAL
 
@@ -36,7 +36,7 @@ if __name__ == "__main__":
         3 Pole Angular Velocity -Inf Inf
         Since the goal is to keep the pole upright for as long as possible.
         """,
-        iterations=3,
+        iterations=1,
     )
     for state in res:
         logger.info(state)

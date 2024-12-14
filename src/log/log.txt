@@ -3740,3 +3740,1197 @@ def reward_func(observations: np.ndarray, terminated: bool, truncated: bool) -> 
 
  isn't trained yet
 
+10:29:22 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+10:29:31 VIRAL.py:148 WARNING
+	The answer does not contain a valid function definition.
+
+10:29:37 VIRAL.py:148 WARNING
+	The answer does not contain a valid function definition.
+
+10:33:38 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+10:33:40 VIRAL.py:148 WARNING
+	The answer does not contain a valid function definition.
+
+10:33:47 VIRAL.py:148 WARNING
+	The answer does not contain a valid function definition.
+
+10:35:05 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+10:35:08 VIRAL.py:148 WARNING
+	The answer does not contain a valid function definition.
+
+10:35:14 VIRAL.py:148 WARNING
+	The answer does not contain a valid function definition.
+
+10:36:15 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+10:36:17 VIRAL.py:148 WARNING
+	The answer does not contain a valid function definition.
+
+10:36:25 VIRAL.py:148 WARNING
+	The answer does not contain a valid function definition.
+
+11:00:12 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+11:01:10 main.py:42 INFO
+	state 0: 
+reward function: 
+
+None
+
+ isn't trained yet
+
+11:01:10 main.py:42 INFO
+	state 1: 
+reward function: 
+
+def reward_func(observations: np.ndarray, terminated: bool, truncated: bool) -> float:
+    """Reward function for CartPole
+
+    Args:
+        observations (np.ndarray): observation on the current state
+        terminated (bool): episode is terminated due a failure
+        truncated (bool): episode is truncated due a success
+
+    Returns:
+        float: The reward for the current step
+    """
+    angle = observations[2]
+    
+    if terminated or truncated:
+        return -1.0
+    else:
+        if np.abs(angle) < 0.2 * np.pi / 180:
+            return 1.0
+        else:
+            return -0.5
+
+ Performances: 
+
+{'train_success_rate': 0.0, 'train_episodes': 2000, 'test_success_rate': 0.0, 'test_rewards': [10.0, 10.0, 9.0, 9.0, 10.0, 9.0, 9.0, 9.0, 9.0, 10.0, 9.0, 9.0, 9.0, 9.0, 9.0, 10.0, 10.0, 10.0, 8.0, 10.0, 10.0, 11.0, 10.0, 19.0, 9.0, 13.0, 10.0, 5.0, 14.0, 9.0, 18.0, 9.0, 9.0, 5.0, 10.0, 9.0, 19.0, 14.0, 5.0, 9.0, 4.0, 10.0, 38.0, 8.0, 9.0, 4.0, 5.0, 5.0, 19.0, 9.0, 5.0, 4.0, 23.0, 5.0, 5.0, 5.0, 5.0, 5.0, 9.0, 18.0, 5.0, 4.0, 5.0, 20.0, 9.0, 21.0, 5.0, 9.0, 9.0, 5.0, 4.0, 9.0, 4.0, 5.0, 4.0, 5.0, 5.0, 5.0, 20.0, 13.0, 5.0, 10.0, 4.0, 5.0, 8.0, 10.0, 19.0, 30.0, 5.0, 52.0, 15.0, 5.0, 9.0, 10.0, 5.0, 5.0, 10.0, 14.0, 14.0, 9.0], 'custom_metrics': [[{'pole_angle_diff': 0.0888961835340872}, {'pole_position_diff': 0.06476298241907621}]]}
+
+ Policy: PolitiqueReinforce
+
+11:01:10 main.py:42 INFO
+	state 2: 
+reward function: 
+
+def reward_func(observations: np.ndarray, terminated: bool, truncated: bool) -> float:
+    """Reward function for CartPole
+
+    Args:
+        observations (np.ndarray): observation on the current state
+        terminated (bool): episode is terminated due a failure
+        truncated (bool): episode is truncated due a success
+
+    Returns:
+        float: The reward for the current step
+    """
+    angle = observations[2]
+    pole_length = 1.0
+    
+    if terminated or truncated:
+        return -1.0
+    else:
+        normalized_angle = np.abs(angle) / (np.pi / 180)
+        reward = pole_length - normalized_angle
+        return float(reward)
+
+ Performances: 
+
+{'train_success_rate': 0.0, 'train_episodes': 2000, 'test_success_rate': 0.0, 'test_rewards': [5.0, 9.0, 9.0, 5.0, 9.0, 14.0, 5.0, 10.0, 10.0, 5.0, 4.0, 9.0, 9.0, 14.0, 9.0, 10.0, 4.0, 5.0, 9.0, 5.0, 14.0, 14.0, 10.0, 5.0, 5.0, 4.0, 5.0, 4.0, 6.0, 9.0, 9.0, 24.0, 5.0, 4.0, 9.0, 18.0, 5.0, 5.0, 4.0, 34.0, 9.0, 4.0, 4.0, 24.0, 5.0, 5.0, 9.0, 10.0, 4.0, 4.0, 4.0, 15.0, 8.0, 19.0, 36.0, 5.0, 5.0, 9.0, 4.0, 14.0, 18.0, 9.0, 9.0, 5.0, 5.0, 9.0, 5.0, 5.0, 5.0, 5.0, 13.0, 5.0, 5.0, 5.0, 4.0, 4.0, 4.0, 4.0, 5.0, 5.0, 10.0, 5.0, 14.0, 10.0, 19.0, 10.0, 5.0, 9.0, 5.0, 8.0, 5.0, 8.0, 10.0, 9.0, 8.0, 9.0, 9.0, 10.0, 11.0, 10.0], 'custom_metrics': [[{'pole_angle_diff': 0.09205692929284122}, {'pole_position_diff': 0.0673644923012401}]]}
+
+ Policy: PolitiqueReinforce
+
+11:01:10 main.py:42 INFO
+	state 3: 
+reward function: 
+
+def reward_func(observations: np.ndarray, terminated: bool, truncated: bool) -> float:
+    """Reward function for CartPole
+
+    Args:
+        observations (np.ndarray): observation on the current state
+        terminated (bool): episode is terminated due a failure
+        truncated (bool): episode is truncated due a success
+
+    Returns:
+        float: The reward for the current step
+    """
+    angle = observations[2]
+    
+    if terminated or truncated:
+        return -1.0
+    else:
+        normalized_angle = np.abs(angle) / (np.pi / 180)
+        proximity_to_goal = 1.0 - normalized_angle
+        velocity_penalty = abs(observations[1]) * 0.05
+        reward = proximity_to_goal - velocity_penalty
+        return float(reward)
+
+ isn't trained yet
+
+11:02:03 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+11:05:44 main.py:42 INFO
+	state 0: 
+reward function: 
+
+None
+
+ Performances: 
+
+{'train_success_rate': 0.05808080808080808, 'train_episodes': 397, 'test_success_rate': 0.96, 'test_rewards': [500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 497.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 426.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 270.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 344.0, 500.0, 500.0, 500.0], 'custom_metrics': [[{'pole_angle_diff': 0.032975297064121036}, {'pole_position_diff': 0.3083051982753446}]]}
+
+ Policy: PolitiqueReinforce
+
+11:05:44 main.py:42 INFO
+	state 1: 
+reward function: 
+
+def reward_func(observations: np.ndarray, terminated: bool, truncated: bool) -> float:
+    """Reward function for CartPole
+
+    Args:
+        observations (np.ndarray): observation on the current state
+        terminated (bool): episode is terminated due a failure
+        truncated (bool): episode is truncated due a success
+
+    Returns:
+        float: The reward for the current step
+    """
+    angle = observations[2]
+    
+    if terminated or truncated:
+        return -1.0
+    else:
+        reward = 1.0 - abs(angle)
+        return reward
+
+ Performances: 
+
+{'train_success_rate': 0.0025012506253126563, 'train_episodes': 2000, 'test_success_rate': 0.0, 'test_rewards': [15.0, 13.0, 12.0, 13.0, 12.0, 14.0, 12.0, 13.0, 14.0, 13.0, 14.0, 12.0, 13.0, 14.0, 11.0, 15.0, 15.0, 15.0, 16.0, 13.0, 13.0, 12.0, 13.0, 11.0, 12.0, 15.0, 12.0, 12.0, 13.0, 13.0, 13.0, 14.0, 11.0, 14.0, 12.0, 13.0, 11.0, 11.0, 12.0, 12.0, 13.0, 13.0, 13.0, 14.0, 14.0, 16.0, 13.0, 13.0, 16.0, 15.0, 14.0, 13.0, 14.0, 12.0, 14.0, 12.0, 13.0, 15.0, 12.0, 15.0, 12.0, 13.0, 15.0, 11.0, 15.0, 11.0, 14.0, 11.0, 13.0, 16.0, 13.0, 13.0, 15.0, 14.0, 12.0, 14.0, 12.0, 13.0, 14.0, 15.0, 13.0, 14.0, 14.0, 14.0, 11.0, 12.0, 14.0, 14.0, 13.0, 14.0, 14.0, 10.0, 14.0, 11.0, 11.0, 13.0, 13.0, 12.0, 12.0, 11.0], 'custom_metrics': [[{'pole_angle_diff': 0.10835415899847005}, {'pole_position_diff': 0.07213903915223843}]]}
+
+ Policy: PolitiqueReinforce
+
+11:05:44 main.py:42 INFO
+	state 2: 
+reward function: 
+
+def reward_func(observations: np.ndarray, terminated: bool, truncated: bool) -> float:
+    """Reward function for CartPole
+
+    Args:
+        observations (np.ndarray): observation on the current state
+        terminated (bool): episode is terminated due a failure
+        truncated (bool): episode is truncated due a success
+
+    Returns:
+        float: The reward for the current step
+    """
+    angle = observations[2]
+    x_position = observations[0]
+
+    if terminated or truncated:
+        return -1.0
+    else:
+        # Reward based on pole angle and cart position
+        reward = 1.0 - abs(angle) - abs(x_position)
+        return reward
+
+ Performances: 
+
+{'train_success_rate': 0.002001000500250125, 'train_episodes': 2000, 'test_success_rate': 0.0, 'test_rewards': [25.0, 18.0, 27.0, 25.0, 23.0, 25.0, 31.0, 26.0, 25.0, 25.0, 19.0, 25.0, 33.0, 26.0, 19.0, 29.0, 27.0, 30.0, 21.0, 32.0, 26.0, 29.0, 29.0, 27.0, 19.0, 23.0, 24.0, 25.0, 27.0, 23.0, 24.0, 19.0, 17.0, 28.0, 27.0, 29.0, 31.0, 19.0, 23.0, 25.0, 23.0, 29.0, 25.0, 26.0, 24.0, 20.0, 24.0, 23.0, 19.0, 22.0, 26.0, 20.0, 19.0, 24.0, 27.0, 29.0, 20.0, 19.0, 18.0, 19.0, 20.0, 29.0, 20.0, 17.0, 19.0, 22.0, 20.0, 28.0, 19.0, 19.0, 28.0, 23.0, 20.0, 21.0, 23.0, 31.0, 27.0, 21.0, 28.0, 32.0, 19.0, 18.0, 19.0, 24.0, 19.0, 30.0, 31.0, 27.0, 19.0, 29.0, 28.0, 29.0, 27.0, 25.0, 22.0, 26.0, 18.0, 22.0, 23.0, 23.0], 'custom_metrics': [[{'pole_angle_diff': 0.10429432237361923}, {'pole_position_diff': 0.0665937819924981}]]}
+
+ Policy: PolitiqueReinforce
+
+11:08:57 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+11:09:05 VIRAL.py:171 WARNING
+	Error syntax Syntax error in the generated code : unindent does not match any outer indentation level (<string>, line 4)
+
+11:13:51 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+11:13:59 VIRAL.py:171 WARNING
+	Error syntax Syntax error in the generated code : unindent does not match any outer indentation level (<string>, line 4)
+
+11:17:49 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+11:17:54 VIRAL.py:171 WARNING
+	Error syntax Syntax error in the generated code : unindent does not match any outer indentation level (<string>, line 11)
+
+11:18:06 VIRAL.py:171 WARNING
+	Error syntax Syntax error in the generated code : unindent does not match any outer indentation level (<string>, line 7)
+
+11:20:24 main.py:42 INFO
+	state 0: 
+reward function: 
+
+None
+
+ Performances: 
+
+{'train_success_rate': 0.00400200100050025, 'train_episodes': 2000, 'test_success_rate': 0.0, 'test_rewards': [10.0, 10.0, 10.0, 8.0, 10.0, 10.0, 8.0, 8.0, 9.0, 9.0, 8.0, 9.0, 10.0, 9.0, 10.0, 11.0, 9.0, 10.0, 9.0, 10.0, 10.0, 10.0, 10.0, 10.0, 9.0, 10.0, 8.0, 10.0, 8.0, 8.0, 10.0, 10.0, 8.0, 9.0, 10.0, 10.0, 9.0, 10.0, 9.0, 10.0, 10.0, 10.0, 9.0, 10.0, 11.0, 9.0, 10.0, 10.0, 10.0, 9.0, 10.0, 9.0, 8.0, 10.0, 9.0, 9.0, 9.0, 9.0, 10.0, 9.0, 8.0, 9.0, 8.0, 9.0, 10.0, 9.0, 10.0, 10.0, 9.0, 9.0, 9.0, 10.0, 9.0, 9.0, 9.0, 10.0, 11.0, 9.0, 9.0, 9.0, 9.0, 9.0, 10.0, 10.0, 9.0, 9.0, 9.0, 9.0, 10.0, 9.0, 9.0, 9.0, 10.0, 10.0, 11.0, 8.0, 10.0, 8.0, 8.0, 9.0], 'custom_metrics': [[{'pole_angle_diff': 0.09201484794501541}, {'pole_position_diff': 0.06738218269629166}]]}
+
+ Policy: PolitiqueReinforce
+
+11:20:24 main.py:42 INFO
+	state 1: 
+reward function: 
+
+def reward_func(observations, terminated, truncated):
+    """Reward function for CartPole
+
+    Args:
+        observations (np.ndarray): observation on the current state
+        terminated (bool): episode is terminated due a failure
+        truncated (bool): episode is truncated due a success
+
+    Returns:
+        float: The reward for the current step
+    """
+    x, _, theta, _ = observations
+    if theta == 0 or abs(theta) >= np.pi / 2:
+        return -1.0  # Failure penalty
+    
+    elif terminated:
+        return 0   # (or any other value for unsuccessful termination)
+
+    else:
+        reward = np.cos(observations[2]) * 3  # Reward with angle cosine value proportional, closest to upright when maximum
+        if truncated:
+            reward += 10   # Reward bonus when task is achieved
+
+    return reward
+
+ Performances: 
+
+{'train_success_rate': 0.03851925962981491, 'train_episodes': 2000, 'test_success_rate': 0.0, 'test_rewards': [8.0, 10.0, 8.0, 9.0, 8.0, 9.0, 8.0, 10.0, 8.0, 9.0, 10.0, 9.0, 9.0, 10.0, 9.0, 9.0, 9.0, 10.0, 9.0, 10.0, 9.0, 8.0, 8.0, 9.0, 11.0, 8.0, 9.0, 9.0, 11.0, 9.0, 10.0, 9.0, 10.0, 9.0, 8.0, 9.0, 9.0, 9.0, 9.0, 9.0, 10.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 10.0, 9.0, 10.0, 10.0, 9.0, 10.0, 9.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 9.0, 10.0, 9.0, 8.0, 9.0, 10.0, 10.0, 10.0, 9.0, 10.0, 9.0, 9.0, 10.0, 9.0, 8.0, 9.0, 8.0, 9.0, 9.0, 11.0, 10.0, 10.0, 9.0, 9.0, 10.0, 10.0, 10.0, 10.0, 8.0, 10.0, 8.0, 10.0, 10.0, 11.0, 10.0, 10.0], 'custom_metrics': [[{'pole_angle_diff': 0.090187619644109}, {'pole_position_diff': 0.06547629466086469}]]}
+
+ Policy: PolitiqueReinforce
+
+11:20:24 main.py:42 INFO
+	state 2: 
+reward function: 
+
+def reward_func(observations, terminated, truncated):
+    """Reward function for CartPole
+
+    Args:
+        observations (np.ndarray): observation on the current state
+        terminated (bool): episode is terminated due a failure
+        truncated (bool): episode is truncated due a success
+
+    Returns:
+        float: The reward for the current step
+    """
+    x, _, theta, _ = observations
+    if abs(theta) >= np.pi / 2:
+        return -1.0  # Failure penalty
+    
+    elif terminated:
+        return 4   # (or any other value for unsuccessful termination)
+
+    else:
+        reward = (np.cos(observations[3])**(-9))*(abs(np.sin(theta))**5)+(max((x+2,8-x))*-1)  # Reward with angle cosine and position linearly related, closest to upright when maximum
+        
+        if truncated:
+            reward += 40   # Reward bonus when task is achieved
+
+    return reward
+
+ Performances: 
+
+{'train_success_rate': 0.0, 'train_episodes': 2000, 'test_success_rate': 0.0, 'test_rewards': [10.0, 14.0, 19.0, 10.0, 10.0, 13.0, 14.0, 11.0, 10.0, 12.0, 9.0, 8.0, 9.0, 10.0, 9.0, 16.0, 9.0, 9.0, 10.0, 11.0, 9.0, 9.0, 10.0, 9.0, 10.0, 11.0, 14.0, 12.0, 8.0, 9.0, 11.0, 10.0, 12.0, 13.0, 10.0, 9.0, 10.0, 10.0, 10.0, 12.0, 9.0, 17.0, 12.0, 10.0, 11.0, 12.0, 10.0, 9.0, 8.0, 11.0, 12.0, 10.0, 12.0, 10.0, 14.0, 9.0, 10.0, 11.0, 10.0, 12.0, 14.0, 8.0, 11.0, 12.0, 12.0, 10.0, 8.0, 12.0, 10.0, 13.0, 9.0, 9.0, 14.0, 14.0, 11.0, 9.0, 10.0, 10.0, 9.0, 12.0, 17.0, 11.0, 10.0, 17.0, 9.0, 10.0, 10.0, 13.0, 10.0, 10.0, 10.0, 11.0, 9.0, 12.0, 10.0, 9.0, 10.0, 10.0, 17.0, 10.0], 'custom_metrics': [[{'pole_angle_diff': 0.08166599659031547}, {'pole_position_diff': 0.05987151502642432}]]}
+
+ Policy: PolitiqueReinforce
+
+11:20:24 main.py:42 INFO
+	state 3: 
+reward function: 
+
+def reward_func(observations, terminated, truncated):
+    """Reward function for CartPole
+
+    Args:
+        observations (np.ndarray): observation on the current state
+        terminated (bool): episode is terminated due a failure
+        truncated (bool): episode is truncated due a success
+
+    Returns:
+        float: The reward for the current step
+    """
+    x, _, theta, _ = observations
+    if abs(theta) >= np.pi / 2:
+        return -1.0  # Failure penalty
+    
+    elif terminated:
+        return 0   # (or any other value for unsuccessful termination)
+
+    else:
+        angle_reward = np.cos(theta * 2) ** 4 + 0.5
+        position_reward = np.clip((x + 2.4) / 4.8, 0, 1)
+        
+        reward = angle_reward * position_reward
+        
+        if truncated:
+            reward += 10   # Reward bonus when task is completed successfully
+
+    return reward
+
+ isn't trained yet
+
+11:24:28 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+11:24:33 VIRAL.py:170 WARNING
+	Error syntax Syntax error in the generated code : unindent does not match any outer indentation level (<string>, line 4)
+
+11:24:38 VIRAL.py:170 WARNING
+	Error syntax Syntax error in the generated code : 'return' outside function (<string>, line 20)
+
+11:24:42 VIRAL.py:170 WARNING
+	Error syntax Syntax error in the generated code : 'return' outside function (<string>, line 20)
+
+11:24:47 VIRAL.py:170 WARNING
+	Error syntax Syntax error in the generated code : 'return' outside function (<string>, line 20)
+
+11:24:51 VIRAL.py:170 WARNING
+	Error syntax Syntax error in the generated code : 'return' outside function (<string>, line 20)
+
+11:24:56 VIRAL.py:170 WARNING
+	Error syntax Syntax error in the generated code : 'return' outside function (<string>, line 20)
+
+11:25:00 VIRAL.py:170 WARNING
+	Error syntax Syntax error in the generated code : 'return' outside function (<string>, line 20)
+
+11:25:05 VIRAL.py:170 WARNING
+	Error syntax Syntax error in the generated code : 'return' outside function (<string>, line 20)
+
+11:25:10 VIRAL.py:170 WARNING
+	Error syntax Syntax error in the generated code : 'return' outside function (<string>, line 20)
+
+11:25:15 VIRAL.py:170 WARNING
+	Error syntax Syntax error in the generated code : 'return' outside function (<string>, line 20)
+
+11:25:19 VIRAL.py:170 WARNING
+	Error syntax Syntax error in the generated code : 'return' outside function (<string>, line 20)
+
+11:25:25 VIRAL.py:170 WARNING
+	Error syntax Syntax error in the generated code : 'return' outside function (<string>, line 20)
+
+11:25:30 VIRAL.py:170 WARNING
+	Error syntax Syntax error in the generated code : 'return' outside function (<string>, line 20)
+
+11:25:36 VIRAL.py:170 WARNING
+	Error syntax Syntax error in the generated code : 'return' outside function (<string>, line 20)
+
+11:25:42 VIRAL.py:170 WARNING
+	Error syntax Syntax error in the generated code : 'return' outside function (<string>, line 20)
+
+11:25:47 VIRAL.py:170 WARNING
+	Error syntax Syntax error in the generated code : 'return' outside function (<string>, line 20)
+
+11:25:53 VIRAL.py:170 WARNING
+	Error syntax Syntax error in the generated code : 'return' outside function (<string>, line 20)
+
+11:26:05 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+11:26:10 VIRAL.py:170 WARNING
+	Error syntax Syntax error in the generated code : unindent does not match any outer indentation level (<string>, line 4)
+
+11:26:15 VIRAL.py:170 WARNING
+	Error syntax Syntax error in the generated code : 'return' outside function (<string>, line 20)
+
+11:26:20 VIRAL.py:170 WARNING
+	Error syntax Syntax error in the generated code : 'return' outside function (<string>, line 20)
+
+11:26:25 VIRAL.py:170 WARNING
+	Error syntax Syntax error in the generated code : 'return' outside function (<string>, line 20)
+
+11:26:29 VIRAL.py:170 WARNING
+	Error syntax Syntax error in the generated code : 'return' outside function (<string>, line 20)
+
+11:26:34 VIRAL.py:170 WARNING
+	Error syntax Syntax error in the generated code : 'return' outside function (<string>, line 20)
+
+11:26:39 VIRAL.py:170 WARNING
+	Error syntax Syntax error in the generated code : 'return' outside function (<string>, line 20)
+
+11:26:44 VIRAL.py:170 WARNING
+	Error syntax Syntax error in the generated code : 'return' outside function (<string>, line 20)
+
+11:26:49 VIRAL.py:170 WARNING
+	Error syntax Syntax error in the generated code : 'return' outside function (<string>, line 20)
+
+11:26:53 VIRAL.py:173 WARNING
+	Error execution Error during reward function execution: name 'self' is not defined
+
+11:27:14 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+11:27:18 VIRAL.py:170 WARNING
+	Error syntax Syntax error in the generated code : unindent does not match any outer indentation level (<string>, line 4)
+
+11:27:22 VIRAL.py:173 WARNING
+	Error execution Error during reward function execution: name 'self' is not defined
+
+11:27:31 VIRAL.py:170 WARNING
+	Error syntax Syntax error in the generated code : unindent does not match any outer indentation level (<string>, line 6)
+
+11:27:37 VIRAL.py:173 WARNING
+	Error execution Error during reward function execution: name 'self' is not defined
+
+11:27:42 VIRAL.py:173 WARNING
+	Error execution Error during reward function execution: name 'self' is not defined
+
+11:30:57 main.py:42 INFO
+	state 0: 
+reward function: 
+
+None
+
+ Performances: 
+
+{'train_success_rate': 0.0, 'train_episodes': 2000, 'test_success_rate': 0.0, 'test_rewards': [48.0, 39.0, 39.0, 39.0, 58.0, 35.0, 50.0, 39.0, 44.0, 51.0, 42.0, 45.0, 36.0, 40.0, 51.0, 35.0, 33.0, 52.0, 48.0, 46.0, 40.0, 48.0, 46.0, 34.0, 51.0, 34.0, 49.0, 34.0, 38.0, 34.0, 32.0, 54.0, 43.0, 36.0, 48.0, 49.0, 34.0, 38.0, 31.0, 41.0, 36.0, 58.0, 36.0, 40.0, 56.0, 54.0, 49.0, 51.0, 36.0, 52.0, 51.0, 46.0, 51.0, 40.0, 38.0, 45.0, 45.0, 50.0, 53.0, 38.0, 41.0, 49.0, 48.0, 48.0, 39.0, 50.0, 58.0, 38.0, 36.0, 34.0, 36.0, 36.0, 39.0, 40.0, 45.0, 35.0, 56.0, 39.0, 54.0, 33.0, 47.0, 34.0, 48.0, 52.0, 44.0, 32.0, 38.0, 35.0, 56.0, 54.0, 32.0, 54.0, 36.0, 38.0, 47.0, 33.0, 36.0, 48.0, 35.0, 38.0], 'custom_metrics': [[{'pole_angle_diff': 0.10436681582119998}, {'pole_position_diff': 0.0441433676210647}]]}
+
+ Policy: PolitiqueReinforce
+
+11:30:57 main.py:42 INFO
+	state 1: 
+reward function: 
+
+def reward_func(observations, terminated, truncated):
+    """Reward function for CartPole
+
+    Args:
+        observations (np.ndarray): observation on the current state
+        terminated (bool): episode is terminated due a failure
+        truncated (bool): episode is truncated due to a success
+
+    Returns:
+        float: The reward for the current step
+    """
+    angle_threshold = np.radians(0.418)  # Assuming theta_thresh is approximately 24 degrees
+
+    if observations[2] >= -angle_threshold and observations[0]>=-4.8 or terminated :
+        return 1.
+    else:
+        return -.5 * abs(np.sin(observations[2]))
+
+ Performances: 
+
+{'train_success_rate': 0.12706353176588295, 'train_episodes': 2000, 'test_success_rate': 0.0, 'test_rewards': [27.0, 21.0, 23.0, 24.0, 30.0, 29.0, 25.0, 27.0, 20.0, 20.0, 28.0, 19.0, 27.0, 25.0, 29.0, 29.0, 31.0, 21.0, 22.0, 20.0, 29.0, 31.0, 32.0, 28.0, 22.0, 25.0, 31.0, 21.0, 24.0, 34.0, 30.0, 26.0, 30.0, 20.0, 22.0, 27.0, 20.0, 30.0, 29.0, 19.0, 23.0, 27.0, 28.0, 23.0, 31.0, 21.0, 28.0, 25.0, 25.0, 21.0, 26.0, 21.0, 22.0, 25.0, 24.0, 28.0, 30.0, 26.0, 21.0, 19.0, 19.0, 23.0, 26.0, 24.0, 33.0, 31.0, 27.0, 23.0, 22.0, 23.0, 21.0, 25.0, 35.0, 21.0, 26.0, 19.0, 30.0, 20.0, 24.0, 21.0, 27.0, 23.0, 23.0, 20.0, 25.0, 29.0, 28.0, 22.0, 22.0, 29.0, 25.0, 28.0, 25.0, 25.0, 22.0, 24.0, 28.0, 25.0, 24.0, 30.0], 'custom_metrics': [[{'pole_angle_diff': 0.105414055757013}, {'pole_position_diff': 0.05595185197641836}]]}
+
+ Policy: PolitiqueReinforce
+
+11:30:57 main.py:42 INFO
+	state 2: 
+reward function: 
+
+def reward_func(observations, terminated, truncated):
+    """Reward function for CartPole
+
+    Args:
+        observations (np.ndarray): observation on the current state
+        terminated (bool): episode is terminated due a failure
+        truncated (bool): episode is truncated due to a success
+
+    Returns:
+        float: The reward for the current step
+    """
+    angle_threshold = np.radians(0.418)  # Assuming theta_thresh is approximately 24 degrees
+
+    if abs(observations[2]) < angle_threshold and observations[0] > -5:
+        return max(-abs(np.sin(angle_threshold)), .9)
+    else:
+        return -.75 * np.cos(max(min(abs((observations[0]- (-4.8))),np.inf),-float('inf')))
+
+ Performances: 
+
+{'train_success_rate': 0.0, 'train_episodes': 2000, 'test_success_rate': 0.0, 'test_rewards': [10.0, 11.0, 10.0, 8.0, 9.0, 11.0, 10.0, 10.0, 10.0, 9.0, 9.0, 10.0, 10.0, 10.0, 9.0, 9.0, 9.0, 10.0, 10.0, 9.0, 8.0, 10.0, 9.0, 10.0, 9.0, 9.0, 8.0, 10.0, 9.0, 10.0, 9.0, 8.0, 9.0, 8.0, 10.0, 10.0, 9.0, 10.0, 8.0, 9.0, 10.0, 10.0, 9.0, 9.0, 8.0, 10.0, 11.0, 10.0, 9.0, 8.0, 10.0, 10.0, 10.0, 9.0, 10.0, 10.0, 10.0, 9.0, 10.0, 10.0, 9.0, 8.0, 10.0, 8.0, 8.0, 10.0, 10.0, 9.0, 10.0, 10.0, 8.0, 9.0, 10.0, 10.0, 9.0, 9.0, 10.0, 9.0, 9.0, 10.0, 9.0, 8.0, 9.0, 9.0, 8.0, 10.0, 10.0, 9.0, 10.0, 9.0, 9.0, 10.0, 10.0, 9.0, 9.0, 9.0, 8.0, 8.0, 9.0, 10.0], 'custom_metrics': [[{'pole_angle_diff': 0.09107282167297216}, {'pole_position_diff': 0.06933048936730059}]]}
+
+ Policy: PolitiqueReinforce
+
+11:32:14 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+11:32:18 VIRAL.py:170 WARNING
+	Error syntax Syntax error in the generated code : unindent does not match any outer indentation level (<string>, line 4)
+
+11:32:21 VIRAL.py:173 WARNING
+	Error execution Error during reward function execution: name 'self' is not defined
+
+11:32:29 VIRAL.py:170 WARNING
+	Error syntax Syntax error in the generated code : unindent does not match any outer indentation level (<string>, line 4)
+
+11:32:33 VIRAL.py:173 WARNING
+	Error execution Error during reward function execution: name 'self' is not defined
+
+11:32:37 VIRAL.py:173 WARNING
+	Error execution Error during reward function execution: name 'self' is not defined
+
+11:32:41 VIRAL.py:173 WARNING
+	Error execution Error during reward function execution: name 'self' is not defined
+
+11:32:45 VIRAL.py:173 WARNING
+	Error execution Error during reward function execution: name 'self' is not defined
+
+11:39:26 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+11:39:34 VIRAL.py:170 WARNING
+	Error syntax Syntax error in the generated code : unexpected indent (<string>, line 4)
+
+11:39:43 VIRAL.py:170 WARNING
+	Error syntax Syntax error in the generated code : invalid character '°' (U+00B0) (<string>, line 4)
+
+11:45:06 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+11:45:16 VIRAL.py:170 WARNING
+	Error syntax Syntax error in the generated code : unindent does not match any outer indentation level (<string>, line 10)
+
+11:45:28 VIRAL.py:170 WARNING
+	Error syntax Syntax error in the generated code : unindent does not match any outer indentation level (<string>, line 4)
+
+11:49:42 main.py:42 INFO
+	state 0: 
+reward function: 
+
+None
+
+ Performances: 
+
+{'train_success_rate': 0.0, 'train_episodes': 2000, 'test_success_rate': 0.0, 'test_rewards': [23.0, 18.0, 23.0, 23.0, 23.0, 21.0, 20.0, 23.0, 26.0, 19.0, 21.0, 25.0, 19.0, 22.0, 23.0, 22.0, 21.0, 25.0, 24.0, 22.0, 23.0, 21.0, 22.0, 21.0, 21.0, 24.0, 23.0, 21.0, 21.0, 23.0, 17.0, 19.0, 23.0, 19.0, 22.0, 24.0, 19.0, 19.0, 22.0, 18.0, 24.0, 21.0, 23.0, 25.0, 21.0, 18.0, 25.0, 21.0, 18.0, 20.0, 19.0, 21.0, 23.0, 18.0, 20.0, 18.0, 24.0, 22.0, 25.0, 19.0, 20.0, 21.0, 18.0, 19.0, 24.0, 21.0, 23.0, 23.0, 22.0, 23.0, 21.0, 22.0, 19.0, 19.0, 20.0, 18.0, 21.0, 24.0, 19.0, 19.0, 19.0, 25.0, 25.0, 23.0, 19.0, 19.0, 25.0, 21.0, 23.0, 19.0, 20.0, 24.0, 21.0, 21.0, 18.0, 23.0, 22.0, 22.0, 17.0, 22.0], 'custom_metrics': [[{'pole_angle_diff': 0.11414486918308916}, {'pole_position_diff': 0.07089283608734376}]]}
+
+ Policy: PolitiqueReinforce
+
+11:49:42 main.py:42 INFO
+	state 1: 
+reward function: 
+
+def reward_func(observations: np.ndarray, terminated: bool, truncated: bool) -> float:
+    """Reward function for CartPole
+
+    Args:
+        observations (np.ndarray): observation on the current state
+        terminated (bool): episode is terminated due a failure
+        truncated (bool): episode is truncated due a success
+
+    Returns:
+        float: The reward for the current step
+    """
+    x, _, theta, _ = observations
+    
+    if theta == 0 or abs(theta) >= np.pi / 2:
+        return -1.0  # Failure penalty
+    
+    elif terminated:
+        return -1.0  # Termination penalty
+
+    elif truncated:
+        return 5.0  # Truncation bonus
+
+    else:
+        pole_angle_threshold_degrees = 4
+        reward_base = np.cos(abs(theta) * ((9 * np.log(3) + 7) / 6))
+
+        if abs(theta) <= np.deg2rad(pole_angle_threshold_degrees):
+            reward_base += 1.0
+
+        return max(-1.0, min(reward_base, 5.0))
+
+ Performances: 
+
+{'train_success_rate': 0.09204602301150576, 'train_episodes': 2000, 'test_success_rate': 0.0, 'test_rewards': [20.0, 18.0, 23.0, 22.0, 22.0, 16.0, 23.0, 17.0, 24.0, 17.0, 22.0, 20.0, 22.0, 21.0, 24.0, 24.0, 23.0, 21.0, 24.0, 18.0, 22.0, 23.0, 21.0, 19.0, 20.0, 18.0, 21.0, 24.0, 25.0, 19.0, 20.0, 25.0, 21.0, 16.0, 16.0, 18.0, 22.0, 23.0, 16.0, 22.0, 25.0, 24.0, 19.0, 21.0, 24.0, 20.0, 21.0, 20.0, 20.0, 17.0, 25.0, 24.0, 23.0, 16.0, 20.0, 17.0, 16.0, 23.0, 19.0, 23.0, 22.0, 23.0, 25.0, 17.0, 20.0, 20.0, 21.0, 25.0, 18.0, 16.0, 18.0, 20.0, 22.0, 19.0, 18.0, 20.0, 21.0, 22.0, 16.0, 22.0, 23.0, 18.0, 24.0, 22.0, 18.0, 17.0, 18.0, 24.0, 16.0, 18.0, 22.0, 25.0, 20.0, 18.0, 19.0, 23.0, 23.0, 24.0, 18.0, 16.0], 'custom_metrics': [[{'pole_angle_diff': 0.10558087690950946}, {'pole_position_diff': 0.06669563458313701}]]}
+
+ Policy: PolitiqueReinforce
+
+11:49:42 main.py:42 INFO
+	state 2: 
+reward function: 
+
+def reward_func(observations: np.ndarray, terminated: bool, truncated: bool) -> float:
+    """Reward function for CartPole
+
+    Args:
+        observations (np.ndarray): observation on the current state
+        terminated (bool): episode is terminated due a failure
+        truncated (bool): episode is truncated due a success
+
+    Returns:
+        float: The reward for the current step
+    """
+    x, _, theta, _ = observations
+    
+    if theta == 0 or abs(theta) >= np.pi / 2:
+        return -1.0  # Failure penalty
+    
+    elif terminated:
+        return -1.0  # Termination penalty
+
+    elif truncated:
+        return 5.0  # Truncation bonus
+
+    else:
+        pole_angle_threshold_degrees = 4
+        reward_base = np.cos(abs(theta) * ((9 * np.log(3) + 7) / 6))
+
+        if abs(theta) <= np.deg2rad(pole_angle_threshold_degrees):
+            reward_base += 1.0
+
+    return max(-1.0, min(reward_base, 5.0))
+
+ Performances: 
+
+{'train_success_rate': 0.16058029014507252, 'train_episodes': 2000, 'test_success_rate': 0.0, 'test_rewards': [9.0, 10.0, 10.0, 8.0, 10.0, 8.0, 11.0, 9.0, 9.0, 8.0, 10.0, 10.0, 8.0, 12.0, 11.0, 12.0, 10.0, 8.0, 9.0, 9.0, 10.0, 11.0, 12.0, 9.0, 11.0, 10.0, 12.0, 11.0, 11.0, 11.0, 10.0, 10.0, 10.0, 10.0, 11.0, 11.0, 11.0, 9.0, 11.0, 9.0, 9.0, 12.0, 10.0, 10.0, 11.0, 9.0, 11.0, 11.0, 10.0, 10.0, 10.0, 9.0, 9.0, 11.0, 10.0, 11.0, 11.0, 9.0, 10.0, 9.0, 11.0, 10.0, 11.0, 11.0, 12.0, 12.0, 10.0, 11.0, 10.0, 11.0, 10.0, 11.0, 12.0, 9.0, 9.0, 10.0, 9.0, 10.0, 11.0, 10.0, 10.0, 11.0, 11.0, 9.0, 9.0, 9.0, 10.0, 11.0, 11.0, 12.0, 9.0, 12.0, 11.0, 10.0, 11.0, 10.0, 9.0, 10.0, 11.0, 11.0], 'custom_metrics': [[{'pole_angle_diff': 0.09611583493156907}, {'pole_position_diff': 0.0743764365064742}]]}
+
+ Policy: PolitiqueReinforce
+
+11:54:44 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+11:56:31 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+11:56:35 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 3)
+
+11:56:39 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 3)
+
+11:56:43 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+11:56:46 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+11:56:50 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+11:56:54 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+11:56:57 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+11:57:01 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+11:57:05 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+11:57:08 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+11:57:12 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+11:57:16 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+11:57:20 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+11:57:23 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+11:57:27 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+11:57:31 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+11:57:36 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+11:57:41 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+11:57:46 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+11:57:50 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+11:57:55 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+11:58:00 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+11:58:05 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+11:58:10 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+11:58:14 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+11:58:19 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+11:58:24 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+11:58:29 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+11:58:34 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+11:58:38 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+11:58:43 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+11:58:48 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+11:58:53 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+11:58:58 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+11:59:02 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+11:59:07 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+11:59:12 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+11:59:17 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+11:59:22 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+11:59:26 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+11:59:31 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+11:59:36 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+11:59:41 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+11:59:46 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+11:59:50 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+11:59:55 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+12:00:00 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+12:00:05 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+12:00:09 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+12:00:14 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+12:00:19 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+12:00:24 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+12:00:28 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+12:00:33 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+12:00:38 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+12:00:43 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+12:00:47 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+12:00:52 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+12:00:57 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+12:01:02 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+12:01:07 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+12:01:11 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+12:01:16 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+12:01:21 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+12:01:26 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+12:01:30 VIRAL.py:172 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 5)
+
+12:03:33 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+12:03:47 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+12:03:51 VIRAL.py:174 WARNING
+	Error syntax Syntax error in the generated code : unexpected indent (<string>, line 7)
+
+12:03:58 VIRAL.py:174 WARNING
+	Error syntax Syntax error in the generated code : unexpected indent (<string>, line 9)
+
+12:04:18 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+12:04:26 VIRAL.py:174 WARNING
+	Error syntax Syntax error in the generated code : unindent does not match any outer indentation level (<string>, line 8)
+
+12:04:36 VIRAL.py:174 WARNING
+	Error syntax Syntax error in the generated code : 'return' outside function (<string>, line 6)
+
+12:06:19 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+12:06:24 VIRAL.py:174 WARNING
+	Error syntax Syntax error in the generated code : unexpected indent (<string>, line 7)
+
+12:06:33 VIRAL.py:174 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 1)
+
+12:08:56 main.py:42 INFO
+	state 0: 
+reward function: 
+
+None
+
+ Performances: 
+
+{'train_success_rate': 0.14213197969543148, 'train_episodes': 395, 'test_success_rate': 0.65, 'test_rewards': [248.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 375.0, 500.0, 500.0, 500.0, 500.0, 301.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 367.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 500.0, 441.0, 9.0, 9.0, 10.0, 10.0, 18.0, 8.0, 21.0, 30.0, 14.0, 11.0, 22.0, 15.0, 18.0, 20.0, 8.0, 12.0, 67.0, 11.0, 49.0, 26.0, 10.0, 11.0, 25.0, 10.0, 8.0, 11.0, 9.0, 10.0, 30.0, 10.0], 'custom_metrics': [[{'pole_angle_diff': 0.05314417904202614}, {'pole_position_diff': 0.1473680228156961}]]}
+
+ Policy: PolitiqueReinforce
+
+12:08:56 main.py:42 INFO
+	state 1: 
+reward function: 
+
+def reward_func(observations, terminated, truncated) -> float:
+    """Reward function for CartPole
+
+    Args:
+        observations (np.ndarray): observation on the current state
+        terminated (bool): episode is terminated due a failure
+        truncated (bool): episode is truncated due a success
+
+    Returns:
+        float: The reward for the current step
+    """
+    
+    cart_pos, cart_vel, pole_angle, pole_ang_vel = observations
+    
+    if terminated or truncated:
+        return -1.0
+    
+    # Reward based on pole angle to keep it upright (24 degrees)
+    max_angle_rad = np.radians(24)
+    reward_upright = max(0, np.cos(pole_angle)) * 1.0
+    
+    # Reward for cart position being close to the center
+    center_pos_range = 1.5
+    cart_pos_reward = max(-1.0, 1 - abs(cart_pos) / center_pos_range)
+    
+    total_reward = reward_upright + cart_pos_reward
+    
+    return float(total_reward)
+
+ Performances: 
+
+{'train_success_rate': 0.0, 'train_episodes': 2000, 'test_success_rate': 0.0, 'test_rewards': [60.0, 27.0, 18.0, 9.0, 42.0, 39.0, 18.0, 42.0, 9.0, 11.0, 10.0, 11.0, 33.0, 13.0, 11.0, 23.0, 48.0, 71.0, 10.0, 20.0, 14.0, 13.0, 15.0, 14.0, 16.0, 13.0, 16.0, 14.0, 15.0, 12.0, 15.0, 11.0, 15.0, 15.0, 12.0, 13.0, 15.0, 12.0, 14.0, 13.0, 16.0, 16.0, 12.0, 14.0, 16.0, 12.0, 13.0, 15.0, 13.0, 13.0, 16.0, 15.0, 15.0, 12.0, 14.0, 11.0, 12.0, 13.0, 14.0, 16.0, 13.0, 13.0, 14.0, 12.0, 16.0, 13.0, 16.0, 12.0, 13.0, 13.0, 14.0, 14.0, 13.0, 14.0, 13.0, 14.0, 13.0, 12.0, 15.0, 13.0, 13.0, 15.0, 13.0, 12.0, 13.0, 15.0, 11.0, 11.0, 12.0, 13.0, 13.0, 14.0, 15.0, 13.0, 16.0, 15.0, 16.0, 13.0, 13.0, 15.0], 'custom_metrics': [[{'pole_angle_diff': 0.10572732040251391}, {'pole_position_diff': 0.07343078419457795}]]}
+
+ Policy: PolitiqueReinforce
+
+12:08:56 main.py:42 INFO
+	state 2: 
+reward function: 
+
+def reward_func(observations: np.ndarray, terminated: bool, truncated: bool) -> float:
+    """Reward function for CartPole
+
+    Args:
+        observations (np.ndarray): observation on the current state
+        terminated (bool): episode is terminated due a failure
+        truncated (bool): episode is truncated due a success
+
+    Returns:
+        float: The reward for the current step
+    """
+    
+    cart_position, pole_angle = observations[:2]
+    
+    # Check if the simulation has ended
+    if terminated or truncated:
+        return -1.0
+    
+    # Reward based on pole angle to keep it upright (45 degrees)
+    max_pole_theta = np.radians(45)
+    reward_upright = (np.cos(pole_angle) + 1) / 2  # Pole angle close to 0 radians gets a higher reward
+
+    total_reward = reward_upright
+    
+    return float(total_reward)
+
+ Performances: 
+
+{'train_success_rate': 0.0, 'train_episodes': 2000, 'test_success_rate': 0.0, 'test_rewards': [44.0, 33.0, 47.0, 32.0, 41.0, 47.0, 42.0, 41.0, 44.0, 58.0, 32.0, 40.0, 38.0, 33.0, 41.0, 47.0, 37.0, 37.0, 40.0, 43.0, 42.0, 49.0, 47.0, 30.0, 32.0, 32.0, 62.0, 42.0, 39.0, 49.0, 36.0, 35.0, 35.0, 32.0, 43.0, 53.0, 40.0, 36.0, 36.0, 38.0, 40.0, 38.0, 43.0, 39.0, 36.0, 36.0, 37.0, 34.0, 30.0, 38.0, 43.0, 37.0, 43.0, 42.0, 35.0, 30.0, 41.0, 36.0, 42.0, 40.0, 36.0, 44.0, 45.0, 39.0, 32.0, 46.0, 41.0, 42.0, 28.0, 38.0, 46.0, 34.0, 31.0, 43.0, 35.0, 41.0, 40.0, 45.0, 28.0, 39.0, 43.0, 41.0, 45.0, 34.0, 43.0, 32.0, 43.0, 58.0, 38.0, 36.0, 37.0, 55.0, 45.0, 47.0, 48.0, 34.0, 54.0, 47.0, 38.0, 39.0], 'custom_metrics': [[{'pole_angle_diff': 0.12093615374128609}, {'pole_position_diff': 0.049571251922300295}]]}
+
+ Policy: PolitiqueReinforce
+
+12:11:53 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+12:12:00 VIRAL.py:133 INFO
+	additional options: {'temperature': 1, 'repeat_penalty': 1.5, 'tfs_z': 1.2, 'seed': 544139}
+
+12:12:03 VIRAL.py:174 WARNING
+	Error syntax Syntax error in the generated code : unexpected indent (<string>, line 4)
+
+12:12:10 VIRAL.py:133 INFO
+	additional options: {'temperature': 1, 'repeat_penalty': 1.5, 'tfs_z': 1.2, 'seed': 544139}
+
+12:12:12 VIRAL.py:174 WARNING
+	Error syntax Syntax error in the generated code : unexpected indent (<string>, line 4)
+
