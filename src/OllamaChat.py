@@ -99,11 +99,16 @@ class OllamaChat:
 
     def print_Generator_and_return(self, response: Generator | str, number: int = 1):
         """
-        Print the response if it's a generator
+         Prints the content of a response if it is a generator, or simply returns the response as is.
         Args:
-            response (Generator | str): the response to print
+            response (Generator | str): The response to print or return. If it's a generator, 
+                                        it will be printed chunk by chunk. If it's a string, 
+                                        it will be returned directly.
+            number (int, optional): The index of the response (default is 1). Used for logging purposes.
+
         Returns:
-            - the response formalized if is was a generator, the response itself otherwise.
+            The original response if it is a string, or the concatenated string of all chunks 
+            if it was a generator.
         """
         self.logger.debug(f"Response {number}:")
         if isinstance(response, Generator):
