@@ -6,7 +6,7 @@ import gymnasium as gym
 import numpy as np
 import torch
 import torch.nn as nn
-from torch.distributions import Normal
+from torch.distributions import Normal, Categorical
 from torch.utils.data import DataLoader, Dataset
 
 logger = getLogger("VIRAL")
@@ -18,7 +18,7 @@ class PPO(nn.Module):
         env: gym.Env,
         hidden_size: int = 256,
         std: float = 0.0,
-        batch_size: int = 5,
+        batch_size: int = 1,
         ppo_epoch: int = 4,
         lr: float = 3e-4,
         nb_episodes: int = 2000,
@@ -53,7 +53,7 @@ class PPO(nn.Module):
         self.optimizer = torch.optim.Adam(self.parameters(), lr=lr)
         self.nb_episodes = nb_episodes
         self.max_t = max_t
-        self.ppo_epoch = ppo_epoch
+        self.ppo_epochs = ppo_epoch
         self.lr = lr
         self.batch_size = batch_size
         self.env = env
@@ -63,8 +63,8 @@ class PPO(nn.Module):
             x = torch.Tensor(x)
         value = self.critic(x)  # predict the reward
         mu = self.actor(x)  # predict the action
-        std = self.log_std.exp()  # compute std
-        dist = Normal(mu, std)  # make a normal distribution of proba
+        # std = self.log_std.exp()  # compute std
+        dist = Categorical(logits=mu.detach())  # make a normal distribution of proba
         return dist, value
 
     def __repr__(self) -> str:
@@ -74,6 +74,7 @@ class PPO(nn.Module):
         """ """
         dist, _ = self.forward(state)
         action = dist.sample()
+        action = torch.argmax(action)
         return action.item()
 
     def save(self, file: str):
@@ -118,14 +119,13 @@ class PPO(nn.Module):
                 dist, value = cp_policy.forward(state)
                 action = dist.sample()
                 log_prob = dist.log_prob(action)
-                action = action.item()
-                next_state, reward, terminated, truncated, _ = cp_policy.env.step(action)
-                log_probs.append(log_prob)
+                next_state, reward, terminated, truncated, _ = cp_policy.env.step(action.item())
+                log_probs.append(torch.tensor([log_prob]))
                 values.append(value)
-                actions.append(action)
+                actions.append(torch.tensor([action]))
                 rewards.append(reward)
-                states.append(state)
-                actions.append(action)
+                states.append(torch.Tensor(state))
+                # actions.append(action)
                 state = next_state
                 if terminated:
                     break
@@ -135,13 +135,21 @@ class PPO(nn.Module):
             # compute Â_1 ... Â_t
             _, value = cp_policy.forward(state)
             values.append(value)
-            advantage_estimates, returns = cp_policy._global_advantage_estimates(
+            returns = cp_policy._global_advantage_estimates(
                 rewards, values
             )
+            returns = torch.cat(returns).detach()
+            log_probs = torch.cat(log_probs).detach()
+            values    = torch.cat(values).detach()
+            states    = torch.cat(states)
+            actions   = torch.cat(actions)
+            advantage_estimates = returns - values[-1:]
             # optimise
             dataset = cp_policy.PPODataset(
                 states, actions, log_probs, returns, advantage_estimates
             )
+            print(f"Dataset size: {len(dataset)}")
+            print(f"DataLoader batch size: {cp_policy.batch_size}")
             data_loader = DataLoader(dataset, batch_size=cp_policy.batch_size, shuffle=True)
             cp_policy._ppo_update(data_loader)
         if save_name is not None:
@@ -155,7 +163,7 @@ class PPO(nn.Module):
             delta = rewards[step] + gamma * values[step + 1] - values[step]
             gae = delta + gamma * tau * gae
             returns.insert(0, gae + values[step])
-        return returns - values, returns
+        return returns
 
     def _ppo_update(
         self, dataloader: DataLoader):
@@ -189,13 +197,53 @@ class PPO(nn.Module):
             self.advantages = advantages
 
         def __len__(self):
-            return self.states.size(0)
+            return len(self.actions)
 
         def __getitem__(self, idx):
+            print(f"Accessing index {idx}")
             return (
-                self.states[idx, :],
-                self.actions[idx, :],
-                self.log_probs[idx, :],
-                self.returns[idx, :],
-                self.advantages[idx, :],
+                self.states[idx],
+                self.actions[idx],
+                self.log_probs[idx],
+                self.returns[idx],
+                self.advantages[idx],
             )
+        
+
+if __name__ == "__main__":
+    def test_policy(policy, env):
+        all_rewards = []
+        all_states = []
+        nb_success = 0
+        for epi in range(1, 101):
+            total_reward = 0
+            state, _ = env.reset()
+            for i in range(1, 1001):
+                action = policy.output(state)
+                next_observation, reward, terminated, truncated, _ = env.step(action)
+                total_reward += reward
+                state = next_observation
+                all_states.append(state)
+                if terminated:
+                    break
+                if truncated:
+                    nb_success += 1
+                    break
+        return all_states, all_rewards, (nb_success / 100)
+
+
+    def learning(learning_method, env) -> None:
+        """train a policy on an environment"""
+        policy, _, sr, nb_ep = learning_method.train()
+        _, rewards, sr_test = test_policy(policy, env)
+        print(
+            {
+                "train_success_rate": sr,
+                "train_episodes": nb_ep,
+                "test_success_rate": sr_test,
+                "test_rewards": rewards,
+            }
+        )
+    
+    env = gym.make("CartPole-v1")
+    learning(PPO(env), env)
