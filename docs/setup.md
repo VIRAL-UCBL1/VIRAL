@@ -1,12 +1,23 @@
-# Welcome to VIRAL
+# Welcome to VIRAL Installation Guide
 
 ## Requirements
 
 - Python 3.11
 - [Ollama](https://ollama.com/).
+- [PyTorch](https://pytorch.org/).
+- [CUDA](https://developer.nvidia.com/cuda)
+- [Git](https://git-scm.com/).
+- [Conda](https://docs.conda.io/en/latest/miniconda.html).
+
+```bash
+git clone https://github.com/VIRAL-UCBL1/VIRAL.git
+cd VIRAL
+```
 
 
 ## Installation
+
+**Before** installing the dependencies, create a **virtual environment** with **conda** or **venv**.
 
 - Python requirements:
 

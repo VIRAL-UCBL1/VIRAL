@@ -37,6 +37,7 @@ theme:
     - content.action.view
     - content.code.annotate
     - content.tabs.link
+    - navigation.sections
 nav:
   - Home: index.md
   - Setup: setup.md
