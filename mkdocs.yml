@@ -2,6 +2,10 @@ site_name: VIRAL
 site_url: https://viral-ucbl1.github.io/
 repo_url: https://github.com/VIRAL-UCBL1/VIRAL
 repo_name: VIRAL-UCBL1/VIRAL
+repo_branch: main
+edit_uri: edit/main/docs/
+view_uri: blob/main/docs/
+
 
 theme:
   name: material
@@ -27,6 +31,12 @@ theme:
     - search.highlight
     - search.suggest
     - search.share
+    - content.code.copy
+    - content.code.prettify
+    - content.action.edit
+    - content.action.view
+    - content.code.annotate
+    - content.tabs.link
 nav:
   - Home: index.md
   - Setup: setup.md
