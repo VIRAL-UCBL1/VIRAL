@@ -9,7 +9,11 @@ from RLAlgo.DirectSearch import DirectSearch
 from RLAlgo.Reinforce import Reinforce
 from VIRAL import VIRAL
 
-if __name__ == "__main__":
+from CustomRewardWrapper import CustomRewardWrapper
+from stable_baselines3 import PPO
+from stable_baselines3.common.env_util import make_vec_env
+
+def parse_logger():
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "-v", "--verbose", action="store_true", help="Enable verbose mode"
@@ -21,12 +25,17 @@ if __name__ == "__main__":
         print("Verbose mode enabled")
     else:
         init_logger("INFO")
-    logger = getLogger("VIRAL")
-    env = gym.make("CartPole-v1")
-    # learning_method = DirectSearch(env)
-    learning_method = Reinforce(env, couche_cachee=[64])
+    return getLogger("VIRAL")
+    
+
+if __name__ == "__main__":
+    parse_logger()
+    vec_env = make_vec_env("CartPole-v1", n_envs=4)
+    learning_method = PPO("MlpPolicy", vec_env, verbose=1)
+    learning_method.learn(total_timesteps=25000)
+
     objectives_metrics = [objective_metric_CartPole]
-    viral = VIRAL(learning_method, env, objectives_metrics)
+    viral = VIRAL("PPO", "CartPole-v1", objectives_metrics)
     res = viral.generate_reward_function(
         task_description="""Balance a pole on a cart, 
         Num Observation Min Max
