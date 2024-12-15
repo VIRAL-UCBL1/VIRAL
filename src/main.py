@@ -30,7 +30,7 @@ def parse_logger():
     
 
 if __name__ == "__main__":
-    logger = getLogger()
+    logger = parse_logger()
 
     viral = VIRAL(Algo.PPO, Environments.CARTPOLE)
     # res = viral.generate_reward_function(

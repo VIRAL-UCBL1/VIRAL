@@ -5889,3 +5889,15 @@ None
 
  Policy: <stable_baselines3.ppo.ppo.PPO object at 0x7fb319e2d550>
 
+23:10:40 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
