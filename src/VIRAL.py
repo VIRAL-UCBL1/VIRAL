@@ -71,7 +71,7 @@ class VIRAL:
         Returns:
             Callable: Generated reward function
         """
-        # TODO a regarder de plus pres
+        # TODO Pourquoi additional_options ici et pas dans le constructeur ?
         additional_options = {
             "temperature": 1,
             #"num_predict": 3, # l'impression que ça change rien a creuser
