@@ -52,6 +52,7 @@ class VIRAL:
         self.learning_method = None
         self.memory: List[State] = [State(0)]
         self.logger = getLogger("VIRAL")
+        self._learning(self.memory[0])
         #self.training_callback = TrainingInfoCallback()
 
     def generate_reward_function(
@@ -244,7 +245,6 @@ class VIRAL:
         """train a policy on an environment"""
         self.logger.debug(f"state {state.idx} begin is learning")
         vec_env, model = self._generate_env_model(state.reward_func)
-
         training_callback = TrainingInfoCallback()
         policy = model.learn(total_timesteps=60000, callback=training_callback)
         metrics = training_callback.get_metrics()
@@ -295,33 +295,16 @@ class VIRAL:
         all_rewards = []
         all_states = []
         nb_success = 0
-        x_max = 0
-        x_min = 0  # avoid div by 0
         for epi in range(1, nb_episodes + 1):
-            total_reward = 0
             obs = env.reset()
-            for i in range(1, max_t + 1):
-                action = policy.predict(obs, deterministic=True)[0]
-                next_observation, reward, done, info = env.step(action)
-                #infos[env_idx]["TimeLimit.truncated"] = truncated and not terminated
-                truncated = info[0]["TimeLimit.truncated"] 
-                if reward_func is not None:
-                    reward = reward_func(next_observation, done, truncated)
-                total_reward += reward
-                state = next_observation
-                all_states.append(state)
-                if done:
-                    if truncated:
-                        nb_success += 1
+            epi_rewards = 0
+            while True:
+                action, _states = policy.predict(obs)
+                obs, reward, dones, info = env.step(action)
+                epi_rewards += reward.item()
+                if dones[0]:
                     break
-            all_rewards.append(total_reward)
-            if total_reward > x_max:
-                x_max = total_reward
-            if total_reward < x_min:
-                x_min = total_reward
-        all_rewards = [
-            x - x_min / x_max - x_min for x in all_rewards
-        ]  # Min-Max normalized
+            all_rewards.append(epi_rewards)
         return all_states, all_rewards, (nb_success / nb_episodes)
 
     def _generate_env_model(self, reward_func):

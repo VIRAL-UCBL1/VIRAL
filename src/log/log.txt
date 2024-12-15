@@ -5664,3 +5664,228 @@ def reward_func(observations:np.ndarray, terminated: bool, truncated: bool) -> f
 14:32:00 VIRAL.py:120 INFO
 	additional options: {'temperature': 1, 'seed': 614476}
 
+14:39:31 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+14:39:56 VIRAL.py:120 INFO
+	additional options: {'temperature': 1, 'seed': 980628}
+
+14:40:12 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+14:40:12 VIRAL.py:120 INFO
+	additional options: {'temperature': 1, 'seed': 6362}
+
+14:40:43 VIRAL.py:120 INFO
+	additional options: {'temperature': 1, 'seed': 6362}
+
+15:08:20 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+15:08:52 main.py:49 INFO
+	state 0: 
+reward function: 
+
+None
+
+ Performances: 
+
+{'train_success_rate': 100.0, 'train_episodes': 382, 'custom_metrics': {}, 'test_success_rate': 0.0, 'test_rewards': [array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([9.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([9.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([9.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([9.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([9.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([9.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([11.], dtype=float32), array([9.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([11.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([9.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([9.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([9.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([11.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([9.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([9.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([9.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32)]}
+
+ Policy: <stable_baselines3.ppo.ppo.PPO object at 0x7f599d51ead0>
+
+15:12:00 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+15:12:32 main.py:49 INFO
+	state 0: 
+reward function: 
+
+None
+
+ Performances: 
+
+{'train_success_rate': 100.0, 'train_episodes': 393, 'custom_metrics': {}, 'test_success_rate': 0.0, 'test_rewards': [array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([9.], dtype=float32), array([11.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([11.], dtype=float32), array([11.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([11.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([9.], dtype=float32), array([11.], dtype=float32), array([9.], dtype=float32), array([10.], dtype=float32), array([9.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([9.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([9.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([9.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([9.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([9.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([9.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([11.], dtype=float32), array([10.], dtype=float32), array([9.], dtype=float32), array([10.], dtype=float32), array([9.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32)]}
+
+ Policy: <stable_baselines3.ppo.ppo.PPO object at 0x7fc7e368cf10>
+
+15:13:37 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+15:14:08 main.py:49 INFO
+	state 0: 
+reward function: 
+
+None
+
+ Performances: 
+
+{'train_success_rate': 100.0, 'train_episodes': 378, 'custom_metrics': {}, 'test_success_rate': 0.0, 'test_rewards': [array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([11.], dtype=float32), array([10.], dtype=float32), array([9.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([9.], dtype=float32), array([9.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([11.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([9.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([9.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([9.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([11.], dtype=float32), array([10.], dtype=float32), array([9.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([9.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([9.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([9.], dtype=float32), array([10.], dtype=float32), array([9.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([11.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([11.], dtype=float32), array([9.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([9.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32)]}
+
+ Policy: <stable_baselines3.ppo.ppo.PPO object at 0x7f7cf896db50>
+
+15:16:44 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+15:17:36 main.py:49 INFO
+	state 0: 
+reward function: 
+
+None
+
+ Performances: 
+
+{'train_success_rate': 100.0, 'train_episodes': 461, 'custom_metrics': {}, 'test_success_rate': 0.0, 'test_rewards': [array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([9.], dtype=float32), array([9.], dtype=float32), array([9.], dtype=float32), array([10.], dtype=float32), array([9.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([9.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([9.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([9.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([9.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([9.], dtype=float32), array([9.], dtype=float32), array([10.], dtype=float32), array([9.], dtype=float32), array([9.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([9.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([9.], dtype=float32), array([8.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([9.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([9.], dtype=float32), array([9.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([9.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([9.], dtype=float32), array([10.], dtype=float32), array([9.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([9.], dtype=float32), array([10.], dtype=float32), array([9.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([11.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32), array([9.], dtype=float32), array([10.], dtype=float32), array([10.], dtype=float32)]}
+
+ Policy: <stable_baselines3.ppo.ppo.PPO object at 0x7f9e6c5d5010>
+
+16:01:07 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+16:02:01 main.py:49 INFO
+	state 0: 
+reward function: 
+
+None
+
+ Performances: 
+
+{'train_success_rate': 100.0, 'train_episodes': 479, 'custom_metrics': {}, 'test_success_rate': 0.0, 'test_rewards': [10.0, 10.0, 10.0, 10.0, 10.0, 9.0, 10.0, 10.0, 10.0, 10.0, 10.0, 11.0, 10.0, 10.0, 9.0, 10.0, 9.0, 10.0, 10.0, 9.0, 10.0, 10.0, 9.0, 10.0, 11.0, 10.0, 10.0, 10.0, 10.0, 10.0, 9.0, 9.0, 9.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 9.0, 10.0, 10.0, 10.0, 10.0, 11.0, 9.0, 11.0, 9.0, 10.0, 10.0, 10.0, 10.0, 10.0, 9.0, 10.0, 9.0, 10.0, 11.0, 10.0, 10.0, 9.0, 9.0, 9.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 9.0, 10.0, 10.0, 10.0, 10.0, 10.0, 9.0, 10.0, 9.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 11.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 9.0, 10.0, 10.0, 10.0, 10.0, 10.0, 11.0]}
+
+ Policy: <stable_baselines3.ppo.ppo.PPO object at 0x7fba63151910>
+
+16:03:50 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+16:04:46 main.py:49 INFO
+	state 0: 
+reward function: 
+
+None
+
+ Performances: 
+
+{'train_success_rate': 100.0, 'train_episodes': 474, 'custom_metrics': {}, 'test_success_rate': 0.0, 'test_rewards': [10.0, 10.0, 10.0, 10.0, 10.0, 11.0, 10.0, 26.0, 11.0, 13.0, 11.0, 10.0, 26.0, 12.0, 14.0, 14.0, 10.0, 10.0, 10.0, 10.0, 10.0, 11.0, 11.0, 10.0, 10.0, 11.0, 10.0, 14.0, 10.0, 10.0, 13.0, 14.0, 10.0, 15.0, 10.0, 10.0, 10.0, 11.0, 13.0, 14.0, 10.0, 10.0, 10.0, 11.0, 10.0, 11.0, 10.0, 11.0, 13.0, 10.0, 10.0, 10.0, 10.0, 12.0, 23.0, 10.0, 10.0, 11.0, 10.0, 19.0, 10.0, 10.0, 11.0, 10.0, 10.0, 10.0, 16.0, 10.0, 13.0, 10.0, 12.0, 11.0, 18.0, 10.0, 11.0, 13.0, 10.0, 15.0, 10.0, 10.0, 12.0, 10.0, 30.0, 11.0, 10.0, 11.0, 10.0, 14.0, 10.0, 14.0, 11.0, 18.0, 10.0, 12.0, 10.0, 12.0, 11.0, 10.0, 12.0, 10.0]}
+
+ Policy: <stable_baselines3.ppo.ppo.PPO object at 0x7f44e8c6bb10>
+
+16:14:08 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+16:15:05 main.py:49 INFO
+	state 0: 
+reward function: 
+
+None
+
+ Performances: 
+
+{'train_success_rate': 100.0, 'train_episodes': 475, 'custom_metrics': {}, 'test_success_rate': 0.0, 'test_rewards': [8.0, 10.0, 10.0, 9.0, 10.0, 11.0, 10.0, 9.0, 8.0, 9.0, 8.0, 10.0, 11.0, 10.0, 10.0, 10.0, 9.0, 10.0, 10.0, 11.0, 10.0, 8.0, 8.0, 9.0, 10.0, 9.0, 9.0, 9.0, 10.0, 10.0, 9.0, 10.0, 8.0, 8.0, 10.0, 10.0, 8.0, 10.0, 10.0, 10.0, 10.0, 11.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 8.0, 10.0, 8.0, 9.0, 11.0, 9.0, 8.0, 8.0, 9.0, 9.0, 10.0, 11.0, 11.0, 8.0, 9.0, 10.0, 9.0, 10.0, 9.0, 9.0, 9.0, 9.0, 9.0, 10.0, 9.0, 9.0, 9.0, 10.0, 10.0, 10.0, 10.0, 9.0, 10.0, 9.0, 9.0, 10.0, 9.0, 9.0, 10.0, 10.0, 9.0, 10.0, 10.0, 11.0, 9.0, 9.0, 10.0, 10.0, 10.0, 9.0, 10.0]}
+
+ Policy: <stable_baselines3.ppo.ppo.PPO object at 0x7fb34653d990>
+
+16:18:42 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+16:19:37 main.py:49 INFO
+	state 0: 
+reward function: 
+
+None
+
+ Performances: 
+
+{'train_success_rate': 100.0, 'train_episodes': 467, 'custom_metrics': {}, 'test_success_rate': 0.0, 'test_rewards': [9.0, 10.0, 9.0, 11.0, 10.0, 10.0, 10.0, 10.0, 11.0, 10.0, 10.0, 10.0, 9.0, 9.0, 10.0, 11.0, 9.0, 9.0, 10.0, 9.0, 10.0, 10.0, 10.0, 10.0, 10.0, 9.0, 11.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 11.0, 10.0, 9.0, 10.0, 9.0, 9.0, 10.0, 9.0, 10.0, 9.0, 10.0, 11.0, 9.0, 11.0, 10.0, 10.0, 10.0, 10.0, 10.0, 9.0, 10.0, 9.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 9.0, 10.0, 9.0, 9.0, 10.0, 10.0, 10.0, 10.0, 10.0, 9.0, 10.0, 10.0, 9.0, 10.0, 9.0, 9.0, 9.0, 9.0, 10.0, 10.0, 10.0, 10.0, 9.0, 11.0, 9.0, 10.0, 9.0, 10.0, 10.0, 8.0, 10.0, 10.0, 9.0, 9.0, 10.0, 10.0]}
+
+ Policy: <stable_baselines3.ppo.ppo.PPO object at 0x7fb319e2d550>
+

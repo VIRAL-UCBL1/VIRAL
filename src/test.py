@@ -95,7 +95,7 @@ def reward_func(observations:np.ndarray, terminated: bool, truncated: bool) -> f
 
 
 # Parallel environments
-vec_env = make_vec_env("CartPole-v1", n_envs=4, wrapper_class=CustomRewardWrapper, wrapper_kwargs={'llm_reward_function': reward_func})
+vec_env = make_vec_env("CartPole-v1", n_envs=1, wrapper_class=CustomRewardWrapper, wrapper_kwargs={'llm_reward_function': reward_func})
 
 model = PPO("MlpPolicy", vec_env, verbose=1)
 
@@ -103,7 +103,7 @@ model = PPO("MlpPolicy", vec_env, verbose=1)
 training_callback = TrainingInfoCallback()
 
 # Entraînement
-model.learn(total_timesteps=60000, callback=training_callback)
+policy = model.learn(total_timesteps=60000, callback=training_callback)
 
 # Récupération des métriques après l'entraînement
 metrics = training_callback.get_metrics()
@@ -111,4 +111,14 @@ metrics = training_callback.get_metrics()
 print(f"Nombre total d'épisodes : {metrics['total_episodes']}")
 print(f"Épisodes terminés (terminated) : {metrics['terminated_count']}")
 print(f"Épisodes tronqués (truncated) : {metrics['truncated_count']}")
-# Exemple de visualisation des métriques
+def func_test(pol, env):
+    obs = vec_env.reset()
+    rewards = 0
+    while True:
+        action, _states = pol.predict(obs)
+        obs, reward, dones, info = env.step(action)
+        rewards += reward
+        if dones[0]:
+            break
+    print(rewards)
+func_test(policy, vec_env)
