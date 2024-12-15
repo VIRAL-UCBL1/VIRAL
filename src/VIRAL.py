@@ -31,6 +31,9 @@ class VIRAL:
                 model (str): Language model for reward generation
                 learning_method (str): Reinforcement learning method
         """
+        if (options.get("seed") is None):
+            options["seed"] = random.randint(0, 1000000)
+
         self.llm = OllamaChat(
             model=model,
             system_prompt="""
@@ -52,7 +55,7 @@ class VIRAL:
         self.learning_method = None
         self.memory: List[State] = [State(0)]
         self.logger = getLogger("VIRAL")
-        self._learning(self.memory[0])
+        #self._learning(self.memory[0])
         #self.training_callback = TrainingInfoCallback()
 
     def generate_reward_function(
@@ -94,8 +97,6 @@ class VIRAL:
             #"seed": 42, # a utiliser pour la reproductibilité des résultats (important si publication)
         }
         ### INIT STAGE ###
-        if (additional_options.get("seed") is None):
-            additional_options["seed"] = random.randint(0, 1000000)
         for i in [1, 2]:
             prompt = f"""
         Complete the reward function for a {self.env_type.value} environment.

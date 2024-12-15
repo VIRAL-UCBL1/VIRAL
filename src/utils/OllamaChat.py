@@ -29,7 +29,7 @@ class OllamaChat:
         self.logger = getLogger("VIRAL")
 
         if system_prompt:
-            self.logger.info(f"System: {system_prompt}")
+            self.logger.info(f"System: {system_prompt}, Options: {self.options}")
             self.add_message(system_prompt, role="system")
 
     def add_message(self, content: str, role: str = "user", **kwargs) -> None:
