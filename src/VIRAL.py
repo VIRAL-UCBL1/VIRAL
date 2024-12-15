@@ -56,7 +56,7 @@ class VIRAL:
         self.memory: List[State] = [State(0)]
         self.logger = getLogger("VIRAL")
         #self._learning(self.memory[0])
-        #self.training_callback = TrainingInfoCallback()
+
 
     def generate_reward_function(
         self, task_description: str, iterations: int = 1
