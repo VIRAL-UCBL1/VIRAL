@@ -27,6 +27,8 @@ def parse_logger():
         print("Verbose mode enabled")
     else:
         init_logger("INFO")
+
+    return getLogger()
     
 
 if __name__ == "__main__":

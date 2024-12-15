@@ -15,6 +15,7 @@ from utils.TrainingInfoCallback import TrainingInfoCallback
 from stable_baselines3 import PPO
 from stable_baselines3.common.env_util import make_vec_env
 import gymnasium as gym
+import torch
 
 class VIRAL:
     def __init__(
@@ -244,21 +245,18 @@ class VIRAL:
 
     def _learning(self, state: State) -> None:
         """train a policy on an environment"""
-        self.logger.debug(f"state {state.idx} begin is learning")
+        self.logger.debug(f"state {state.idx} begin is learning with reward function: {state.reward_func_str}")
         vec_env, model = self._generate_env_model(state.reward_func)
         training_callback = TrainingInfoCallback()
         policy = model.learn(total_timesteps=60000, callback=training_callback)
         metrics = training_callback.get_metrics()
+        self.logger.debug(f"TRAINING METRICS: {metrics}")
         self.memory[state.idx].set_policy(policy)
         observations, rewards, sr_test = self.test_policy(vec_env, policy)
+        # ajoute au dict metrics les performances sans ecraser les anciennes
         metrics["test_success_rate"] = sr_test
-        metrics["test_rewards"] = rewards
-        perso_observations = []
-        for objective_metric in self.objectives_metrics:
-            perso_observations.append(objective_metric(observations))
         self.memory[state.idx].set_performances(metrics)
-        print(f"state {state.idx} performances: {metrics}")
-        self.logger.debug(f"state {state.idx} as finished is learning")
+        self.logger.debug(f"state {state.idx} as finished is learning with performances: {metrics}")
 
     def evaluate_policy(self, idx1: int, idx2: int) -> int:
         """
@@ -314,7 +312,7 @@ class VIRAL:
         """
         vec_env = make_vec_env(self.env_type.value, n_envs=1, wrapper_class=CustomRewardWrapper, wrapper_kwargs={'llm_reward_function': reward_func})
         if self.learning_algo == Algo.PPO:
-            model = PPO("MlpPolicy", vec_env, verbose=1)
+            model = PPO("MlpPolicy", vec_env, verbose=1, device="cpu")
         else:
             raise ValueError("The learning algorithm is not implemented.")
         
