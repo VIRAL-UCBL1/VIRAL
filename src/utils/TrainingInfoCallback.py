@@ -1,10 +1,6 @@
-from typing import Callable
-import gymnasium as gym
 import numpy as np
 from stable_baselines3.common.callbacks import BaseCallback
-from utils.CustomRewardWrapper import CustomRewardWrapper
-from stable_baselines3 import PPO
-from stable_baselines3.common.env_util import make_vec_env
+
 class TrainingInfoCallback(BaseCallback):
     def __init__(self, verbose=0):
         super().__init__(verbose)
@@ -14,13 +10,14 @@ class TrainingInfoCallback(BaseCallback):
             'episode_lengths': [],
             'mean_rewards': [],
             'mean_lengths': [],
-            'terminated_count': 0,  # Nombre d'épisodes terminés normalement
-            'truncated_count': 0,   # Nombre d'épisodes tronqués
-            'total_episodes': 0     # Nombre total d'épisodes
+            'terminated_count': 0,
+            'truncated_count': 0,
+            'total_episodes': 0
         }
         
         self.current_episode_reward = 0
         self.current_episode_length = 0
+        self.custom_metrics = {}
 
     def _on_step(self) -> bool:
         for reward, done, truncated in zip(
@@ -62,53 +59,23 @@ class TrainingInfoCallback(BaseCallback):
         
         return True
 
-    def get_metrics(self):
-        """
-        Méthode pour récupérer toutes les métriques collectées
-        """
-        return {
-            'timesteps': self.training_metrics['timesteps'],
-            'episode_rewards': self.training_metrics['episode_rewards'],
-            'episode_lengths': self.training_metrics['episode_lengths'],
-            'mean_rewards_10_episodes': self.training_metrics['mean_rewards'],
-            'mean_lengths_10_episodes': self.training_metrics['mean_lengths'],
-            'terminated_count': self.training_metrics['terminated_count'],
-            'truncated_count': self.training_metrics['truncated_count'],
-            'total_episodes': self.training_metrics['total_episodes']
+    def _on_training_end(self) -> None:
+        # Calculer le taux de succès à l'entraînement
+        try:
+            train_success_rate = (self.training_metrics['terminated_count'] / 
+                                  self.training_metrics['total_episodes']) * 100
+        except ZeroDivisionError:
+            train_success_rate = 0
+
+        # Préparer les métriques finales
+        self.results = {
+            "train_success_rate": train_success_rate,
+            "train_episodes": self.training_metrics['total_episodes'],
+            "custom_metrics": self.custom_metrics
         }
 
-def reward_func(observations:np.ndarray, terminated: bool, truncated: bool) -> float:
-    """Reward function for CartPole
-
-    Args:
-        observations (np.ndarray): observation on the current state
-        terminated (bool): episode is terminated due a failure
-        truncated (bool): episode is truncated due a success
-
-    Returns:
-        float: The reward for the current step
-    """
-    if terminated or truncated:
-        return -1.0  # Penalize termination or truncation
-    else:
-        return 1.0  # Reward for every step taken
-
-
-# Parallel environments
-vec_env = make_vec_env("CartPole-v1", n_envs=4, wrapper_class=CustomRewardWrapper, wrapper_kwargs={'llm_reward_function': reward_func})
-
-model = PPO("MlpPolicy", vec_env, verbose=1)
-
-# Utilisation
-training_callback = TrainingInfoCallback()
-
-# Entraînement
-model.learn(total_timesteps=60000, callback=training_callback)
-
-# Récupération des métriques après l'entraînement
-metrics = training_callback.get_metrics()
-
-print(f"Nombre total d'épisodes : {metrics['total_episodes']}")
-print(f"Épisodes terminés (terminated) : {metrics['terminated_count']}")
-print(f"Épisodes tronqués (truncated) : {metrics['truncated_count']}")
-# Exemple de visualisation des métriques
+    def get_metrics(self):
+        """
+        Méthode pour récupérer les métriques dans le format spécifié
+        """
+        return self.results if hasattr(self, 'results') else {}

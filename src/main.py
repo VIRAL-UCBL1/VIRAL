@@ -4,14 +4,16 @@ from logging import getLogger
 import gymnasium as gym
 
 from log.log_config import init_logger
-from ObjectivesMetrics import objective_metric_CartPole
+from utils.ObjectivesMetrics import objective_metric_CartPole
 from RLAlgo.DirectSearch import DirectSearch
 from RLAlgo.Reinforce import Reinforce
 from VIRAL import VIRAL
 
-from CustomRewardWrapper import CustomRewardWrapper
+from utils.CustomRewardWrapper import CustomRewardWrapper
 from stable_baselines3 import PPO
 from stable_baselines3.common.env_util import make_vec_env
+from utils.Environments import Environments
+from utils.Algo import Algo
 
 def parse_logger():
     parser = argparse.ArgumentParser()
@@ -29,13 +31,9 @@ def parse_logger():
     
 
 if __name__ == "__main__":
-    parse_logger()
-    vec_env = make_vec_env("CartPole-v1", n_envs=4)
-    learning_method = PPO("MlpPolicy", vec_env, verbose=1)
-    learning_method.learn(total_timesteps=25000)
+    logger = parse_logger()
 
-    objectives_metrics = [objective_metric_CartPole]
-    viral = VIRAL("PPO", "CartPole-v1", objectives_metrics)
+    viral = VIRAL(Algo.PPO, Environments.CARTPOLE)
     res = viral.generate_reward_function(
         task_description="""Balance a pole on a cart, 
         Num Observation Min Max

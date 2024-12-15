@@ -4934,3 +4934,733 @@ def reward_func(observations: np.ndarray, terminated: bool, truncated: bool) -> 
 12:12:12 VIRAL.py:174 WARNING
 	Error syntax Syntax error in the generated code : unexpected indent (<string>, line 4)
 
+13:21:33 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+13:22:01 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+13:22:44 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+13:22:52 VIRAL.py:119 INFO
+	additional options: {'temperature': 1, 'repeat_penalty': 1.5, 'tfs_z': 1.2, 'seed': 613243}
+
+13:22:56 VIRAL.py:162 WARNING
+	Error syntax Syntax error in the generated code : inconsistent use of tabs and spaces in indentation (<string>, line 6)
+
+13:23:04 VIRAL.py:162 WARNING
+	Error syntax Syntax error in the generated code : unterminated string literal (detected at line 1) (<string>, line 1)
+
+13:23:12 VIRAL.py:162 WARNING
+	Error syntax Syntax error in the generated code : unterminated string literal (detected at line 1) (<string>, line 1)
+
+13:23:19 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+13:23:21 VIRAL.py:119 INFO
+	additional options: {'temperature': 1, 'repeat_penalty': 1.5, 'tfs_z': 1.2, 'seed': 643271}
+
+13:23:25 VIRAL.py:162 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 8)
+
+13:23:31 VIRAL.py:162 WARNING
+	Error syntax Syntax error in the generated code : unindent does not match any outer indentation level (<string>, line 11)
+
+13:23:37 VIRAL.py:162 WARNING
+	Error syntax Syntax error in the generated code : unindent does not match any outer indentation level (<string>, line 11)
+
+13:23:43 VIRAL.py:162 WARNING
+	Error syntax Syntax error in the generated code : unindent does not match any outer indentation level (<string>, line 11)
+
+13:23:50 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+13:23:52 VIRAL.py:119 INFO
+	additional options: {'temperature': 1, 'repeat_penalty': 1.5, 'tfs_z': 1.2, 'seed': 942914}
+
+13:23:53 VIRAL.py:162 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 4)
+
+13:24:10 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+13:24:12 VIRAL.py:119 INFO
+	additional options: {'temperature': 1, 'seed': 76352}
+
+13:26:44 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+13:26:46 VIRAL.py:120 INFO
+	additional options: {'temperature': 1, 'seed': 656100}
+
+13:27:42 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+13:27:44 VIRAL.py:120 INFO
+	additional options: {'temperature': 1, 'seed': 339103}
+
+13:27:47 VIRAL.py:120 INFO
+	additional options: {'temperature': 1, 'seed': 339103}
+
+13:27:48 main.py:49 INFO
+	state 0: 
+reward function: 
+
+None
+
+ isn't trained yet
+
+13:27:48 main.py:49 INFO
+	state 1: 
+reward function: 
+
+def reward_func(observations:np.ndarray, terminated: bool, truncated: bool) -> float:
+    if terminated or truncated:
+        return -1.0
+    else:
+        return 1.0 - observations[2]**2
+
+ isn't trained yet
+
+13:27:48 main.py:49 INFO
+	state 2: 
+reward function: 
+
+def reward_func(observations:np.ndarray, terminated: bool, truncated: bool) -> float:
+    if terminated or truncated:
+        return -1.0
+    else:
+        return 1.0 + observations[2]**2
+
+ isn't trained yet
+
+13:27:59 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+13:28:01 VIRAL.py:120 INFO
+	additional options: {'temperature': 1, 'seed': 734281}
+
+13:28:06 VIRAL.py:120 INFO
+	additional options: {'temperature': 1, 'seed': 734281}
+
+13:28:08 main.py:49 INFO
+	state 0: 
+reward function: 
+
+None
+
+ isn't trained yet
+
+13:28:08 main.py:49 INFO
+	state 1: 
+reward function: 
+
+import numpy as np
+
+def reward_func(observations:np.ndarray, terminated: bool, truncated: bool) -> float:
+    """Reward function for CartPole-v1
+
+    Args:
+        observations (np.ndarray): observation on the current state
+        terminated (bool): episode is terminated due a failure
+        truncated (bool): episode is truncated due a success
+
+    Returns:
+        float: The reward for the current step
+    """
+    pole_angle = observations[2]
+    
+    if terminated or truncated:
+        return -1.0
+    else:
+        return 1.0 - abs(pole_angle) / np.pi * 2
+
+ isn't trained yet
+
+13:28:08 main.py:49 INFO
+	state 2: 
+reward function: 
+
+import numpy as np
+
+def reward_func(observations:np.ndarray, terminated: bool, truncated: bool) -> float:
+    """Reward function for CartPole-v1
+
+    Args:
+        observations (np.ndarray): observation on the current state
+        terminated (bool): episode is terminated due a failure
+        truncated (bool): episode is truncated due a success
+
+    Returns:
+        float: The reward for the current step
+    """
+    pole_angle = observations[2]
+    
+    if terminated or truncated:
+        return -1.0
+    else:
+        return 1.0 - abs(pole_angle) / np.pi * 2
+
+ isn't trained yet
+
+13:28:32 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+13:28:34 VIRAL.py:120 INFO
+	additional options: {'temperature': 1, 'seed': 735279}
+
+13:28:38 VIRAL.py:120 INFO
+	additional options: {'temperature': 1, 'seed': 735279}
+
+13:28:40 main.py:49 INFO
+	state 0: 
+reward function: 
+
+None
+
+ isn't trained yet
+
+13:28:40 main.py:49 INFO
+	state 1: 
+reward function: 
+
+def reward_func(observations: np.ndarray, terminated: bool, truncated: bool) -> float:
+    """Reward function for CartPole-v1
+
+    Args:
+        observations (np.ndarray): observation on the current state
+        terminated (bool): episode is terminated due a failure
+        truncated (bool): episode is truncated due a success
+
+    Returns:
+        float: The reward for the current step
+    """
+    if terminated or truncated:
+        return -1.0
+    else:
+        return 1.0
+
+ isn't trained yet
+
+13:28:40 main.py:49 INFO
+	state 2: 
+reward function: 
+
+def reward_func(observations: np.ndarray, terminated: bool, truncated: bool) -> float:
+    """Reward function for CartPole-v1
+
+    Args:
+        observations (np.ndarray): observation on the current state
+        terminated (bool): episode is terminated due a failure
+        truncated (bool): episode is truncated due a success
+
+    Returns:
+        float: The reward for the current step
+    """
+    if terminated or truncated:
+        return -1.0
+    else:
+        angle = observations[2]
+        return 1.0 - abs(angle / 0.418)
+
+ isn't trained yet
+
+13:29:39 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+13:29:41 VIRAL.py:120 INFO
+	additional options: {'temperature': 1, 'seed': 601536}
+
+13:29:45 VIRAL.py:120 INFO
+	additional options: {'temperature': 1, 'seed': 601536}
+
+13:31:18 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+13:31:20 VIRAL.py:120 INFO
+	additional options: {'temperature': 1, 'seed': 379124}
+
+13:31:25 VIRAL.py:120 INFO
+	additional options: {'temperature': 1, 'seed': 379124}
+
+13:36:36 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+13:36:44 VIRAL.py:120 INFO
+	additional options: {'temperature': 1, 'seed': 161778}
+
+13:36:49 VIRAL.py:120 INFO
+	additional options: {'temperature': 1, 'seed': 161778}
+
+13:38:14 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+13:38:16 VIRAL.py:120 INFO
+	additional options: {'temperature': 1, 'seed': 478769}
+
+13:38:21 VIRAL.py:120 INFO
+	additional options: {'temperature': 1, 'seed': 478769}
+
+13:39:24 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+13:39:26 VIRAL.py:120 INFO
+	additional options: {'temperature': 1, 'seed': 788195}
+
+13:39:30 VIRAL.py:120 INFO
+	additional options: {'temperature': 1, 'seed': 788195}
+
+13:41:01 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+13:41:04 VIRAL.py:120 INFO
+	additional options: {'temperature': 1, 'seed': 222331}
+
+13:41:08 VIRAL.py:120 INFO
+	additional options: {'temperature': 1, 'seed': 222331}
+
+13:43:39 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+13:43:42 VIRAL.py:120 INFO
+	additional options: {'temperature': 1, 'seed': 392125}
+
+13:43:46 VIRAL.py:120 INFO
+	additional options: {'temperature': 1, 'seed': 392125}
+
+13:44:00 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+13:44:02 VIRAL.py:120 INFO
+	additional options: {'temperature': 1, 'seed': 655337}
+
+13:44:06 VIRAL.py:120 INFO
+	additional options: {'temperature': 1, 'seed': 655337}
+
+13:45:58 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+13:46:01 VIRAL.py:120 INFO
+	additional options: {'temperature': 1, 'seed': 87728}
+
+13:46:06 VIRAL.py:120 INFO
+	additional options: {'temperature': 1, 'seed': 87728}
+
+13:47:36 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+13:47:38 VIRAL.py:120 INFO
+	additional options: {'temperature': 1, 'seed': 681457}
+
+13:47:41 VIRAL.py:120 INFO
+	additional options: {'temperature': 1, 'seed': 681457}
+
+13:48:17 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+13:48:19 VIRAL.py:120 INFO
+	additional options: {'temperature': 1, 'seed': 189860}
+
+13:48:23 VIRAL.py:120 INFO
+	additional options: {'temperature': 1, 'seed': 189860}
+
+13:49:22 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+13:49:24 VIRAL.py:120 INFO
+	additional options: {'temperature': 1, 'seed': 973783}
+
+13:49:29 VIRAL.py:120 INFO
+	additional options: {'temperature': 1, 'seed': 973783}
+
+13:53:34 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+13:53:36 VIRAL.py:120 INFO
+	additional options: {'temperature': 1, 'seed': 606951}
+
+13:53:42 VIRAL.py:120 INFO
+	additional options: {'temperature': 1, 'seed': 606951}
+
+13:54:10 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+13:54:12 VIRAL.py:120 INFO
+	additional options: {'temperature': 1, 'seed': 743526}
+
+13:54:17 VIRAL.py:120 INFO
+	additional options: {'temperature': 1, 'seed': 743526}
+
+13:57:01 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+13:57:03 VIRAL.py:120 INFO
+	additional options: {'temperature': 1, 'seed': 973923}
+
+13:57:08 VIRAL.py:120 INFO
+	additional options: {'temperature': 1, 'seed': 973923}
+
+13:59:21 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+13:59:23 VIRAL.py:120 INFO
+	additional options: {'temperature': 1, 'seed': 234892}
+
+13:59:29 VIRAL.py:120 INFO
+	additional options: {'temperature': 1, 'seed': 234892}
+
+14:03:19 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+14:03:21 VIRAL.py:120 INFO
+	additional options: {'temperature': 1, 'seed': 285825}
+
+14:03:26 VIRAL.py:120 INFO
+	additional options: {'temperature': 1, 'seed': 285825}
+
+14:19:52 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+14:20:00 VIRAL.py:120 INFO
+	additional options: {'temperature': 1, 'seed': 523047}
+
+14:20:05 VIRAL.py:120 INFO
+	additional options: {'temperature': 1, 'seed': 523047}
+
+14:21:07 main.py:49 INFO
+	state 0: 
+reward function: 
+
+None
+
+ isn't trained yet
+
+14:21:07 main.py:49 INFO
+	state 1: 
+reward function: 
+
+import numpy as np
+
+def reward_func(observations:np.ndarray, terminated: bool, truncated: bool) -> float:
+    """Reward function for CartPole-v1
+
+    Args:
+        observations (np.ndarray): observation on the current state
+        terminated (bool): episode is terminated due a failure
+        truncated (bool): episode is truncated due a success
+
+    Returns:
+        float: The reward for the current step
+    """
+    angle = observations[2]
+    if terminated or truncated:
+        return -1.0  # Failure or success, negative reward
+    else:
+        return np.cos(angle)  # Positive reward based on pole's vertical alignment
+
+ Performances: 
+
+{'train_success_rate': 100.0, 'train_episodes': 266, 'custom_metrics': {}, 'test_success_rate': 0.0, 'test_rewards': [array([6.9661956], dtype=float32), array([7.9666786], dtype=float32), array([7.9743767], dtype=float32), array([6.9526296], dtype=float32), array([7.9711695], dtype=float32), array([6.9662633], dtype=float32), array([6.9566326], dtype=float32), array([6.9468813], dtype=float32), array([7.968299], dtype=float32), array([7.9710064], dtype=float32), array([7.9740477], dtype=float32), array([7.9554615], dtype=float32), array([7.9686165], dtype=float32), array([6.9505167], dtype=float32), array([7.975523], dtype=float32), array([7.974062], dtype=float32), array([7.974058], dtype=float32), array([7.975336], dtype=float32), array([6.9584856], dtype=float32), array([7.9685783], dtype=float32), array([6.9728503], dtype=float32), array([6.9664545], dtype=float32), array([7.973238], dtype=float32), array([7.9752445], dtype=float32), array([6.97116], dtype=float32), array([8.958213], dtype=float32), array([6.9739437], dtype=float32), array([7.9682894], dtype=float32), array([7.970299], dtype=float32), array([8.957311], dtype=float32), array([7.962881], dtype=float32), array([6.966643], dtype=float32), array([6.9740434], dtype=float32), array([7.970749], dtype=float32), array([7.9729576], dtype=float32), array([7.963971], dtype=float32), array([7.9719152], dtype=float32), array([7.973875], dtype=float32), array([7.960619], dtype=float32), array([7.95782], dtype=float32), array([7.97324], dtype=float32), array([7.969879], dtype=float32), array([6.9488845], dtype=float32), array([6.9505363], dtype=float32), array([6.9723186], dtype=float32), array([6.9681463], dtype=float32), array([6.951812], dtype=float32), array([6.973339], dtype=float32), array([7.969619], dtype=float32), array([6.969921], dtype=float32), array([5.965583], dtype=float32), array([7.9729977], dtype=float32), array([7.967022], dtype=float32), array([7.9752455], dtype=float32), array([6.9745774], dtype=float32), array([6.946839], dtype=float32), array([7.9725657], dtype=float32), array([6.968704], dtype=float32), array([7.971817], dtype=float32), array([7.955346], dtype=float32), array([7.9672003], dtype=float32), array([6.9571753], dtype=float32), array([7.9757013], dtype=float32), array([7.9652205], dtype=float32), array([6.959957], dtype=float32), array([6.958987], dtype=float32), array([6.973798], dtype=float32), array([7.965373], dtype=float32), array([6.9544606], dtype=float32), array([6.9696803], dtype=float32), array([6.9539676], dtype=float32), array([7.9676437], dtype=float32), array([7.961423], dtype=float32), array([7.9618893], dtype=float32), array([7.9730186], dtype=float32), array([6.969637], dtype=float32), array([7.9639864], dtype=float32), array([6.9628677], dtype=float32), array([7.961005], dtype=float32), array([6.9554634], dtype=float32), array([7.969965], dtype=float32), array([7.966872], dtype=float32), array([7.9683123], dtype=float32), array([7.9744987], dtype=float32), array([7.974103], dtype=float32), array([6.960107], dtype=float32), array([7.960619], dtype=float32), array([6.9713655], dtype=float32), array([7.97474], dtype=float32), array([7.973501], dtype=float32), array([7.963004], dtype=float32), array([6.9714313], dtype=float32), array([7.974412], dtype=float32), array([6.94937], dtype=float32), array([6.966172], dtype=float32), array([6.9685435], dtype=float32), array([7.9758053], dtype=float32), array([6.9507504], dtype=float32), array([7.9687405], dtype=float32), array([6.9664655], dtype=float32)]}
+
+ Policy: <stable_baselines3.ppo.ppo.PPO object at 0x000002B5C91C6110>
+
+14:21:07 main.py:49 INFO
+	state 2: 
+reward function: 
+
+import numpy as np
+
+def reward_func(observations:np.ndarray, terminated: bool, truncated: bool) -> float:
+    """Reward function for CartPole-v1
+
+    Args:
+        observations (np.ndarray): observation on the current state
+        terminated (bool): episode is terminated due a failure
+        truncated (bool): episode is truncated due a success
+
+    Returns:
+        float: The reward for the current step
+    """
+    angle = observations[2]
+    if terminated or truncated:
+        return -1.0  # Failure or success, negative reward
+    else:
+        return np.cos(angle) + 0.5 * (angle**2 < 0.2)**2  # Positive reward based on pole's vertical alignment and stability
+
+ Performances: 
+
+{'train_success_rate': 100.0, 'train_episodes': 251, 'custom_metrics': {}, 'test_success_rate': 0.0, 'test_rewards': [array([10.95259], dtype=float32), array([13.957707], dtype=float32), array([10.969561], dtype=float32), array([12.471957], dtype=float32), array([12.472703], dtype=float32), array([12.467831], dtype=float32), array([10.973705], dtype=float32), array([12.460483], dtype=float32), array([12.457328], dtype=float32), array([12.461605], dtype=float32), array([10.963558], dtype=float32), array([12.475749], dtype=float32), array([9.464667], dtype=float32), array([12.466751], dtype=float32), array([12.455445], dtype=float32), array([10.945679], dtype=float32), array([12.470938], dtype=float32), array([12.471609], dtype=float32), array([12.470207], dtype=float32), array([10.972839], dtype=float32), array([12.467936], dtype=float32), array([10.968296], dtype=float32), array([10.961361], dtype=float32), array([12.467699], dtype=float32), array([12.462386], dtype=float32), array([12.470747], dtype=float32), array([12.452126], dtype=float32), array([12.469376], dtype=float32), array([12.464769], dtype=float32), array([13.958049], dtype=float32), array([12.472413], dtype=float32), array([10.967122], dtype=float32), array([10.956684], dtype=float32), array([12.460769], dtype=float32), array([12.473208], dtype=float32), array([10.974245], dtype=float32), array([12.466009], dtype=float32), array([12.462774], dtype=float32), array([10.968747], dtype=float32), array([12.463215], dtype=float32), array([10.948158], dtype=float32), array([10.965016], dtype=float32), array([13.956003], dtype=float32), array([12.453936], dtype=float32), array([12.471634], dtype=float32), array([12.467441], dtype=float32), array([12.47491], dtype=float32), array([12.465915], dtype=float32), array([10.955706], dtype=float32), array([12.472738], dtype=float32), array([10.9681015], dtype=float32), array([12.466104], dtype=float32), array([10.968498], dtype=float32), array([12.463783], dtype=float32), array([12.461851], dtype=float32), array([10.961075], dtype=float32), array([12.470657], dtype=float32), array([12.466281], dtype=float32), array([12.461803], dtype=float32), array([12.459101], dtype=float32), array([10.9648285], dtype=float32), array([12.475041], dtype=float32), array([12.465155], dtype=float32), array([12.455122], dtype=float32), array([12.473621], dtype=float32), array([10.954266], dtype=float32), array([12.472059], dtype=float32), array([12.467389], dtype=float32), array([12.461479], dtype=float32), array([12.465909], dtype=float32), array([12.473216], dtype=float32), array([10.971273], dtype=float32), array([12.455473], dtype=float32), array([12.473352], dtype=float32), array([12.472754], dtype=float32), array([12.475703], dtype=float32), array([12.471912], dtype=float32), array([12.46884], dtype=float32), array([12.464479], dtype=float32), array([10.964634], dtype=float32), array([12.456501], dtype=float32), array([12.468685], dtype=float32), array([10.966262], dtype=float32), array([12.475623], dtype=float32), array([13.954869], dtype=float32), array([10.971606], dtype=float32), array([12.47558], dtype=float32), array([12.469751], dtype=float32), array([12.475481], dtype=float32), array([12.467912], dtype=float32), array([10.948302], dtype=float32), array([12.471239], dtype=float32), array([12.461482], dtype=float32), array([13.954246], dtype=float32), array([12.453873], dtype=float32), array([10.966632], dtype=float32), array([12.463488], dtype=float32), array([12.4592085], dtype=float32), array([12.473618], dtype=float32), array([10.966131], dtype=float32)]}
+
+ Policy: <stable_baselines3.ppo.ppo.PPO object at 0x000002B5D8250890>
+
+14:31:47 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+14:31:54 VIRAL.py:120 INFO
+	additional options: {'temperature': 1, 'seed': 614476}
+
+14:32:00 VIRAL.py:120 INFO
+	additional options: {'temperature': 1, 'seed': 614476}
+
