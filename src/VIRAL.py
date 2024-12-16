@@ -252,7 +252,7 @@ class VIRAL:
         metrics = training_callback.get_metrics()
         self.logger.debug(f"TRAINING METRICS: {metrics}")
         self.memory[state.idx].set_policy(policy)
-        observations, rewards, sr_test = self.test_policy(vec_env, policy)
+        sr_test = self.test_policy(vec_env, policy)
         # ajoute au dict metrics les performances sans ecraser les anciennes
         metrics["test_success_rate"] = sr_test
         self.memory[state.idx].set_performances(metrics)
@@ -302,9 +302,12 @@ class VIRAL:
                 obs, reward, dones, info = env.step(action)
                 epi_rewards += reward.item()
                 if dones[0]:
+                    if info[0]["TimeLimit.truncated"]:
+                        print("truncated")
+                        nb_success += 1
                     break
             all_rewards.append(epi_rewards)
-        return all_states, all_rewards, (nb_success / nb_episodes)
+        return (nb_success / nb_episodes)
 
     def _generate_env_model(self, reward_func):
         """
