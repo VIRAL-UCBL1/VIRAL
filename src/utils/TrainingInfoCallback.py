@@ -3,6 +3,7 @@ from stable_baselines3.common.callbacks import BaseCallback
 
 class TrainingInfoCallback(BaseCallback):
     # TODO refaire ces methodes, ne pas hésiter a tout delete :)
+    # /////////!!!\\\\\\ gerer vec env
     def __init__(self):
         super().__init__()
         self.training_metrics = {
