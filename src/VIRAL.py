@@ -126,7 +126,6 @@ class VIRAL:
             self.memory.append(State(i, reward_func, response))
             
         best_idx, worst_idx = self.evaluate_policy(1, 2) 
-        worst_idx = 1
         self.logger.debug(f"state to refine: {worst_idx}")
         ### SECOND STAGE ###
         for n in range(iterations - 1):

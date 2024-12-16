@@ -33,18 +33,10 @@ def parse_logger():
 
 if __name__ == "__main__":
     logger = parse_logger()
-
     viral = VIRAL(Algo.PPO, Environments.CARTPOLE)
     res = viral.generate_reward_function(
-        task_description="""Balance a pole on a cart, 
-        Num Observation Min Max
-        0 Cart Position -4.8 4.8
-        1 Cart Velocity -Inf Inf
-        2 Pole Angle ~ -0.418 rad (-24°) ~ 0.418 rad (24°)
-        3 Pole Angular Velocity -Inf Inf
-        Since the goal is to keep the pole upright for as long as possible.
-        """,
-        iterations=1,
+        task_description=Environments.CARTPOLE.task_description,
+        iterations=2,
     )
     for state in viral.memory:
         logger.info(state)
