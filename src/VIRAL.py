@@ -1,8 +1,10 @@
 import random
 import signal
 import sys
+from multiprocessing import Process, Queue
 from logging import getLogger
 from typing import Callable, Dict, List
+from venv import logger
 
 import numpy as np
 
@@ -54,10 +56,13 @@ class VIRAL:
         self.objectives_metrics = objectives_metrics
         self.learning_algo : Algo = learning_algo
         self.learning_method = None
-        self.memory: List[State] = [State(0)]
         self.logger = getLogger("VIRAL")
         #self._learning(self.memory[0])
-
+        self.queue = Queue()
+        self.memory: List[State] = [State(0)]
+        self.multi_process: list[Process] = []
+        self.multi_process.append(Process(target=self._learning, args=(self.memory[0], self.queue,)))
+        self.multi_process[0].start()
 
     def generate_reward_function(
         self, task_description: str, iterations: int = 1
@@ -242,7 +247,7 @@ class VIRAL:
 
         return len(self.memory) - 1
 
-    def _learning(self, state: State) -> None:
+    def _learning(self, state: State, queue: Queue) -> None:
         """train a policy on an environment"""
         self.logger.debug(f"state {state.idx} begin is learning with reward function: {state.reward_func_str}")
         vec_env, model = self._generate_env_model(state.reward_func)
@@ -250,12 +255,13 @@ class VIRAL:
         policy = model.learn(total_timesteps=60000, callback=training_callback)
         metrics = training_callback.get_metrics()
         self.logger.debug(f"TRAINING METRICS: {metrics}")
-        self.memory[state.idx].set_policy(policy)
         sr_test = self.test_policy(vec_env, policy)
         # ajoute au dict metrics les performances sans ecraser les anciennes
         metrics["test_success_rate"] = sr_test
-        self.memory[state.idx].set_performances(metrics)
         self.logger.debug(f"state {state.idx} as finished is learning with performances: {metrics}")
+        queue.put((state.idx, policy, metrics))
+
+
 
     def evaluate_policy(self, idx1: int, idx2: int) -> int:
         """
@@ -270,10 +276,23 @@ class VIRAL:
         """
         if len(self.memory) < 2:
             self.logger.error("At least two reward functions are required.")
+        to_join: int = []
         for i in [idx1, idx2]:
             if self.memory[i].performances is None:
-                self._learning(self.memory[i])
+                self.multi_process.append(Process(target=self._learning, args=(self.memory[i], self.queue,)))
+                self.multi_process[-1].start()
+                to_join.append(i)
         # TODO comparaison sur le success rate pour l'instant
+        for p in to_join:
+            self.logger.debug("waiting to join")
+            self.multi_process[p].join()
+                
+        # Retrieve results from the queue
+        while not self.queue.empty():
+            state_idx, policy, metrics = self.queue.get()
+            self.memory[state_idx].set_policy(policy)
+            self.memory[state_idx].set_performances(metrics)
+            self.logger.debug(f"state {state_idx} has finished learning with performances: {metrics}")
         if (
             self.memory[idx1].performances["test_success_rate"]
             > self.memory[idx2].performances["test_success_rate"]
@@ -298,7 +317,7 @@ class VIRAL:
             epi_rewards = 0
             while True:
                 action, _states = policy.predict(obs)
-                obs, reward, dones, info = env.step(action)
+                obs, reward, dones, info = env.step(action)  # TODO treat multiples envs
                 epi_rewards += reward.item()
                 if dones[0]:
                     if info[0]["TimeLimit.truncated"]:
@@ -313,7 +332,7 @@ class VIRAL:
         """
         vec_env = make_vec_env(self.env_type.value, n_envs=1, wrapper_class=CustomRewardWrapper, wrapper_kwargs={'llm_reward_function': reward_func})
         if self.learning_algo == Algo.PPO:
-            model = PPO("MlpPolicy", vec_env, verbose=1, device="cpu")
+            model = PPO("MlpPolicy", vec_env, verbose=0, device="cpu")
         else:
             raise ValueError("The learning algorithm is not implemented.")
         
