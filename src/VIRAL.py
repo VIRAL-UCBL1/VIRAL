@@ -4,18 +4,19 @@ import sys
 from logging import getLogger
 from typing import Callable, Dict, List
 
+import gymnasium as gym
 import numpy as np
-
-from utils.OllamaChat import OllamaChat
-from utils.State import State
-from utils.Algo import Algo
-from utils.Environments import Environments
-from utils.CustomRewardWrapper import CustomRewardWrapper
-from utils.TrainingInfoCallback import TrainingInfoCallback
+import torch
 from stable_baselines3 import PPO
 from stable_baselines3.common.env_util import make_vec_env
-import gymnasium as gym
-import torch
+
+from utils.Algo import Algo
+from utils.CustomRewardWrapper import CustomRewardWrapper
+from utils.Environments import Environments
+from utils.OllamaChat import OllamaChat
+from utils.State import State
+from utils.TrainingInfoCallback import TrainingInfoCallback
+
 
 class VIRAL:
     def __init__(
@@ -301,6 +302,8 @@ class VIRAL:
                 obs, reward, dones, info = env.step(action)
                 epi_rewards += reward.item()
                 if dones[0]:
+                    # TODO: check if the episode is successful
+                    print(info[0])
                     if info[0]["TimeLimit.truncated"]:
                         nb_success += 1
                     break
