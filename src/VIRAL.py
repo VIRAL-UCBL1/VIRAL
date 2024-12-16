@@ -9,6 +9,7 @@ import numpy as np
 import torch
 from stable_baselines3 import PPO
 from stable_baselines3.common.env_util import make_vec_env
+from stable_baselines3.common.vec_env import SubprocVecEnv
 
 from utils.Algo import Algo
 from utils.CustomRewardWrapper import CustomRewardWrapper
@@ -246,13 +247,13 @@ class VIRAL:
     def _learning(self, state: State) -> None:
         """train a policy on an environment"""
         self.logger.debug(f"state {state.idx} begin is learning with reward function: {state.reward_func_str}")
-        vec_env, model = self._generate_env_model(state.reward_func)
+        vec_env, model, numvenv = self._generate_env_model(state.reward_func)
         training_callback = TrainingInfoCallback()
         policy = model.learn(total_timesteps=60000, callback=training_callback)
         metrics = training_callback.get_metrics()
         self.logger.debug(f"TRAINING METRICS: {metrics}")
         self.memory[state.idx].set_policy(policy)
-        sr_test = self.test_policy(vec_env, policy)
+        sr_test = self.test_policy(vec_env, policy, numvenv)
         # ajoute au dict metrics les performances sans ecraser les anciennes
         metrics["test_success_rate"] = sr_test
         self.memory[state.idx].set_performances(metrics)
@@ -287,38 +288,49 @@ class VIRAL:
         self,
         env,
         policy,
-        reward_func=None,
+        numvenv,
         nb_episodes=100,
-        max_t=1000
-    ) -> list:
+    ) -> float:
         all_rewards = []
-        all_states = []
         nb_success = 0
-        for epi in range(1, nb_episodes + 1):
-            obs = env.reset()
-            epi_rewards = 0
-            while True:
-                action, _states = policy.predict(obs)
-                obs, reward, dones, info = env.step(action)
-                epi_rewards += reward.item()
-                if dones[0]:
-                    # TODO: check if the episode is successful
-                    print(info[0])
-                    if info[0]["TimeLimit.truncated"]:
-                        nb_success += 1
-                    break
-            all_rewards.append(epi_rewards)
-        return (nb_success / nb_episodes)
+
+        obs = env.reset()
+
+        for _ in range(nb_episodes // numvenv):
+            episode_rewards = np.zeros(numvenv)
+            dones = [False] * numvenv
+            
+            while not all(dones):
+                actions, _ = policy.predict(obs)
+                obs, rewards, new_dones, infos = env.step(actions)
+                episode_rewards += np.array(rewards)
+                for i, (done, info) in enumerate(zip(new_dones, infos)):
+                    if done and not dones[i]:
+                        dones[i] = True
+                        if info.get('TimeLimit.truncated', False):
+                            nb_success += 1
+            
+            all_rewards.extend(episode_rewards)
+
+        success_rate = nb_success / nb_episodes
+        return success_rate
 
     def _generate_env_model(self, reward_func):
         """
         Generate the environment model
         """
-        vec_env = make_vec_env(self.env_type.value, n_envs=1, wrapper_class=CustomRewardWrapper, wrapper_kwargs={'llm_reward_function': reward_func})
+        numenvs = 2
+        # SubprocVecEnv sauf on utilisera cuda derrière
+        vec_env = make_vec_env(
+            self.env_type.value, 
+            n_envs=numenvs, 
+            wrapper_class=CustomRewardWrapper, 
+            wrapper_kwargs={'llm_reward_function': reward_func},
+            vec_env_cls=SubprocVecEnv)
         if self.learning_algo == Algo.PPO:
             model = PPO("MlpPolicy", vec_env, verbose=1, device="cpu")
         else:
             raise ValueError("The learning algorithm is not implemented.")
         
-        return vec_env, model
+        return vec_env, model, numenvs
         

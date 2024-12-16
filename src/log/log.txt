@@ -4421,7 +4421,7 @@ def reward_func(observations, terminated, truncated):
 	Error syntax Syntax error in the generated code : unexpected indent (<string>, line 4)
 
 11:39:43 VIRAL.py:170 WARNING
-	Error syntax Syntax error in the generated code : invalid character '°' (U+00B0) (<string>, line 4)
+	Error syntax Syntax error in the generated code : invalid character 'ï¿½' (U+00B0) (<string>, line 4)
 
 11:45:06 OllamaChat.py:32 INFO
 	System: 
@@ -6447,7 +6447,7 @@ None
 15:54:33 VIRAL.py:123 INFO
 	additional options: {'temperature': 1}
 
-16:12:10 OllamaChat.py:32 INFO
+15:57:34 OllamaChat.py:32 INFO
 	System: 
         You are an expert in Reinforcement Learning specialized in designing reward functions.
         Strict criteria:
@@ -6457,15 +6457,15 @@ None
         - Focus on the Gymnasium environment 
         - Take into the observation of the state, the terminated and truncated boolean
         - STOP immediately your completion after the last return
-        , Options: {'seed': 459019}
+        , Options: {'seed': 309554}
 
-16:12:49 VIRAL.py:123 INFO
+15:57:36 VIRAL.py:123 INFO
 	additional options: {'temperature': 1}
 
-16:13:48 VIRAL.py:123 INFO
+15:57:41 VIRAL.py:123 INFO
 	additional options: {'temperature': 1}
 
-16:39:05 OllamaChat.py:32 INFO
+16:07:43 OllamaChat.py:32 INFO
 	System: 
         You are an expert in Reinforcement Learning specialized in designing reward functions.
         Strict criteria:
@@ -6475,15 +6475,15 @@ None
         - Focus on the Gymnasium environment 
         - Take into the observation of the state, the terminated and truncated boolean
         - STOP immediately your completion after the last return
-        , Options: {'seed': 372686}
+        , Options: {'seed': 213931}
 
-16:39:12 VIRAL.py:123 INFO
+16:07:51 VIRAL.py:123 INFO
 	additional options: {'temperature': 1}
 
-16:39:16 VIRAL.py:123 INFO
+16:07:53 VIRAL.py:123 INFO
 	additional options: {'temperature': 1}
 
-17:12:59 OllamaChat.py:32 INFO
+17:12:51 OllamaChat.py:32 INFO
 	System: 
         You are an expert in Reinforcement Learning specialized in designing reward functions.
         Strict criteria:
@@ -6493,15 +6493,15 @@ None
         - Focus on the Gymnasium environment 
         - Take into the observation of the state, the terminated and truncated boolean
         - STOP immediately your completion after the last return
-        , Options: {'seed': 64002}
+        , Options: {'seed': 128369}
 
-17:13:02 VIRAL.py:123 INFO
+17:12:57 VIRAL.py:123 INFO
 	additional options: {'temperature': 1}
 
-17:13:04 VIRAL.py:123 INFO
+17:12:59 VIRAL.py:123 INFO
 	additional options: {'temperature': 1}
 
-17:48:34 OllamaChat.py:32 INFO
+17:13:45 OllamaChat.py:32 INFO
 	System: 
         You are an expert in Reinforcement Learning specialized in designing reward functions.
         Strict criteria:
@@ -6511,15 +6511,15 @@ None
         - Focus on the Gymnasium environment 
         - Take into the observation of the state, the terminated and truncated boolean
         - STOP immediately your completion after the last return
-        , Options: {'seed': 112614}
+        , Options: {'seed': 883543}
 
-17:48:37 VIRAL.py:124 INFO
+17:13:47 VIRAL.py:123 INFO
 	additional options: {'temperature': 1}
 
-17:48:40 VIRAL.py:124 INFO
+17:13:51 VIRAL.py:123 INFO
 	additional options: {'temperature': 1}
 
-17:50:08 OllamaChat.py:32 INFO
+17:14:22 OllamaChat.py:32 INFO
 	System: 
         You are an expert in Reinforcement Learning specialized in designing reward functions.
         Strict criteria:
@@ -6529,15 +6529,15 @@ None
         - Focus on the Gymnasium environment 
         - Take into the observation of the state, the terminated and truncated boolean
         - STOP immediately your completion after the last return
-        , Options: {'seed': 455141}
+        , Options: {'seed': 210473}
 
-17:50:08 VIRAL.py:124 INFO
+17:14:24 VIRAL.py:123 INFO
 	additional options: {'temperature': 1}
 
-17:50:12 VIRAL.py:124 INFO
+17:14:28 VIRAL.py:123 INFO
 	additional options: {'temperature': 1}
 
-18:04:54 OllamaChat.py:32 INFO
+17:16:08 OllamaChat.py:32 INFO
 	System: 
         You are an expert in Reinforcement Learning specialized in designing reward functions.
         Strict criteria:
@@ -6547,15 +6547,15 @@ None
         - Focus on the Gymnasium environment 
         - Take into the observation of the state, the terminated and truncated boolean
         - STOP immediately your completion after the last return
-        , Options: {'seed': 787959}
+        , Options: {'seed': 514126}
 
-18:04:57 VIRAL.py:124 INFO
+17:16:11 VIRAL.py:123 INFO
 	additional options: {'temperature': 1}
 
-18:04:59 VIRAL.py:124 INFO
+17:16:15 VIRAL.py:123 INFO
 	additional options: {'temperature': 1}
 
-18:06:20 OllamaChat.py:32 INFO
+17:31:04 OllamaChat.py:32 INFO
 	System: 
         You are an expert in Reinforcement Learning specialized in designing reward functions.
         Strict criteria:
@@ -6565,15 +6565,15 @@ None
         - Focus on the Gymnasium environment 
         - Take into the observation of the state, the terminated and truncated boolean
         - STOP immediately your completion after the last return
-        , Options: {'seed': 594786}
+        , Options: {'seed': 512228}
 
-18:06:20 VIRAL.py:124 INFO
+17:31:09 VIRAL.py:123 INFO
 	additional options: {'temperature': 1}
 
-18:06:24 VIRAL.py:124 INFO
+17:31:13 VIRAL.py:123 INFO
 	additional options: {'temperature': 1}
 
-18:09:07 OllamaChat.py:32 INFO
+17:42:17 OllamaChat.py:32 INFO
 	System: 
         You are an expert in Reinforcement Learning specialized in designing reward functions.
         Strict criteria:
@@ -6583,15 +6583,15 @@ None
         - Focus on the Gymnasium environment 
         - Take into the observation of the state, the terminated and truncated boolean
         - STOP immediately your completion after the last return
-        , Options: {'seed': 153285}
+        , Options: {'seed': 664444}
 
-18:09:08 VIRAL.py:124 INFO
+17:42:22 VIRAL.py:123 INFO
 	additional options: {'temperature': 1}
 
-18:09:14 VIRAL.py:124 INFO
+17:42:27 VIRAL.py:123 INFO
 	additional options: {'temperature': 1}
 
-18:11:41 OllamaChat.py:32 INFO
+18:05:33 OllamaChat.py:32 INFO
 	System: 
         You are an expert in Reinforcement Learning specialized in designing reward functions.
         Strict criteria:
@@ -6601,15 +6601,15 @@ None
         - Focus on the Gymnasium environment 
         - Take into the observation of the state, the terminated and truncated boolean
         - STOP immediately your completion after the last return
-        , Options: {'seed': 945653}
+        , Options: {'seed': 511302}
 
-18:11:41 VIRAL.py:124 INFO
+18:05:39 VIRAL.py:123 INFO
 	additional options: {'temperature': 1}
 
-18:11:49 VIRAL.py:124 INFO
+18:05:43 VIRAL.py:123 INFO
 	additional options: {'temperature': 1}
 
-18:12:14 OllamaChat.py:32 INFO
+18:08:49 OllamaChat.py:32 INFO
 	System: 
         You are an expert in Reinforcement Learning specialized in designing reward functions.
         Strict criteria:
@@ -6619,15 +6619,15 @@ None
         - Focus on the Gymnasium environment 
         - Take into the observation of the state, the terminated and truncated boolean
         - STOP immediately your completion after the last return
-        , Options: {'seed': 161562}
+        , Options: {'seed': 343457}
 
-18:12:14 VIRAL.py:124 INFO
+18:08:51 VIRAL.py:123 INFO
 	additional options: {'temperature': 1}
 
-18:12:19 VIRAL.py:124 INFO
+18:08:55 VIRAL.py:123 INFO
 	additional options: {'temperature': 1}
 
-18:12:53 OllamaChat.py:32 INFO
+18:11:55 OllamaChat.py:32 INFO
 	System: 
         You are an expert in Reinforcement Learning specialized in designing reward functions.
         Strict criteria:
@@ -6637,15 +6637,15 @@ None
         - Focus on the Gymnasium environment 
         - Take into the observation of the state, the terminated and truncated boolean
         - STOP immediately your completion after the last return
-        , Options: {'seed': 889954}
+        , Options: {'seed': 923586}
 
-18:12:53 VIRAL.py:124 INFO
+18:11:57 VIRAL.py:123 INFO
 	additional options: {'temperature': 1}
 
-18:12:58 VIRAL.py:124 INFO
+18:12:01 VIRAL.py:123 INFO
 	additional options: {'temperature': 1}
 
-18:18:44 OllamaChat.py:32 INFO
+18:15:17 OllamaChat.py:32 INFO
 	System: 
         You are an expert in Reinforcement Learning specialized in designing reward functions.
         Strict criteria:
@@ -6655,15 +6655,15 @@ None
         - Focus on the Gymnasium environment 
         - Take into the observation of the state, the terminated and truncated boolean
         - STOP immediately your completion after the last return
-        , Options: {'seed': 583634}
+        , Options: {'seed': 565417}
 
-18:18:47 VIRAL.py:124 INFO
+18:15:19 VIRAL.py:123 INFO
 	additional options: {'temperature': 1}
 
-18:18:52 VIRAL.py:124 INFO
+18:15:23 VIRAL.py:123 INFO
 	additional options: {'temperature': 1}
 
-18:23:55 OllamaChat.py:32 INFO
+18:17:00 OllamaChat.py:32 INFO
 	System: 
         You are an expert in Reinforcement Learning specialized in designing reward functions.
         Strict criteria:
@@ -6673,15 +6673,15 @@ None
         - Focus on the Gymnasium environment 
         - Take into the observation of the state, the terminated and truncated boolean
         - STOP immediately your completion after the last return
-        , Options: {'seed': 768251}
+        , Options: {'seed': 738168}
 
-18:23:55 VIRAL.py:124 INFO
+18:17:02 VIRAL.py:123 INFO
 	additional options: {'temperature': 1}
 
-18:24:03 VIRAL.py:124 INFO
+18:17:06 VIRAL.py:123 INFO
 	additional options: {'temperature': 1}
 
-18:24:25 OllamaChat.py:32 INFO
+18:22:35 OllamaChat.py:32 INFO
 	System: 
         You are an expert in Reinforcement Learning specialized in designing reward functions.
         Strict criteria:
@@ -6691,11 +6691,11 @@ None
         - Focus on the Gymnasium environment 
         - Take into the observation of the state, the terminated and truncated boolean
         - STOP immediately your completion after the last return
-        , Options: {'seed': 884537}
+        , Options: {'seed': 335045}
 
-18:24:25 VIRAL.py:124 INFO
+18:22:37 VIRAL.py:124 INFO
 	additional options: {'temperature': 1}
 
-18:24:29 VIRAL.py:124 INFO
+18:22:41 VIRAL.py:124 INFO
 	additional options: {'temperature': 1}
 
