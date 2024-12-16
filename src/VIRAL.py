@@ -302,7 +302,6 @@ class VIRAL:
                 epi_rewards += reward.item()
                 if dones[0]:
                     if info[0]["TimeLimit.truncated"]:
-                        print("truncated")
                         nb_success += 1
                     break
             all_rewards.append(epi_rewards)
