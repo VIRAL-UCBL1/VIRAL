@@ -107,11 +107,11 @@ class VIRAL:
         - Re-evaluates after each refinement
         - Repeats for specified number of iterations
 
-        Notes:
-        - Uses dynamic LLM configuration options
-        - Supports flexible environment types
-        - Provides a systematic approach to reward function generation
-        - Logging at various stages for debugging and tracking
+        Note:
+            - Uses dynamic LLM configuration options
+            - Supports flexible environment types
+            - Provides a systematic approach to reward function generation
+            - Logging at various stages for debugging and tracking
         """
         # TODO Pourquoi additional_options ici et pas dans le constructeur ?
         additional_options = {
