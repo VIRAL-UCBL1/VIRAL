@@ -5,25 +5,38 @@ def unwrap_env(env):
     """
     Fonction récursive pour déballer les wrappers Gym jusqu'à l'environnement de base.
     """
-    while hasattr(env, "env"):  # Vérifie si l'attribut 'env' existe
+    while hasattr(env, "env"):  # check if env is a wrapper
         env = unwrap_env(env.env)
     return env
 
 
-def lunar_lander_function(env, info):
+def lunar_lander_function(env, info,terminated = None,truncated = None):
     """
     Cette fonction vérifie si le lander est "awake" et met à jour l'info.
     """
     # print("Lunar Lander Function")
-    base_env = unwrap_env(env)  # Déballe l'environnement jusqu'à LunarLander
-    # print(base_env)  # Affiche l'environnement de base
-    # print(base_env.lander)  # Affiche le lander
+    base_env = unwrap_env(env)  # unwrap the environment
+    # print(base_env)  # print the environment
+    # print(base_env.lander)  # print the lander object
 
-    # Vérifier si le lander existe et est "awake"
+    # check if the lander is awake
     if hasattr(base_env, "lander") and not base_env.lander.awake:
         info["success"] = True
     else:
         info["success"] = False
+        
+def cartpole_function(env, info,terminated = None,truncated = None):
+    """
+    Cette fonction vérifie si le lander est "awake" et met à jour l'info.
+    """
+    # print("CartPole Function")
+    if truncated:  # the episode was truncated (time limit reached successfully)
+        info["success"] = True
+    elif terminated:  # the episode is over
+        info["success"] = False
+    else:
+        info["success"] = None  # the episode is still running
+
 
 
 
@@ -35,7 +48,7 @@ class Environments(Enum):
     2 Pole Angle ~ -0.418 rad (-24°) ~ 0.418 rad (24°)
     3 Pole Angular Velocity -Inf Inf
     Since the goal is to keep the pole upright for as long as possible.
-    """,lambda: "CartPole function")
+    """,cartpole_function)
     LUNAR_LANDER = ("LunarLander-v3", """ The goal is  to land safely
     Action Space : Discrete(4) 
     Observation Space Box([ -2.5 -2.5 -10. -10. -6.2831855 -10. -0. -0. ], [ 2.5 2.5 10. 10. 6.2831855 10. 1. 1. ], (8,), float32),

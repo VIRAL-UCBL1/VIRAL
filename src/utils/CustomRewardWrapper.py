@@ -17,6 +17,6 @@ class CustomRewardWrapper(gym.Wrapper):
         else:
             reward = original_reward
         if self.success_function is not None:
-            self.success_function(self.env, info)
+            self.success_function(self.env, info, terminated, truncated)
         
         return observation, reward, terminated, truncated, info

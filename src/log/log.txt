@@ -6936,3 +6936,57 @@ None
 11:33:08 VIRAL.py:127 INFO
 	additional options: {'temperature': 1}
 
+11:42:17 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 57702}
+
+11:42:49 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+11:43:39 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+11:52:43 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 394515}
+
+11:53:15 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+11:54:09 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+12:00:10 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 173044}
+
+12:00:42 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+12:01:32 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+

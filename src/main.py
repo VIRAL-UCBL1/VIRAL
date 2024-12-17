@@ -33,9 +33,9 @@ def parse_logger():
 
 if __name__ == "__main__":
     logger = parse_logger()
-    viral = VIRAL(Algo.PPO, Environments.LUNAR_LANDER, Environments.LUNAR_LANDER.task_function)
+    viral = VIRAL(Algo.PPO, Environments.CARTPOLE, Environments.CARTPOLE.task_function)
     res = viral.generate_reward_function(
-        task_description=Environments.LUNAR_LANDER.task_description,
+        task_description=Environments.CARTPOLE.task_description,
         iterations=2,
     )
     for state in viral.memory:
