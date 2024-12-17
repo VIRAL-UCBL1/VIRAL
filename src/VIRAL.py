@@ -67,14 +67,51 @@ class VIRAL:
         self, task_description: str, iterations: int = 1
     ) -> List[State]:
         """
-        Generate reward function using LLM
+        Generate and iteratively improve a reward function using a Language Model (LLM).
+
+        This method implements a sophisticated reward function generation process 
+        that involves multiple stages of creation, evaluation, and refinement.
+
+        Key Stages:\n
+        1. Initial Function Generation: Create two initial reward function candidates
+        2. Evaluation: Compare and identify the best and worst performing functions
+        3. Iterative Refinement: Progressively improve the worst-performing function
 
         Args:
-            task_description (str): Detailed description of the task
-            environment_type (str): Type of environment (2D/3D, robotics, etc.)
+            task_description (str): A detailed description of the task or environment 
+                                    for which the reward function is being generated.
+            iterations (int, optional): Number of refinement iterations to perform. 
+                                        Defaults to 1.
 
         Returns:
-            Callable: Generated reward function
+            List[State]: A list of generated and refined reward function states, 
+                        containing information about each function's performance 
+                        and implementation.
+
+        Process Overview:\n
+        - Generates two initial reward functions using an LLM
+        - Evaluates these functions using a policy evaluation method
+        - Selects the worst-performing function for refinement
+        - Iteratively refines the function through self-refinement
+        - Tracks the evolution of reward functions in the memory
+
+        Detailed Workflow:\n
+        1. Generate two initial reward functions
+        - Uses a predefined prompt template
+        - Applies configurable LLM generation options
+        - Compiles and tests each generated function
+        2. Evaluates initial functions
+        - Identifies best and worst performing functions
+        3. Iterative Refinement
+        - Applies self-refinement to the worst-performing function
+        - Re-evaluates after each refinement
+        - Repeats for specified number of iterations
+
+        Notes:
+        - Uses dynamic LLM configuration options
+        - Supports flexible environment types
+        - Provides a systematic approach to reward function generation
+        - Logging at various stages for debugging and tracking
         """
         # TODO Pourquoi additional_options ici et pas dans le constructeur ?
         additional_options = {
@@ -189,7 +226,7 @@ class VIRAL:
                 - Callable: The compiled and validated reward function
                 - str: The original response code
 
-        Raises:
+        Raises:\n
             Implicitly handles and attempts to recover from:
             - ValueError: Invalid function definition
             - SyntaxError: Syntax issues in the function
@@ -316,15 +353,46 @@ class VIRAL:
 
     def self_refine_reward(self, idx: int) -> Callable:
         """
-        Self-refinement of reward function based on performance
+        Iteratively improve a reward function using self-refinement techniques.
+
+        This method implements an intelligent self-refinement process for reward functions
+        by leveraging a Language Model (LLM) to analyze and improve the current function
+        based on its previous performance.
+
+        Key Objectives: \n
+        - Analyze current reward function performance
+        - Generate an improved version of the reward function
+        - Maintain the core task objectives while optimizing the reward signal
 
         Args:
-            current_reward_func (Callable): Current reward function
-            performance_metrics (Dict): Performance evaluation metrics
+            idx (int): Index of the reward function in the memory to be refined.
+                    Typically the worst-performing function from previous evaluation.
 
         Returns:
-            Callable: Refined reward function
-        """
+            int: Index of the newly created refined reward function in the memory.
+
+        Refinement Process: \n
+        1. Construct a refinement prompt with:
+        - Current reward function code
+        - Performance metrics
+        - Explicit refinement goals
+        2. Generate a new reward function using LLM
+        3. Compile and validate the new function
+        4. Append the new function to memory
+        5. Return the index of the new function
+
+        Refinement Goals: \n
+        - Increase success rate of the policy
+        - Optimize the reward signal for better learning
+        - Preserve the original task objectives
+        - Improve overall performance
+
+        Notes: \n
+        - Uses the existing memory to track function evolution
+        - Leverages LLM for intelligent function refinement
+        - Provides a systematic approach to reward function improvement
+        - Maintains a history of function iterations
+    """
         refinement_prompt = f"""
         improve the reward function to:
         - Increase success rate

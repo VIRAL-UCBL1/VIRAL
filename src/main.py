@@ -16,6 +16,12 @@ from VIRAL import VIRAL
 
 
 def parse_logger():
+    """
+    Parses command-line arguments to configure the logger.
+
+    Returns:
+        Logger: Configured logger instance.
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "-v", "--verbose", action="store_true", help="Enable verbose mode"
@@ -29,9 +35,15 @@ def parse_logger():
         init_logger("DEBUG")
 
     return getLogger()
-    
 
-if __name__ == "__main__":
+def main():
+    """
+    Main entry point of the script.
+
+    This block is executed when the script is run directly. It initializes the
+    logger, and run VIRAL. It uses CLI interface.
+    memory.
+    """
     logger = parse_logger()
     viral = VIRAL(
         learning_algo=Algo.PPO,
@@ -43,3 +55,7 @@ if __name__ == "__main__":
     )
     for state in viral.memory:
         logger.info(state)
+
+
+if __name__ == "__main__":
+    main()
