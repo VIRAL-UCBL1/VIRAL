@@ -26,15 +26,14 @@ def parse_logger():
         init_logger("DEBUG")
         print("Verbose mode enabled")
     else:
-        init_logger("INFO")
+        init_logger("DEBUG")
 
     return getLogger()
     
 
 if __name__ == "__main__":
     logger = parse_logger()
-    print(Environments.CARTPOLE.function)
-    viral = VIRAL(Algo.PPO, Environments.CARTPOLE, Environments.CARTPOLE.task_function, Environments.CARTPOLE.function)
+    viral = VIRAL(Algo.PPO, Environments.CARTPOLE, Environments.CARTPOLE.task_function)
     res = viral.generate_reward_function(
         task_description=Environments.CARTPOLE.task_description,
         iterations=2,

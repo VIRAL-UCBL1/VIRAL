@@ -27,7 +27,14 @@ def lunar_lander_function(env, info) -> bool:
         
 def cartpole_function(env, info) -> bool:
     """
-    Cette fonction vérifie si le lander est "awake" et met à jour l'info.
+    Cartpole Evaluation Function
+
+    Args:
+        env : gym.Env : Environment
+        info : dict : Information from the environment
+
+    Returns:
+        bool : True if the episode is truncated, False otherwise
     """
     if info["TimeLimit.truncated"]:
         return True

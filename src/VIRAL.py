@@ -309,9 +309,7 @@ class VIRAL:
                 for i, (done, info) in enumerate(zip(new_dones, infos)):
                     if done:
                         dones[i] = True
-                        self.function_success(env.envs[i], info)
-                        if info.get("success") is not None and info["success"]:
-                            print(f"Environnement {i} : SUCCESS")
+                        if self.function_success(env.envs[i], info):
                             nb_success += 1
             
             all_rewards.extend(episode_rewards)
