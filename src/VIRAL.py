@@ -482,12 +482,9 @@ class VIRAL:
                     )
                     to_get -= 1
                 except Empty:
-                    self.logger.debug("Consumer: got nothing, waiting a while...")
-                    sleep(1)
-                    continue
+                    sleep(0.1)
 
             for p in to_join:
-                self.logger.debug(f"waiting to join {p}")
                 self.multi_process[p].join()
             if (
                 self.memory[idx1].performances["test_success_rate"]
