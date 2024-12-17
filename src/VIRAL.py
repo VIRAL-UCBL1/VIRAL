@@ -4,25 +4,27 @@ import sys
 from logging import getLogger
 from typing import Callable, Dict, List
 
+import gymnasium as gym
 import numpy as np
-
-from utils.OllamaChat import OllamaChat
-from utils.State import State
-from utils.Algo import Algo
-from utils.Environments import Environments
-from utils.CustomRewardWrapper import CustomRewardWrapper
-from utils.TrainingInfoCallback import TrainingInfoCallback
+import torch
 from stable_baselines3 import PPO
 from stable_baselines3.common.env_util import make_vec_env
 from stable_baselines3.common.vec_env import SubprocVecEnv
-import gymnasium as gym
-import torch
+
+from utils.Algo import Algo
+from utils.CustomRewardWrapper import CustomRewardWrapper
+from utils.Environments import Environments
+from utils.OllamaChat import OllamaChat
+from utils.State import State
+from utils.TrainingInfoCallback import TrainingInfoCallback
+
 
 class VIRAL:
     def __init__(
         self,
         learning_algo: Algo,
         env_type : Environments,
+        function_success: Callable,
         objectives_metrics: List[callable] = [],
         model: str = "qwen2.5-coder",
         options: dict = {},
@@ -51,6 +53,7 @@ class VIRAL:
             options=options,
         )
         self.env_type : Environments = env_type
+        self.function_success = function_success
         self.env = None
         self.objectives_metrics = objectives_metrics
         self.learning_algo : Algo = learning_algo
@@ -304,9 +307,9 @@ class VIRAL:
                 obs, rewards, new_dones, infos = env.step(actions)
                 episode_rewards += np.array(rewards)
                 for i, (done, info) in enumerate(zip(new_dones, infos)):
-                    if done and not dones[i]:
+                    if done:
                         dones[i] = True
-                        if info.get('TimeLimit.truncated', False):
+                        if self.function_success(env.envs[i], info):
                             nb_success += 1
             
             all_rewards.extend(episode_rewards)
@@ -324,8 +327,7 @@ class VIRAL:
             self.env_type.value, 
             n_envs=numenvs, 
             wrapper_class=CustomRewardWrapper, 
-            wrapper_kwargs={'llm_reward_function': reward_func},
-            vec_env_cls=SubprocVecEnv)
+            wrapper_kwargs={"llm_reward_function": reward_func})
         if self.learning_algo == Algo.PPO:
             model = PPO("MlpPolicy", vec_env, verbose=1, device="cpu")
         else:

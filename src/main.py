@@ -2,18 +2,18 @@ import argparse
 from logging import getLogger
 
 import gymnasium as gym
-
-from log.log_config import init_logger
-from utils.ObjectivesMetrics import objective_metric_CartPole
-from RLAlgo.DirectSearch import DirectSearch
-from RLAlgo.Reinforce import Reinforce
-from VIRAL import VIRAL
-
-from utils.CustomRewardWrapper import CustomRewardWrapper
 from stable_baselines3 import PPO
 from stable_baselines3.common.env_util import make_vec_env
-from utils.Environments import Environments
+
+from log.log_config import init_logger
+from RLAlgo.DirectSearch import DirectSearch
+from RLAlgo.Reinforce import Reinforce
 from utils.Algo import Algo
+from utils.CustomRewardWrapper import CustomRewardWrapper
+from utils.Environments import Environments
+from utils.ObjectivesMetrics import objective_metric_CartPole
+from VIRAL import VIRAL
+
 
 def parse_logger():
     parser = argparse.ArgumentParser()
@@ -26,14 +26,14 @@ def parse_logger():
         init_logger("DEBUG")
         print("Verbose mode enabled")
     else:
-        init_logger("INFO")
+        init_logger("DEBUG")
 
     return getLogger()
     
 
 if __name__ == "__main__":
     logger = parse_logger()
-    viral = VIRAL(Algo.PPO, Environments.CARTPOLE)
+    viral = VIRAL(Algo.PPO, Environments.CARTPOLE, Environments.CARTPOLE.task_function)
     res = viral.generate_reward_function(
         task_description=Environments.CARTPOLE.task_description,
         iterations=2,
