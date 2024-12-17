@@ -444,6 +444,7 @@ class VIRAL:
         else:
             state.set_performances(metrics)
             self.memory[state.idx].set_policy(policy)
+            self.logger.debug(f"state {state.idx} has finished learning with performances: {metrics}")
 
     def evaluate_policy(self, idx1: int, idx2: int) -> int:
         """
