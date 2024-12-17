@@ -13,8 +13,7 @@ from utils.CustomRewardWrapper import CustomRewardWrapper
 from utils.Environments import Environments
 from utils.ObjectivesMetrics import objective_metric_CartPole
 from VIRAL import VIRAL
-
-
+import multiprocessing as mp
 def parse_logger():
     """
     Parses command-line arguments to configure the logger.

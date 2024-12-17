@@ -1,8 +1,12 @@
 import random
 import signal
 import sys
+from multiprocessing import Process, Queue
+from queue import Empty
 from logging import getLogger
+from time import sleep
 from typing import Callable, Dict, List
+from venv import logger
 
 import gymnasium as gym
 import numpy as np
@@ -17,6 +21,7 @@ from utils.Environments import Environments
 from utils.OllamaChat import OllamaChat
 from utils.State import State
 from utils.TrainingInfoCallback import TrainingInfoCallback
+import os
 
 
 class VIRAL:
@@ -35,7 +40,7 @@ class VIRAL:
                 model (str): Language model for reward generation
                 learning_method (str): Reinforcement learning method
         """
-        if (options.get("seed") is None):
+        if options.get("seed") is None:
             options["seed"] = random.randint(0, 1000000)
 
         self.llm = OllamaChat(
@@ -56,11 +61,28 @@ class VIRAL:
         self.success_function = success_function
         self.env = None
         self.objectives_metrics = objectives_metrics
-        self.learning_algo : Algo = learning_algo
+        self.learning_algo: Algo = learning_algo
         self.learning_method = None
-        self.memory: List[State] = [State(0)]
         self.logger = getLogger("VIRAL")
-        #self._learning(self.memory[0])
+        # self._learning(self.memory[0])
+
+        if os.name == "posix":
+            self.queue = Queue()
+            self.memory: List[State] = [State(0)]
+            self.multi_process: list[Process] = []
+            self.multi_process.append(
+                Process(
+                    target=self._learning,
+                    args=(
+                        self.memory[0],
+                        self.queue,
+                    ),
+                )
+            )
+            self.multi_process[0].start()
+            self.to_get = 1
+        else:
+            self.memory: List[State] = [State(0)]
 
 
     def generate_reward_function(
@@ -116,27 +138,19 @@ class VIRAL:
         # TODO Pourquoi additional_options ici et pas dans le constructeur ?
         additional_options = {
             "temperature": 1,
-            #"num_predict": 3, # l'impression que ça change rien a creuser
-            
-            #"mirostat" : 1,
-            #"mirostat_eta" : 0.01, #gère la vitesse de réponses du model (0.1 par défaut) plus c'est petit plus c'est lent
-            #"mirostat_tau" : 4.0, #gère la balance entre la diversité et la coherence des réponses (5.0 par défaut) plus c'est petit plus c'est focus et cohérent
-            
-            #num_ctx": 2048, # nombre de tokens contextuels (2048 par défaut peut être pas nécessaire de changer)
-            
-            #repeat_last_n": 64, # combien le model regarde en arrière pour éviter de répéter les réponses (64 par défaut large pour nous)
-            
-            #"repeat_penalty": 1.5, # pénalité pour éviter de répéter les réponses (1.1 par défaut au mac 1.5 intéressant a modificer je pense)
-            
-            #"stop": "stop you here" # pour stopper la génération de texte pas intéressant pour nous
-            
-            #"tfs_z": 1.2, #reduire l'impacte des token les moins "pertinents" (1.0 par défaut pour désactiver 2.0 max)
-            
-            #"top_k": 30, #reduit la probabilité de générer des non-sens (40 par défaut, 100 pour générer des réponses plus diverses, 10 pour des réponses plus "conservatrices")
-            #"top_p": 0.95, #marche avec le top_k une forte valeur pour des texte plus diverses (0.9 par défaut)
-            #"min_p": 0.05, #alternative au top_p, vise a s'aéssurer de la balance entre qualité et diversité (0.0 par défaut)
-            
-            #"seed": 42, # a utiliser pour la reproductibilité des résultats (important si publication)
+            # "num_predict": 3, # l'impression que ça change rien a creuser
+            # "mirostat" : 1,
+            # "mirostat_eta" : 0.01, #gère la vitesse de réponses du model (0.1 par défaut) plus c'est petit plus c'est lent
+            # "mirostat_tau" : 4.0, #gère la balance entre la diversité et la coherence des réponses (5.0 par défaut) plus c'est petit plus c'est focus et cohérent
+            # num_ctx": 2048, # nombre de tokens contextuels (2048 par défaut peut être pas nécessaire de changer)
+            # repeat_last_n": 64, # combien le model regarde en arrière pour éviter de répéter les réponses (64 par défaut large pour nous)
+            # "repeat_penalty": 1.5, # pénalité pour éviter de répéter les réponses (1.1 par défaut au mac 1.5 intéressant a modificer je pense)
+            # "stop": "stop you here" # pour stopper la génération de texte pas intéressant pour nous
+            # "tfs_z": 1.2, #reduire l'impacte des token les moins "pertinents" (1.0 par défaut pour désactiver 2.0 max)
+            # "top_k": 30, #reduit la probabilité de générer des non-sens (40 par défaut, 100 pour générer des réponses plus diverses, 10 pour des réponses plus "conservatrices")
+            # "top_p": 0.95, #marche avec le top_k une forte valeur pour des texte plus diverses (0.9 par défaut)
+            # "min_p": 0.05, #alternative au top_p, vise a s'aéssurer de la balance entre qualité et diversité (0.0 par défaut)
+            # "seed": 42, # a utiliser pour la reproductibilité des résultats (important si publication)
         }
         ### INIT STAGE ###
         for i in [1, 2]:
@@ -165,8 +179,8 @@ class VIRAL:
             response = self.llm.print_Generator_and_return(response, i)
             reward_func, response = self.get_runnable_function(response)
             self.memory.append(State(i, reward_func, response))
-            
-        best_idx, worst_idx = self.evaluate_policy(1, 2) 
+
+        best_idx, worst_idx = self.evaluate_policy(1, 2)
         self.logger.debug(f"state to refine: {worst_idx}")
         ### SECOND STAGE ###
         for n in range(iterations - 1):
@@ -413,20 +427,23 @@ class VIRAL:
 
         return len(self.memory) - 1
 
-    def _learning(self, state: State) -> None:
+    def _learning(self, state: State, queue: Queue = None) -> None:
         """train a policy on an environment"""
         self.logger.debug(f"state {state.idx} begin is learning with reward function: {state.reward_func_str}")
         vec_env, model, numvenv = self._generate_env_model(state.reward_func)
         training_callback = TrainingInfoCallback()
-        policy = model.learn(total_timesteps=60000, callback=training_callback)
+        policy = model.learn(total_timesteps=60, callback=training_callback)
+        policy.save(f"model/policy{state.idx}.model")
         metrics = training_callback.get_metrics()
-        self.logger.debug(f"TRAINING METRICS: {metrics}")
-        self.memory[state.idx].set_policy(policy)
+        self.logger.debug(f"{state.idx} TRAINING METRICS: {metrics}")
         sr_test = self.test_policy(vec_env, policy, numvenv)
         # ajoute au dict metrics les performances sans ecraser les anciennes
         metrics["test_success_rate"] = sr_test
-        self.memory[state.idx].set_performances(metrics)
-        self.logger.debug(f"state {state.idx} as finished is learning with performances: {metrics}")
+        if os.name == "posix":
+            queue.put([state.idx, f"model/policy{state.idx}.model", metrics])
+        else:
+            state.set_performances(metrics)
+            self.memory[state.idx].set_policy(policy)
 
     def evaluate_policy(self, idx1: int, idx2: int) -> int:
         """
@@ -439,19 +456,54 @@ class VIRAL:
         Returns:
             Dict: Performance metrics for multiple reward functions
         """
-        if len(self.memory) < 2:
-            self.logger.error("At least two reward functions are required.")
-        for i in [idx1, idx2]:
-            if self.memory[i].performances is None:
-                self._learning(self.memory[i])
-        # TODO comparaison sur le success rate pour l'instant
-        if (
-            self.memory[idx1].performances["test_success_rate"]
-            > self.memory[idx2].performances["test_success_rate"]
-        ):
-            return idx1, idx2
+        if os.name == "posix":
+            if len(self.memory) < 2:
+                self.logger.error("At least two reward functions are required.")
+            to_join: list = []
+            for i in [idx1, idx2]:
+                if self.memory[i].performances is None:
+                    self.multi_process.append(
+                        Process(target=self._learning, args=(self.memory[i], self.queue))
+                    )
+                    self.multi_process[-1].start()
+                    self.to_get += 1
+                    to_join.append(len(self.multi_process)-1)
+
+            while self.to_get != 0:
+                try:
+                    get = self.queue.get(block=False)
+                    self.memory[get[0]].set_policy(get[1])
+                    self.memory[get[0]].set_performances(get[2])
+                    self.logger.debug(
+                        f"state {get[0]} has finished learning with performances: {get[2]}"
+                    )
+                    self.to_get -= 1
+                except Empty:
+                    sleep(0.1)
+
+            for p in to_join:
+                self.multi_process[p].join()
+            if (
+                self.memory[idx1].performances["test_success_rate"]
+                > self.memory[idx2].performances["test_success_rate"]
+            ):
+                return idx1, idx2
+            else:
+                return idx2, idx1
         else:
-            return idx2, idx1
+            if len(self.memory) < 2:
+                self.logger.error("At least two reward functions are required.")
+            for i in [idx1, idx2]:
+                if self.memory[i].performances is None:
+                    self._learning(self.memory[i])
+            # TODO comparaison sur le success rate pour l'instant
+            if (
+                self.memory[idx1].performances["test_success_rate"]
+                > self.memory[idx2].performances["test_success_rate"]
+            ):
+                return idx1, idx2
+            else:
+                return idx2, idx1
 
     def test_policy(
         self,
@@ -496,7 +548,7 @@ class VIRAL:
             wrapper_class=CustomRewardWrapper, 
             wrapper_kwargs={"llm_reward_function": reward_func})
         if self.learning_algo == Algo.PPO:
-            model = PPO("MlpPolicy", vec_env, verbose=1, device="cpu")
+            model = PPO("MlpPolicy", vec_env, verbose=0, device="cpu")
         else:
             raise ValueError("The learning algorithm is not implemented.")
         
