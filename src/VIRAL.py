@@ -24,6 +24,7 @@ class VIRAL:
         self,
         learning_algo: Algo,
         env_type : Environments,
+        function_success: Callable,
         objectives_metrics: List[callable] = [],
         model: str = "qwen2.5-coder",
         options: dict = {},
@@ -52,6 +53,7 @@ class VIRAL:
             options=options,
         )
         self.env_type : Environments = env_type
+        self.function_success = function_success
         self.env = None
         self.objectives_metrics = objectives_metrics
         self.learning_algo : Algo = learning_algo
@@ -307,7 +309,8 @@ class VIRAL:
                 for i, (done, info) in enumerate(zip(new_dones, infos)):
                     if done and not dones[i]:
                         dones[i] = True
-                        if info.get('TimeLimit.truncated', False):
+                        if info.get("success") is not None and info["success"]:
+                            print(f"Environnement {i} : SUCCESS")
                             nb_success += 1
             
             all_rewards.extend(episode_rewards)
@@ -325,7 +328,7 @@ class VIRAL:
             self.env_type.value, 
             n_envs=numenvs, 
             wrapper_class=CustomRewardWrapper, 
-            wrapper_kwargs={'llm_reward_function': reward_func},
+            wrapper_kwargs={"llm_reward_function": reward_func, "success_function": self.function_success},
             vec_env_cls=SubprocVecEnv)
         if self.learning_algo == Algo.PPO:
             model = PPO("MlpPolicy", vec_env, verbose=1, device="cpu")
