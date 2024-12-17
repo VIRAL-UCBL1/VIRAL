@@ -80,6 +80,7 @@ class VIRAL:
                 )
             )
             self.multi_process[0].start()
+            self.to_get = 1
         else:
             self.memory: List[State] = [State(0)]
 
@@ -431,16 +432,13 @@ class VIRAL:
         self.logger.debug(f"state {state.idx} begin is learning with reward function: {state.reward_func_str}")
         vec_env, model, numvenv = self._generate_env_model(state.reward_func)
         training_callback = TrainingInfoCallback()
-        policy = model.learn(total_timesteps=60000, callback=training_callback)
+        policy = model.learn(total_timesteps=60, callback=training_callback)
         policy.save(f"model/policy{state.idx}.model")
         metrics = training_callback.get_metrics()
-        self.logger.debug(f"TRAINING METRICS: {metrics}")
+        self.logger.debug(f"{state.idx} TRAINING METRICS: {metrics}")
         sr_test = self.test_policy(vec_env, policy, numvenv)
         # ajoute au dict metrics les performances sans ecraser les anciennes
         metrics["test_success_rate"] = sr_test
-        self.logger.debug(
-            f"state {state.idx} as finished is learning with performances: {metrics}"
-        )
         if os.name == "posix":
             queue.put([state.idx, f"model/policy{state.idx}.model", metrics])
         else:
@@ -461,7 +459,6 @@ class VIRAL:
         if os.name == "posix":
             if len(self.memory) < 2:
                 self.logger.error("At least two reward functions are required.")
-            to_get: int = 0
             to_join: list = []
             for i in [idx1, idx2]:
                 if self.memory[i].performances is None:
@@ -469,10 +466,10 @@ class VIRAL:
                         Process(target=self._learning, args=(self.memory[i], self.queue))
                     )
                     self.multi_process[-1].start()
-                    to_get += 1
+                    self.to_get += 1
                     to_join.append(len(self.multi_process)-1)
 
-            while to_get != 0:
+            while self.to_get != 0:
                 try:
                     get = self.queue.get(block=False)
                     self.memory[get[0]].set_policy(get[1])
@@ -480,7 +477,7 @@ class VIRAL:
                     self.logger.debug(
                         f"state {get[0]} has finished learning with performances: {get[2]}"
                     )
-                    to_get -= 1
+                    self.to_get -= 1
                 except Empty:
                     sleep(0.1)
 
