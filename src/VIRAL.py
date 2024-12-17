@@ -72,10 +72,10 @@ class VIRAL:
         This method implements a sophisticated reward function generation process 
         that involves multiple stages of creation, evaluation, and refinement.
 
-        Key Stages:\n
-        1. Initial Function Generation: Create two initial reward function candidates
-        2. Evaluation: Compare and identify the best and worst performing functions
-        3. Iterative Refinement: Progressively improve the worst-performing function
+        Key Stages:
+            1. Initial Function Generation: Create two initial reward function candidates
+            2. Evaluation: Compare and identify the best and worst performing functions
+            3. Iterative Refinement: Progressively improve the worst-performing function
 
         Args:
             task_description (str): A detailed description of the task or environment 
@@ -88,24 +88,24 @@ class VIRAL:
                         containing information about each function's performance 
                         and implementation.
 
-        Process Overview:\n
-        - Generates two initial reward functions using an LLM
-        - Evaluates these functions using a policy evaluation method
-        - Selects the worst-performing function for refinement
-        - Iteratively refines the function through self-refinement
-        - Tracks the evolution of reward functions in the memory
+        Process Overview:
+            - Generates two initial reward functions using an LLM
+            - Evaluates these functions using a policy evaluation method
+            - Selects the worst-performing function for refinement
+            - Iteratively refines the function through self-refinement
+            - Tracks the evolution of reward functions in the memory
 
-        Detailed Workflow:\n
-        1. Generate two initial reward functions
-        - Uses a predefined prompt template
-        - Applies configurable LLM generation options
-        - Compiles and tests each generated function
-        2. Evaluates initial functions
-        - Identifies best and worst performing functions
-        3. Iterative Refinement
-        - Applies self-refinement to the worst-performing function
-        - Re-evaluates after each refinement
-        - Repeats for specified number of iterations
+        Detailed Workflow:
+            1. Generate two initial reward functions
+                - Uses a predefined prompt template
+                - Applies configurable LLM generation options
+                - Compiles and tests each generated function
+            2. Evaluates initial functions
+                - Identifies best and worst performing functions
+            3. Iterative Refinement
+                - Applies self-refinement to the worst-performing function
+                - Re-evaluates after each refinement
+                - Repeats for specified number of iterations
 
         Note:
             - Uses dynamic LLM configuration options
@@ -226,8 +226,7 @@ class VIRAL:
                 - Callable: The compiled and validated reward function
                 - str: The original response code
 
-        Raises:\n
-            Implicitly handles and attempts to recover from:
+        Raises:
             - ValueError: Invalid function definition
             - SyntaxError: Syntax issues in the function
             - RuntimeError: Execution problems during function testing
@@ -274,11 +273,11 @@ class VIRAL:
         compiles it into an executable Python function. It provides a secure way to 
         generate reward functions for reinforcement learning environments.
 
-        Key Features:\n
-        - Dynamically executes code in an isolated global namespace
-        - Provides access to NumPy functions
-        - Extracts the compiled function by its name
-        - Robust error handling for syntax issues
+        Key Features:
+            - Dynamically executes code in an isolated global namespace
+            - Provides access to NumPy functions
+            - Extracts the compiled function by its name
+            - Robust error handling for syntax issues
 
         Args:
             response (str): A string containing a complete Python function definition 
@@ -320,10 +319,10 @@ class VIRAL:
         process. It attempts to execute the reward function with the given arguments and 
         logs the output or raises an error if execution fails.
 
-        Purpose:\n
-        - Verify the reward function can be executed without errors
-        - Log the reward function's output for debugging
-        - Ensure the function returns a valid result in the context of a gym environment
+        Purpose:
+            - Verify the reward function can be executed without errors
+            - Log the reward function's output for debugging
+            - Ensure the function returns a valid result in the context of a gym environment
 
         Args:
             reward_function (Callable): The compiled reward function to be tested.
@@ -359,10 +358,10 @@ class VIRAL:
         by leveraging a Language Model (LLM) to analyze and improve the current function
         based on its previous performance.
 
-        Key Objectives: \n
-        - Analyze current reward function performance
-        - Generate an improved version of the reward function
-        - Maintain the core task objectives while optimizing the reward signal
+        Key Objectives: 
+            - Analyze current reward function performance
+            - Generate an improved version of the reward function
+            - Maintain the core task objectives while optimizing the reward signal
 
         Args:
             idx (int): Index of the reward function in the memory to be refined.
@@ -371,27 +370,27 @@ class VIRAL:
         Returns:
             int: Index of the newly created refined reward function in the memory.
 
-        Refinement Process: \n
-        1. Construct a refinement prompt with:
-        - Current reward function code
-        - Performance metrics
-        - Explicit refinement goals
-        2. Generate a new reward function using LLM
-        3. Compile and validate the new function
-        4. Append the new function to memory
-        5. Return the index of the new function
+        Refinement Process:
+            1. Construct a refinement prompt with:
+                - Current reward function code
+                - Performance metrics
+                - Explicit refinement goals
+            2. Generate a new reward function using LLM
+            3. Compile and validate the new function
+            4. Append the new function to memory
+            5. Return the index of the new function
 
-        Refinement Goals: \n
-        - Increase success rate of the policy
-        - Optimize the reward signal for better learning
-        - Preserve the original task objectives
-        - Improve overall performance
+        Refinement Goals:
+            - Increase success rate of the policy
+            - Optimize the reward signal for better learning
+            - Preserve the original task objectives
+            - Improve overall performance
 
-        Notes: \n
-        - Uses the existing memory to track function evolution
-        - Leverages LLM for intelligent function refinement
-        - Provides a systematic approach to reward function improvement
-        - Maintains a history of function iterations
+        Notes:
+            - Uses the existing memory to track function evolution
+            - Leverages LLM for intelligent function refinement
+            - Provides a systematic approach to reward function improvement
+            - Maintains a history of function iterations
     """
         refinement_prompt = f"""
         improve the reward function to:
