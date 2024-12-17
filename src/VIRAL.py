@@ -24,7 +24,7 @@ class VIRAL:
         self,
         learning_algo: Algo,
         env_type : Environments,
-        function_success: Callable,
+        success_function: Callable,
         objectives_metrics: List[callable] = [],
         model: str = "qwen2.5-coder",
         options: dict = {},
@@ -53,7 +53,7 @@ class VIRAL:
             options=options,
         )
         self.env_type : Environments = env_type
-        self.function_success = function_success
+        self.success_function = success_function
         self.env = None
         self.objectives_metrics = objectives_metrics
         self.learning_algo : Algo = learning_algo
@@ -126,7 +126,7 @@ class VIRAL:
             )
             self.logger.info(f"additional options: {additional_options}")
             response = self.llm.print_Generator_and_return(response, i)
-            reward_func, response = self._get_runnable_function(response)
+            reward_func, response = self.get_runnable_function(response)
             self.memory.append(State(i, reward_func, response))
             
         best_idx, worst_idx = self.evaluate_policy(1, 2) 
@@ -309,7 +309,7 @@ class VIRAL:
                 for i, (done, info) in enumerate(zip(new_dones, infos)):
                     if done:
                         dones[i] = True
-                        if self.function_success(env.envs[i], info):
+                        if self.success_function(env.envs[i], info):
                             nb_success += 1
             
             all_rewards.extend(episode_rewards)
