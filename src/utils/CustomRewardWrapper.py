@@ -1,5 +1,6 @@
-import gymnasium as gym
 from typing import Callable
+
+import gymnasium as gym
 
 
 class CustomRewardWrapper(gym.Wrapper):
@@ -8,8 +9,11 @@ class CustomRewardWrapper(gym.Wrapper):
         self.llm_reward_function = llm_reward_function
 
     def step(self, action):
-        observation, reward, terminated, truncated, info = self.env.step(action)
+        observation, original_reward, terminated, truncated, info = self.env.step(action)
+        # 5 env 
         if self.llm_reward_function is not None:
             reward = self.llm_reward_function(observation, terminated, truncated)
-
+        else:
+            reward = original_reward
+        
         return observation, reward, terminated, truncated, info

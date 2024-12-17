@@ -8,25 +8,28 @@ from time import sleep
 from typing import Callable, Dict, List
 from venv import logger
 
+import gymnasium as gym
 import numpy as np
-
-from utils.OllamaChat import OllamaChat
-from utils.State import State
-from utils.Algo import Algo
-from utils.Environments import Environments
-from utils.CustomRewardWrapper import CustomRewardWrapper
-from utils.TrainingInfoCallback import TrainingInfoCallback
+import torch
 from stable_baselines3 import PPO
 from stable_baselines3.common.env_util import make_vec_env
-import gymnasium as gym
-import torch
+from stable_baselines3.common.vec_env import SubprocVecEnv
+
+from utils.Algo import Algo
+from utils.CustomRewardWrapper import CustomRewardWrapper
+from utils.Environments import Environments
+from utils.OllamaChat import OllamaChat
+from utils.State import State
+from utils.TrainingInfoCallback import TrainingInfoCallback
+import os
 
 
 class VIRAL:
     def __init__(
         self,
         learning_algo: Algo,
-        env_type: Environments,
+        env_type : Environments,
+        success_function: Callable,
         objectives_metrics: List[callable] = [],
         model: str = "qwen2.5-coder",
         options: dict = {},
@@ -54,39 +57,82 @@ class VIRAL:
         """,
             options=options,
         )
-        self.env_type: Environments = env_type
+        self.env_type : Environments = env_type
+        self.success_function = success_function
         self.env = None
         self.objectives_metrics = objectives_metrics
         self.learning_algo: Algo = learning_algo
         self.learning_method = None
         self.logger = getLogger("VIRAL")
         # self._learning(self.memory[0])
-        self.queue = Queue()
-        self.memory: List[State] = [State(0)]
-        self.multi_process: list[Process] = []
-        self.multi_process.append(
-            Process(
-                target=self._learning,
-                args=(
-                    self.memory[0],
-                    self.queue,
-                ),
+
+        if os.name == "posix":
+            self.queue = Queue()
+            self.memory: List[State] = [State(0)]
+            self.multi_process: list[Process] = []
+            self.multi_process.append(
+                Process(
+                    target=self._learning,
+                    args=(
+                        self.memory[0],
+                        self.queue,
+                    ),
+                )
             )
-        )
-        self.multi_process[0].start()
+            self.multi_process[0].start()
+        else:
+            self.memory: List[State] = [State(0)]
+
 
     def generate_reward_function(
         self, task_description: str, iterations: int = 1
     ) -> List[State]:
         """
-        Generate reward function using LLM
+        Generate and iteratively improve a reward function using a Language Model (LLM).
+
+        This method implements a sophisticated reward function generation process 
+        that involves multiple stages of creation, evaluation, and refinement.
+
+        Key Stages:
+            1. Initial Function Generation: Create two initial reward function candidates
+            2. Evaluation: Compare and identify the best and worst performing functions
+            3. Iterative Refinement: Progressively improve the worst-performing function
 
         Args:
-            task_description (str): Detailed description of the task
-            environment_type (str): Type of environment (2D/3D, robotics, etc.)
+            task_description (str): A detailed description of the task or environment 
+                                    for which the reward function is being generated.
+            iterations (int, optional): Number of refinement iterations to perform. 
+                                        Defaults to 1.
 
         Returns:
-            Callable: Generated reward function
+            List[State]: A list of generated and refined reward function states, 
+                        containing information about each function's performance 
+                        and implementation.
+
+        Process Overview:
+            - Generates two initial reward functions using an LLM
+            - Evaluates these functions using a policy evaluation method
+            - Selects the worst-performing function for refinement
+            - Iteratively refines the function through self-refinement
+            - Tracks the evolution of reward functions in the memory
+
+        Detailed Workflow:
+            1. Generate two initial reward functions
+                - Uses a predefined prompt template
+                - Applies configurable LLM generation options
+                - Compiles and tests each generated function
+            2. Evaluates initial functions
+                - Identifies best and worst performing functions
+            3. Iterative Refinement
+                - Applies self-refinement to the worst-performing function
+                - Re-evaluates after each refinement
+                - Repeats for specified number of iterations
+
+        Note:
+            - Uses dynamic LLM configuration options
+            - Supports flexible environment types
+            - Provides a systematic approach to reward function generation
+            - Logging at various stages for debugging and tracking
         """
         # TODO Pourquoi additional_options ici et pas dans le constructeur ?
         additional_options = {
@@ -124,21 +170,13 @@ class VIRAL:
                 float: The reward for the current step
             \"\"\"
         """
-            # self.llm.add_message(prompt)
-            # response = self.llm.generate_response(
-            #     stream=True, additional_options=additional_options
-            # )
-            response = """
-def reward_func(observations:np.ndarray, terminated: bool, truncated: bool) -> float:
-    _, _, pole_angle, _ = observations
-    
-    if terminated or truncated:
-        return -1.0
-    else:
-        return np.cos(pole_angle)"""
+            self.llm.add_message(prompt)
+            response = self.llm.generate_response(
+                stream=True, additional_options=additional_options
+            )
             self.logger.info(f"additional options: {additional_options}")
             response = self.llm.print_Generator_and_return(response, i)
-            reward_func, response = self._get_runnable_function(response)
+            reward_func, response = self.get_runnable_function(response)
             self.memory.append(State(i, reward_func, response))
 
         best_idx, worst_idx = self.evaluate_policy(1, 2)
@@ -150,26 +188,79 @@ def reward_func(observations:np.ndarray, terminated: bool, truncated: bool) -> f
             self.logger.debug(f"state to refine: {worst_idx}")
         return self.memory
 
-    def _get_code(self, response: str) -> str:
+    def get_code(self, response: str) -> str:
+        """
+        Clean and validate a code response by removing code block markers and ensuring a function definition.
+
+        This method is designed to process code responses, typically extracted from text or code blocks,
+        by performing the following operations:\n
+        1. Remove leading and trailing code block markers (```),
+        2. Remove the 'python' language identifier,
+        3. Strip any additional whitespace
+        4. Validate that the response contains a function definition
+
+        Args:
+            response (str): The raw code response to be cleaned and validated.
+
+        Returns:
+            str: The cleaned code response containing a function definition.
+
+        Raises:
+            ValueError: If the response does not contain a valid function definition 
+                        (i.e., if "def " is not present in the cleaned response).
+
+        Logging:
+            Logs the cleaned code at DEBUG level for debugging purposes.
+    """
         cleaned_response = response.strip("```").replace("python", "").strip()
         if "def " not in cleaned_response:
             raise ValueError("The answer does not contain a valid function definition.")
         self.logger.debug("Code nettoyé pour compilation :\n" + cleaned_response)
         return cleaned_response
 
-    def _get_runnable_function(self, response: str, error: str = None) -> Callable:
+    def get_runnable_function(self, response: str, error: str = None) -> Callable:
+        """
+        Process and validate a reward function for a gym environment.
+
+        This method attempts to generate and validate a reward function by:\n
+        1. Handling potential previous errors
+        2. Creating a gym environment
+        3. Cleaning and compiling the code
+        4. Testing the reward function with a sample action
+        5. Recursively handling various potential errors
+
+        Args:
+            response (str): The code response containing the reward function definition.
+            error (str, optional): Previous error message to be added to LLM context. 
+                                    Defaults to None.
+
+        Returns:
+            tuple: A tuple containing:
+                - Callable: The compiled and validated reward function
+                - str: The original response code
+
+        Raises:
+            - ValueError: Invalid function definition
+            - SyntaxError: Syntax issues in the function
+            - RuntimeError: Execution problems during function testing
+        
+        Note:
+            - Uses recursion to handle potential errors
+            - Relies on get_code, compile_reward_function, and test_reward_function methods
+            - Provides a robust mechanism for generating valid reward functions
+    """
         if error is not None:
             self.llm.add_message(error)
             response = self.llm.generate_response(stream=True)
             response = self.llm.print_Generator_and_return(response)
         try:
             env = gym.make(self.env_type.value)
-            response = self._get_code(response)
-            reward_func = self._compile_reward_function(response)
+            response = self.get_code(response)
+            reward_func = self.compile_reward_function(response)
             state, _ = env.reset()
             action = env.action_space.sample()
             next_observation, _, terminated, truncated, _ = env.step(action)
-            self._test_reward_function(
+            self.test_reward_function(
                 reward_func,
                 observations=next_observation,
                 terminated=terminated,
@@ -177,25 +268,47 @@ def reward_func(observations:np.ndarray, terminated: bool, truncated: bool) -> f
             )
         except ValueError as e:
             self.logger.warning(str(e))
-            return self._get_runnable_function(response, str(e))
+            return self.get_runnable_function(response, str(e))
         except SyntaxError as e:
             self.logger.warning(f"Error syntax {e}")
-            return self._get_runnable_function(response, str(e))
+            return self.get_runnable_function(response, str(e))
         except RuntimeError as e:
             self.logger.warning(f"Error execution {e}")
-            return self._get_runnable_function(response, str(e))
+            return self.get_runnable_function(response, str(e))
 
         return reward_func, response
 
-    def _compile_reward_function(self, response: str) -> Callable:
+    def compile_reward_function(self, response: str) -> Callable:
         """
-        Compile the reward function from the LLM response.
+        Compile a reward function dynamically from a string response.
+
+        This method takes a code string representing a reward function and dynamically 
+        compiles it into an executable Python function. It provides a secure way to 
+        generate reward functions for reinforcement learning environments.
+
+        Key Features:
+            - Dynamically executes code in an isolated global namespace
+            - Provides access to NumPy functions
+            - Extracts the compiled function by its name
+            - Robust error handling for syntax issues
+
         Args:
-            response (str): LLM generated reward function.
+            response (str): A string containing a complete Python function definition 
+                            for a reward function.
 
         Returns:
-            Callable: Compiled reward function.
-        """
+            Callable: The compiled reward function that can be called with appropriate 
+                    arguments in a gym environment.
+
+        Raises:
+            SyntaxError: If the provided code contains invalid Python syntax.
+            ValueError: If the function cannot be extracted from the compiled namespace.
+
+        Notes:
+            - Uses `exec()` for dynamic code compilation
+            - Provides NumPy (`np`) in the execution namespace
+            - Assumes the last function defined in the response is the reward function
+    """
 
         exec_globals = {}
         exec_globals["np"] = np
@@ -211,14 +324,38 @@ def reward_func(observations:np.ndarray, terminated: bool, truncated: bool) -> f
 
         return reward_function
 
-    def _test_reward_function(self, reward_function: Callable, *args, **kwargs):
+    def test_reward_function(self, reward_function: Callable, *args, **kwargs):
         """
-        Test the compiled reward function with example inputs.
+        Test the compiled reward function with provided inputs to validate its execution.
+
+        This method serves as a crucial validation step in the reward function generation 
+        process. It attempts to execute the reward function with the given arguments and 
+        logs the output or raises an error if execution fails.
+
+        Purpose:
+            - Verify the reward function can be executed without errors
+            - Log the reward function's output for debugging
+            - Ensure the function returns a valid result in the context of a gym environment
 
         Args:
-            reward_function (Callable): The reward function to test.
-            *args: Positional arguments for the reward function.
-            **kwargs: Keyword arguments for the reward function.
+            reward_function (Callable): The compiled reward function to be tested.
+            *args: Variable length argument list to pass to the reward function.
+                Typically includes observations, actions, or environment states.
+            **kwargs: Arbitrary keyword arguments to pass to the reward function.
+                May include additional context like 'terminated' or 'truncated' flags.
+
+        Raises:
+            RuntimeError: If the reward function fails to execute successfully.
+                This includes any exceptions that occur during function invocation.
+
+        Logging:
+            - Logs the reward function's output at DEBUG level when successful
+            - Provides detailed error information if execution fails
+
+        Notes:
+            - Designed to be flexible with varying function signatures
+            - Critical for validating dynamically generated reward functions
+            - Part of the reward function generation quality control process
         """
         try:
             reward = reward_function(*args, **kwargs)
@@ -228,15 +365,46 @@ def reward_func(observations:np.ndarray, terminated: bool, truncated: bool) -> f
 
     def self_refine_reward(self, idx: int) -> Callable:
         """
-        Self-refinement of reward function based on performance
+        Iteratively improve a reward function using self-refinement techniques.
+
+        This method implements an intelligent self-refinement process for reward functions
+        by leveraging a Language Model (LLM) to analyze and improve the current function
+        based on its previous performance.
+
+        Key Objectives: 
+            - Analyze current reward function performance
+            - Generate an improved version of the reward function
+            - Maintain the core task objectives while optimizing the reward signal
 
         Args:
-            current_reward_func (Callable): Current reward function
-            performance_metrics (Dict): Performance evaluation metrics
+            idx (int): Index of the reward function in the memory to be refined.
+                    Typically the worst-performing function from previous evaluation.
 
         Returns:
-            Callable: Refined reward function
-        """
+            int: Index of the newly created refined reward function in the memory.
+
+        Refinement Process:
+            1. Construct a refinement prompt with:
+                - Current reward function code
+                - Performance metrics
+                - Explicit refinement goals
+            2. Generate a new reward function using LLM
+            3. Compile and validate the new function
+            4. Append the new function to memory
+            5. Return the index of the new function
+
+        Refinement Goals:
+            - Increase success rate of the policy
+            - Optimize the reward signal for better learning
+            - Preserve the original task objectives
+            - Improve overall performance
+
+        Notes:
+            - Uses the existing memory to track function evolution
+            - Leverages LLM for intelligent function refinement
+            - Provides a systematic approach to reward function improvement
+            - Maintains a history of function iterations
+    """
         refinement_prompt = f"""
         improve the reward function to:
         - Increase success rate
@@ -253,31 +421,31 @@ def reward_func(observations:np.ndarray, terminated: bool, truncated: bool) -> f
         self.llm.add_message(refinement_prompt)
         refined_response = self.llm.generate_response(stream=True)
         refined_response = self.llm.print_Generator_and_return(refined_response)
-        reward_func, refined_response = self._get_runnable_function(refined_response)
+        reward_func, refined_response = self.get_runnable_function(refined_response)
         self.memory.append(State(len(self.memory), reward_func, refined_response))
 
         return len(self.memory) - 1
 
-    def _learning(self, state: State, queue: Queue) -> None:
+    def _learning(self, state: State, queue: Queue = None) -> None:
         """train a policy on an environment"""
-        self.logger.debug(
-            f"state {state.idx} begin is learning with reward function: {state.reward_func_str}"
-        )
-        vec_env, model = self._generate_env_model(state.reward_func)
+        self.logger.debug(f"state {state.idx} begin is learning with reward function: {state.reward_func_str}")
+        vec_env, model, numvenv = self._generate_env_model(state.reward_func)
         training_callback = TrainingInfoCallback()
-        policy = model.learn(total_timesteps=600, callback=training_callback)
+        policy = model.learn(total_timesteps=60000, callback=training_callback)
         policy.save(f"model/policy{state.idx}.model")
         metrics = training_callback.get_metrics()
         self.logger.debug(f"TRAINING METRICS: {metrics}")
-        sr_test = self.test_policy(vec_env, policy)
+        sr_test = self.test_policy(vec_env, policy, numvenv)
         # ajoute au dict metrics les performances sans ecraser les anciennes
         metrics["test_success_rate"] = sr_test
         self.logger.debug(
             f"state {state.idx} as finished is learning with performances: {metrics}"
         )
-
-        queue.put([state.idx, f"model/policy{state.idx}.model", metrics])
-        self.logger.debug(f"queue size {queue.empty()}")
+        if os.name == "posix":
+            queue.put([state.idx, f"model/policy{state.idx}.model", metrics])
+        else:
+            state.set_performances(metrics)
+            self.memory[state.idx].set_policy(policy)
 
     def evaluate_policy(self, idx1: int, idx2: int) -> int:
         """
@@ -290,77 +458,105 @@ def reward_func(observations:np.ndarray, terminated: bool, truncated: bool) -> f
         Returns:
             Dict: Performance metrics for multiple reward functions
         """
-        if len(self.memory) < 2:
-            self.logger.error("At least two reward functions are required.")
-        to_get: int = 0
-        to_join: list = []
-        for i in [idx1, idx2]:
-            if self.memory[i].performances is None:
-                self.multi_process.append(
-                    Process(target=self._learning, args=(self.memory[i], self.queue))
-                )
-                self.multi_process[-1].start()
-                to_get += 1
-                to_join.append(len(self.multi_process)-1)
+        if os.name == "posix":
+            if len(self.memory) < 2:
+                self.logger.error("At least two reward functions are required.")
+            to_get: int = 0
+            to_join: list = []
+            for i in [idx1, idx2]:
+                if self.memory[i].performances is None:
+                    self.multi_process.append(
+                        Process(target=self._learning, args=(self.memory[i], self.queue))
+                    )
+                    self.multi_process[-1].start()
+                    to_get += 1
+                    to_join.append(len(self.multi_process)-1)
 
-        while len(to_get) > 0:
-            try:
-                get = self.queue.get(block=False)
-                self.memory[get[0]].set_policy(get[1])
-                self.memory[get[0]].set_performances(get[2])
-                self.logger.debug(
-                    f"state {get[0]} has finished learning with performances: {get[2]}"
-                )
-                to_get -= 1
-            except Empty:
-                self.logger.debug("Consumer: got nothing, waiting a while...")
-                sleep(1)
-                continue
+            while to_get != 0:
+                try:
+                    get = self.queue.get(block=False)
+                    self.memory[get[0]].set_policy(get[1])
+                    self.memory[get[0]].set_performances(get[2])
+                    self.logger.debug(
+                        f"state {get[0]} has finished learning with performances: {get[2]}"
+                    )
+                    to_get -= 1
+                except Empty:
+                    self.logger.debug("Consumer: got nothing, waiting a while...")
+                    sleep(1)
+                    continue
 
-        for p in to_join:
-            self.logger.debug(f"waiting to join {p}")
-            self.multi_process[p].join()
-        if (
-            self.memory[idx1].performances["test_success_rate"]
-            > self.memory[idx2].performances["test_success_rate"]
-        ):
-            return idx1, idx2
+            for p in to_join:
+                self.logger.debug(f"waiting to join {p}")
+                self.multi_process[p].join()
+            if (
+                self.memory[idx1].performances["test_success_rate"]
+                > self.memory[idx2].performances["test_success_rate"]
+            ):
+                return idx1, idx2
+            else:
+                return idx2, idx1
         else:
-            return idx2, idx1
+            if len(self.memory) < 2:
+                self.logger.error("At least two reward functions are required.")
+            for i in [idx1, idx2]:
+                if self.memory[i].performances is None:
+                    self._learning(self.memory[i])
+            # TODO comparaison sur le success rate pour l'instant
+            if (
+                self.memory[idx1].performances["test_success_rate"]
+                > self.memory[idx2].performances["test_success_rate"]
+            ):
+                return idx1, idx2
+            else:
+                return idx2, idx1
 
     def test_policy(
-        self, env, policy, reward_func=None, nb_episodes=100, max_t=1000
-    ) -> list:
+        self,
+        env,
+        policy,
+        numvenv,
+        nb_episodes=100,
+    ) -> float:
         all_rewards = []
-        all_states = []
         nb_success = 0
-        for epi in range(1, nb_episodes + 1):
-            obs = env.reset()
-            epi_rewards = 0
-            while True:
-                action, _states = policy.predict(obs)
-                obs, reward, dones, info = env.step(action)  # TODO treat multiples envs
-                epi_rewards += reward.item()
-                if dones[0]:
-                    if info[0]["TimeLimit.truncated"]:
-                        nb_success += 1
-                    break
-            all_rewards.append(epi_rewards)
-        return nb_success / nb_episodes
+
+        obs = env.reset()
+
+        for _ in range(nb_episodes // numvenv):
+            episode_rewards = np.zeros(numvenv)
+            dones = [False] * numvenv
+            
+            while not all(dones):
+                actions, _ = policy.predict(obs)
+                obs, rewards, new_dones, infos = env.step(actions)
+                episode_rewards += np.array(rewards)
+                for i, (done, info) in enumerate(zip(new_dones, infos)):
+                    if done:
+                        dones[i] = True
+                        if self.success_function(env.envs[i], info):
+                            nb_success += 1
+            
+            all_rewards.extend(episode_rewards)
+
+        success_rate = nb_success / nb_episodes
+        return success_rate
 
     def _generate_env_model(self, reward_func):
         """
         Generate the environment model
         """
+        numenvs = 2
+        # SubprocVecEnv sauf on utilisera cuda derrière
         vec_env = make_vec_env(
-            self.env_type.value,
-            n_envs=1,
-            wrapper_class=CustomRewardWrapper,
-            wrapper_kwargs={"llm_reward_function": reward_func},
-        )
+            self.env_type.value, 
+            n_envs=numenvs, 
+            wrapper_class=CustomRewardWrapper, 
+            wrapper_kwargs={"llm_reward_function": reward_func})
         if self.learning_algo == Algo.PPO:
             model = PPO("MlpPolicy", vec_env, verbose=0, device="cpu")
         else:
             raise ValueError("The learning algorithm is not implemented.")
-
-        return vec_env, model
+        
+        return vec_env, model, numenvs
+        

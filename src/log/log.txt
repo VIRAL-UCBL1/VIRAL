@@ -4421,7 +4421,7 @@ def reward_func(observations, terminated, truncated):
 	Error syntax Syntax error in the generated code : unexpected indent (<string>, line 4)
 
 11:39:43 VIRAL.py:170 WARNING
-	Error syntax Syntax error in the generated code : invalid character '°' (U+00B0) (<string>, line 4)
+	Error syntax Syntax error in the generated code : invalid character 'ï¿½' (U+00B0) (<string>, line 4)
 
 11:45:06 OllamaChat.py:32 INFO
 	System: 
@@ -6445,5 +6445,1583 @@ None
 	additional options: {'temperature': 1}
 
 15:54:33 VIRAL.py:123 INFO
+	additional options: {'temperature': 1}
+
+15:57:34 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 309554}
+
+15:57:36 VIRAL.py:123 INFO
+	additional options: {'temperature': 1}
+
+15:57:41 VIRAL.py:123 INFO
+	additional options: {'temperature': 1}
+
+16:07:43 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 213931}
+
+16:07:51 VIRAL.py:123 INFO
+	additional options: {'temperature': 1}
+
+16:07:53 VIRAL.py:123 INFO
+	additional options: {'temperature': 1}
+
+17:12:51 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 128369}
+
+17:12:57 VIRAL.py:123 INFO
+	additional options: {'temperature': 1}
+
+17:12:59 VIRAL.py:123 INFO
+	additional options: {'temperature': 1}
+
+17:13:45 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 883543}
+
+17:13:47 VIRAL.py:123 INFO
+	additional options: {'temperature': 1}
+
+17:13:51 VIRAL.py:123 INFO
+	additional options: {'temperature': 1}
+
+17:14:22 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 210473}
+
+17:14:24 VIRAL.py:123 INFO
+	additional options: {'temperature': 1}
+
+17:14:28 VIRAL.py:123 INFO
+	additional options: {'temperature': 1}
+
+17:16:08 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 514126}
+
+17:16:11 VIRAL.py:123 INFO
+	additional options: {'temperature': 1}
+
+17:16:15 VIRAL.py:123 INFO
+	additional options: {'temperature': 1}
+
+17:31:04 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 512228}
+
+17:31:09 VIRAL.py:123 INFO
+	additional options: {'temperature': 1}
+
+17:31:13 VIRAL.py:123 INFO
+	additional options: {'temperature': 1}
+
+17:42:17 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 664444}
+
+17:42:22 VIRAL.py:123 INFO
+	additional options: {'temperature': 1}
+
+17:42:27 VIRAL.py:123 INFO
+	additional options: {'temperature': 1}
+
+18:05:33 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 511302}
+
+18:05:39 VIRAL.py:123 INFO
+	additional options: {'temperature': 1}
+
+18:05:43 VIRAL.py:123 INFO
+	additional options: {'temperature': 1}
+
+18:08:49 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 343457}
+
+18:08:51 VIRAL.py:123 INFO
+	additional options: {'temperature': 1}
+
+18:08:55 VIRAL.py:123 INFO
+	additional options: {'temperature': 1}
+
+18:11:55 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 923586}
+
+18:11:57 VIRAL.py:123 INFO
+	additional options: {'temperature': 1}
+
+18:12:01 VIRAL.py:123 INFO
+	additional options: {'temperature': 1}
+
+18:15:17 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 565417}
+
+18:15:19 VIRAL.py:123 INFO
+	additional options: {'temperature': 1}
+
+18:15:23 VIRAL.py:123 INFO
+	additional options: {'temperature': 1}
+
+18:17:00 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 738168}
+
+18:17:02 VIRAL.py:123 INFO
+	additional options: {'temperature': 1}
+
+18:17:06 VIRAL.py:123 INFO
+	additional options: {'temperature': 1}
+
+18:22:35 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 335045}
+
+18:22:37 VIRAL.py:124 INFO
+	additional options: {'temperature': 1}
+
+18:22:41 VIRAL.py:124 INFO
+	additional options: {'temperature': 1}
+
+18:44:04 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 102981}
+
+18:44:07 VIRAL.py:125 INFO
+	additional options: {'temperature': 1}
+
+18:44:13 VIRAL.py:125 INFO
+	additional options: {'temperature': 1}
+
+19:04:29 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 907155}
+
+19:04:32 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+19:04:37 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+19:05:11 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 846677}
+
+19:05:11 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+19:05:17 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+10:27:09 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 10321}
+
+10:27:53 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+10:28:58 VIRAL.py:173 WARNING
+	Error execution Error during reward function execution: 'numpy.float32' object is not iterable
+
+10:30:39 VIRAL.py:170 WARNING
+	Error syntax Syntax error in the generated code : unterminated string literal (detected at line 1) (<string>, line 1)
+
+10:30:50 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 771287}
+
+10:30:50 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+10:32:36 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+10:37:59 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 431676}
+
+10:37:59 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+10:39:41 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+10:42:44 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 725423}
+
+10:42:45 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+10:44:43 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+10:49:08 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 657860}
+
+10:49:08 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+10:50:54 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+10:54:15 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 460404}
+
+10:54:15 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+10:56:14 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+11:00:49 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 163090}
+
+11:00:49 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+11:02:16 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+11:17:23 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 995511}
+
+11:18:10 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+11:20:02 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+11:27:06 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 905352}
+
+11:27:51 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+11:29:14 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+11:31:16 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 244357}
+
+11:31:16 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+11:33:08 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+11:42:17 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 57702}
+
+11:42:49 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+11:43:39 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+11:52:43 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 394515}
+
+11:53:15 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+11:54:09 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+12:00:10 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 173044}
+
+12:00:42 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+12:01:32 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+17:53:35 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 992871}
+
+17:54:19 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+17:55:18 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+17:56:29 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 292589}
+
+17:56:29 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+17:57:08 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+17:57:28 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 464261}
+
+17:57:28 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+17:58:36 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+18:03:09 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 550082}
+
+18:03:10 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+18:04:10 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+18:11:16 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 157704}
+
+18:11:16 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+18:12:13 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+18:22:21 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 61629}
+
+18:22:22 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+18:23:28 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+18:25:54 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 964382}
+
+18:25:54 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+18:26:55 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+18:37:30 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 300524}
+
+18:37:31 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+18:38:26 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+18:41:51 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 348711}
+
+18:41:51 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+18:42:46 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+20:39:15 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 737353}
+
+20:39:32 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+20:39:37 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+20:41:37 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 589202}
+
+20:41:39 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+20:41:44 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+20:48:47 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 418709}
+
+20:48:49 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+20:48:53 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+20:52:48 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 542754}
+
+20:52:50 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+20:52:53 VIRAL.py:173 WARNING
+	Error execution Error during reward function execution: too many values to unpack (expected 6)
+
+20:53:00 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+20:55:40 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 534392}
+
+20:55:43 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+20:55:47 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+20:59:25 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 949154}
+
+20:59:27 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+20:59:28 VIRAL.py:167 WARNING
+	The answer does not contain a valid function definition.
+
+20:59:34 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+20:59:34 VIRAL.py:167 WARNING
+	The answer does not contain a valid function definition.
+
+21:01:20 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 965601}
+
+21:01:22 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+21:01:27 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+21:17:57 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 575947}
+
+21:18:03 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+21:18:28 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 929303}
+
+21:18:31 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+21:18:35 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+21:32:01 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 676173}
+
+21:32:08 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+21:32:12 VIRAL.py:127 INFO
+	additional options: {'temperature': 1}
+
+21:35:30 VIRAL.py:227 WARNING
+	Error execution Error during reward function execution: index 5 is out of bounds for axis 0 with size 4
+
+21:35:36 VIRAL.py:224 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 1)
+
+21:35:42 VIRAL.py:224 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 1)
+
+21:35:47 VIRAL.py:224 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 1)
+
+21:35:52 VIRAL.py:224 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 1)
+
+21:35:57 VIRAL.py:224 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 1)
+
+21:36:03 VIRAL.py:224 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 1)
+
+21:36:09 VIRAL.py:224 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 1)
+
+21:36:13 VIRAL.py:224 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 1)
+
+21:36:19 VIRAL.py:224 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 1)
+
+21:36:24 VIRAL.py:224 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 1)
+
+21:36:30 VIRAL.py:224 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 1)
+
+21:36:35 VIRAL.py:224 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 1)
+
+21:36:40 VIRAL.py:224 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 1)
+
+21:36:46 VIRAL.py:224 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 1)
+
+21:36:52 VIRAL.py:224 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 1)
+
+21:36:58 VIRAL.py:224 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 1)
+
+21:37:04 VIRAL.py:224 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 1)
+
+21:37:09 VIRAL.py:224 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 1)
+
+21:37:15 VIRAL.py:224 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 1)
+
+21:37:28 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 421921}
+
+21:37:30 VIRAL.py:164 INFO
+	additional options: {'temperature': 1}
+
+21:37:31 VIRAL.py:258 WARNING
+	The answer does not contain a valid function definition.
+
+21:37:37 VIRAL.py:164 INFO
+	additional options: {'temperature': 1}
+
+21:37:37 VIRAL.py:258 WARNING
+	The answer does not contain a valid function definition.
+
+21:42:21 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 251114}
+
+21:42:23 VIRAL.py:164 INFO
+	additional options: {'temperature': 1}
+
+21:42:27 VIRAL.py:164 INFO
+	additional options: {'temperature': 1}
+
+22:50:38 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 674888}
+
+22:50:38 VIRAL.py:180 INFO
+	additional options: {'temperature': 1}
+
+22:50:38 VIRAL.py:180 INFO
+	additional options: {'temperature': 1}
+
+22:50:56 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 581841}
+
+22:50:56 VIRAL.py:180 INFO
+	additional options: {'temperature': 1}
+
+22:50:56 VIRAL.py:180 INFO
+	additional options: {'temperature': 1}
+
+22:53:48 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 723768}
+
+22:53:48 VIRAL.py:180 INFO
+	additional options: {'temperature': 1}
+
+22:53:48 VIRAL.py:180 INFO
+	additional options: {'temperature': 1}
+
+22:53:59 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 562360}
+
+22:53:59 VIRAL.py:180 INFO
+	additional options: {'temperature': 1}
+
+22:53:59 VIRAL.py:180 INFO
+	additional options: {'temperature': 1}
+
+22:55:41 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 409324}
+
+22:55:41 VIRAL.py:182 INFO
+	additional options: {'temperature': 1}
+
+22:55:41 VIRAL.py:182 INFO
+	additional options: {'temperature': 1}
+
+22:56:59 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 337407}
+
+22:56:59 VIRAL.py:180 INFO
+	additional options: {'temperature': 1}
+
+22:56:59 VIRAL.py:180 INFO
+	additional options: {'temperature': 1}
+
+22:57:24 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 496965}
+
+22:57:24 VIRAL.py:180 INFO
+	additional options: {'temperature': 1}
+
+22:57:24 VIRAL.py:180 INFO
+	additional options: {'temperature': 1}
+
+23:02:16 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 710701}
+
+23:02:16 VIRAL.py:180 INFO
+	additional options: {'temperature': 1}
+
+23:02:16 VIRAL.py:180 INFO
+	additional options: {'temperature': 1}
+
+23:02:54 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 476810}
+
+23:02:54 VIRAL.py:180 INFO
+	additional options: {'temperature': 1}
+
+23:02:54 VIRAL.py:180 INFO
+	additional options: {'temperature': 1}
+
+23:04:14 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 486907}
+
+23:04:14 VIRAL.py:180 INFO
+	additional options: {'temperature': 1}
+
+23:04:14 VIRAL.py:180 INFO
+	additional options: {'temperature': 1}
+
+23:05:39 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 155503}
+
+23:05:39 VIRAL.py:180 INFO
+	additional options: {'temperature': 1}
+
+23:05:39 VIRAL.py:180 INFO
+	additional options: {'temperature': 1}
+
+23:06:08 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 857776}
+
+23:06:08 VIRAL.py:181 INFO
+	additional options: {'temperature': 1}
+
+23:06:08 VIRAL.py:181 INFO
+	additional options: {'temperature': 1}
+
+23:08:54 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 30474}
+
+23:08:54 VIRAL.py:180 INFO
+	additional options: {'temperature': 1}
+
+23:08:54 VIRAL.py:180 INFO
+	additional options: {'temperature': 1}
+
+23:09:36 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 551454}
+
+23:09:36 VIRAL.py:180 INFO
+	additional options: {'temperature': 1}
+
+23:09:36 VIRAL.py:180 INFO
+	additional options: {'temperature': 1}
+
+23:10:31 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 596725}
+
+23:10:31 VIRAL.py:180 INFO
+	additional options: {'temperature': 1}
+
+23:10:31 VIRAL.py:180 INFO
+	additional options: {'temperature': 1}
+
+23:12:06 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 520425}
+
+23:12:06 VIRAL.py:180 INFO
+	additional options: {'temperature': 1}
+
+23:12:06 VIRAL.py:180 INFO
+	additional options: {'temperature': 1}
+
+23:13:50 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 666045}
+
+23:13:50 VIRAL.py:180 INFO
+	additional options: {'temperature': 1}
+
+23:13:50 VIRAL.py:180 INFO
+	additional options: {'temperature': 1}
+
+23:14:48 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 836683}
+
+23:14:48 VIRAL.py:180 INFO
+	additional options: {'temperature': 1}
+
+23:14:48 VIRAL.py:180 INFO
+	additional options: {'temperature': 1}
+
+23:17:20 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 476927}
+
+23:17:20 VIRAL.py:180 INFO
+	additional options: {'temperature': 1}
+
+23:17:20 VIRAL.py:180 INFO
+	additional options: {'temperature': 1}
+
+23:18:45 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 703077}
+
+23:18:45 VIRAL.py:180 INFO
+	additional options: {'temperature': 1}
+
+23:18:45 VIRAL.py:180 INFO
+	additional options: {'temperature': 1}
+
+23:20:44 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 430774}
+
+23:20:44 VIRAL.py:180 INFO
+	additional options: {'temperature': 1}
+
+23:20:44 VIRAL.py:180 INFO
+	additional options: {'temperature': 1}
+
+23:21:26 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 835248}
+
+23:21:26 VIRAL.py:180 INFO
+	additional options: {'temperature': 1}
+
+23:21:26 VIRAL.py:180 INFO
+	additional options: {'temperature': 1}
+
+23:22:15 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 482362}
+
+23:22:15 VIRAL.py:180 INFO
+	additional options: {'temperature': 1}
+
+23:22:15 VIRAL.py:180 INFO
+	additional options: {'temperature': 1}
+
+23:22:48 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 81174}
+
+23:22:48 VIRAL.py:180 INFO
+	additional options: {'temperature': 1}
+
+23:22:48 VIRAL.py:180 INFO
+	additional options: {'temperature': 1}
+
+23:23:25 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 272026}
+
+23:23:25 VIRAL.py:180 INFO
+	additional options: {'temperature': 1}
+
+23:23:25 VIRAL.py:180 INFO
+	additional options: {'temperature': 1}
+
+23:24:45 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 642408}
+
+23:24:45 VIRAL.py:180 INFO
+	additional options: {'temperature': 1}
+
+23:24:45 VIRAL.py:180 INFO
+	additional options: {'temperature': 1}
+
+23:29:12 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 933871}
+
+23:29:19 VIRAL.py:177 INFO
+	additional options: {'temperature': 1}
+
+23:29:23 VIRAL.py:177 INFO
+	additional options: {'temperature': 1}
+
+23:29:54 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 341166}
+
+23:29:56 VIRAL.py:177 INFO
+	additional options: {'temperature': 1}
+
+23:29:57 VIRAL.py:270 WARNING
+	The answer does not contain a valid function definition.
+
+23:30:03 VIRAL.py:177 INFO
+	additional options: {'temperature': 1}
+
+23:30:04 VIRAL.py:270 WARNING
+	The answer does not contain a valid function definition.
+
+23:30:52 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 648800}
+
+23:30:54 VIRAL.py:177 INFO
+	additional options: {'temperature': 1}
+
+23:30:59 VIRAL.py:177 INFO
+	additional options: {'temperature': 1}
+
+23:31:11 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 554732}
+
+23:31:13 VIRAL.py:177 INFO
+	additional options: {'temperature': 1}
+
+23:31:18 VIRAL.py:177 INFO
+	additional options: {'temperature': 1}
+
+23:31:35 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 358923}
+
+23:31:38 VIRAL.py:177 INFO
+	additional options: {'temperature': 1}
+
+23:31:43 VIRAL.py:177 INFO
+	additional options: {'temperature': 1}
+
+23:32:02 VIRAL.py:276 WARNING
+	Error execution Error during reward function execution: name 'cart_velocity' is not defined
+
+23:32:17 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 102237}
+
+23:32:19 VIRAL.py:177 INFO
+	additional options: {'temperature': 1}
+
+23:32:24 VIRAL.py:177 INFO
 	additional options: {'temperature': 1}
 
