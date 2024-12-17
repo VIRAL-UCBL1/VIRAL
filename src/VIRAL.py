@@ -307,8 +307,9 @@ class VIRAL:
                 obs, rewards, new_dones, infos = env.step(actions)
                 episode_rewards += np.array(rewards)
                 for i, (done, info) in enumerate(zip(new_dones, infos)):
-                    if done and not dones[i]:
+                    if done:
                         dones[i] = True
+                        self.function_success(env.envs[i], info)
                         if info.get("success") is not None and info["success"]:
                             print(f"Environnement {i} : SUCCESS")
                             nb_success += 1
@@ -328,8 +329,7 @@ class VIRAL:
             self.env_type.value, 
             n_envs=numenvs, 
             wrapper_class=CustomRewardWrapper, 
-            wrapper_kwargs={"llm_reward_function": reward_func, "success_function": self.function_success},
-            vec_env_cls=SubprocVecEnv)
+            wrapper_kwargs={"llm_reward_function": reward_func})
         if self.learning_algo == Algo.PPO:
             model = PPO("MlpPolicy", vec_env, verbose=1, device="cpu")
         else:

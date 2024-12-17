@@ -10,7 +10,7 @@ def unwrap_env(env):
     return env
 
 
-def lunar_lander_function(env, info,terminated = None,truncated = None):
+def lunar_lander_function(env, info) -> bool:
     """
     Cette fonction vérifie si le lander est "awake" et met à jour l'info.
     """
@@ -21,21 +21,18 @@ def lunar_lander_function(env, info,terminated = None,truncated = None):
 
     # check if the lander is awake
     if hasattr(base_env, "lander") and not base_env.lander.awake:
-        info["success"] = True
+        return True
     else:
-        info["success"] = False
+        return False
         
-def cartpole_function(env, info,terminated = None,truncated = None):
+def cartpole_function(env, info) -> bool:
     """
     Cette fonction vérifie si le lander est "awake" et met à jour l'info.
     """
-    # print("CartPole Function")
-    if truncated:  # the episode was truncated (time limit reached successfully)
-        info["success"] = True
-    elif terminated:  # the episode is over
-        info["success"] = False
+    if info["TimeLimit.truncated"]:
+        return True
     else:
-        info["success"] = None  # the episode is still running
+        return False
 
 
 
