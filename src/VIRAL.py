@@ -432,7 +432,7 @@ class VIRAL:
         self.logger.debug(f"state {state.idx} begin is learning with reward function: {state.reward_func_str}")
         vec_env, model, numvenv = self._generate_env_model(state.reward_func)
         training_callback = TrainingInfoCallback()
-        policy = model.learn(total_timesteps=60, callback=training_callback)
+        policy = model.learn(total_timesteps=60000, callback=training_callback)
         policy.save(f"model/policy{state.idx}.model")
         metrics = training_callback.get_metrics()
         self.logger.debug(f"{state.idx} TRAINING METRICS: {metrics}")
@@ -548,7 +548,7 @@ class VIRAL:
             wrapper_class=CustomRewardWrapper, 
             wrapper_kwargs={"llm_reward_function": reward_func})
         if self.learning_algo == Algo.PPO:
-            model = PPO("MlpPolicy", vec_env, verbose=0, device="cpu")
+            model = PPO("MlpPolicy", vec_env, verbose=1, device="cpu")
         else:
             raise ValueError("The learning algorithm is not implemented.")
         
