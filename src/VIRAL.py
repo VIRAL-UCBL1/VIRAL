@@ -124,18 +124,10 @@ class VIRAL:
                 float: The reward for the current step
             \"\"\"
         """
-            # self.llm.add_message(prompt)
-            # response = self.llm.generate_response(
-            #     stream=True, additional_options=additional_options
-            # )
-            response = """
-def reward_func(observations:np.ndarray, terminated: bool, truncated: bool) -> float:
-    _, _, pole_angle, _ = observations
-    
-    if terminated or truncated:
-        return -1.0
-    else:
-        return np.cos(pole_angle)"""
+            self.llm.add_message(prompt)
+            response = self.llm.generate_response(
+                stream=True, additional_options=additional_options
+            )
             self.logger.info(f"additional options: {additional_options}")
             response = self.llm.print_Generator_and_return(response, i)
             reward_func, response = self._get_runnable_function(response)
@@ -265,19 +257,14 @@ def reward_func(observations:np.ndarray, terminated: bool, truncated: bool) -> f
         )
         vec_env, model = self._generate_env_model(state.reward_func)
         training_callback = TrainingInfoCallback()
-        policy = model.learn(total_timesteps=600, callback=training_callback)
+        policy = model.learn(total_timesteps=60000, callback=training_callback)
         policy.save(f"model/policy{state.idx}.model")
         metrics = training_callback.get_metrics()
         self.logger.debug(f"TRAINING METRICS: {metrics}")
         sr_test = self.test_policy(vec_env, policy)
         # ajoute au dict metrics les performances sans ecraser les anciennes
         metrics["test_success_rate"] = sr_test
-        self.logger.debug(
-            f"state {state.idx} as finished is learning with performances: {metrics}"
-        )
-
         queue.put([state.idx, f"model/policy{state.idx}.model", metrics])
-        self.logger.debug(f"queue size {queue.empty()}")
 
     def evaluate_policy(self, idx1: int, idx2: int) -> int:
         """
@@ -313,12 +300,9 @@ def reward_func(observations:np.ndarray, terminated: bool, truncated: bool) -> f
                 )
                 to_get -= 1
             except Empty:
-                self.logger.debug("Consumer: got nothing, waiting a while...")
-                sleep(1)
-                continue
+                sleep(0.1)
 
         for p in to_join:
-            self.logger.debug(f"waiting to join {p}")
             self.multi_process[p].join()
         if (
             self.memory[idx1].performances["test_success_rate"]
