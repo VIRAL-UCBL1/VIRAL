@@ -11,19 +11,19 @@ from PolicyTrainer.CustomRewardWrapper import CustomRewardWrapper
 from PolicyTrainer.TrainingInfoCallback import TrainingInfoCallback
 from State.State import State
 from Environments.Algo import Algo
-from Environments.Environments import Environments
+from Environments.EnvType import EnvType
 
 import numpy as np
 import os
 
 
 class PolicyTrainer:
-    def __init__(self, memory: list[State], algo: Algo, env: Environments, success_func: Callable):
+    def __init__(self, memory: list[State], env_type: EnvType):
         self.logger = getLogger("VIRAL")
         self.memory = memory
-        self.algo = algo
-        self.env = env
-        self.success_func = success_func
+        self.algo = env_type.algo
+        self.env_name = str(env_type)
+        self.success_func = env_type.success_func
         if os.name == "posix":
             self.queue = Queue()
             self.multi_process: list[Process] = []
@@ -158,7 +158,7 @@ class PolicyTrainer:
         numenvs = 2
         # SubprocVecEnv sauf on utilisera cuda derrière
         vec_env = make_vec_env(
-            self.env.value, 
+            self.env_name, 
             n_envs=numenvs, 
             wrapper_class=CustomRewardWrapper, 
             wrapper_kwargs={"llm_reward_function": reward_func})

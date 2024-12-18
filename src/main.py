@@ -1,18 +1,11 @@
 import argparse
 from logging import getLogger
 
-import gymnasium as gym
-from stable_baselines3 import PPO
-from stable_baselines3.common.env_util import make_vec_env
-
 from log.log_config import init_logger
 from RLAlgo.DirectSearch import DirectSearch
 from RLAlgo.Reinforce import Reinforce
-from Environments.Algo import Algo
-from Environments.Environments import Environments
-from utils.ObjectivesMetrics import objective_metric_CartPole
+from Environments import Prompt, Algo, CartPole, LunarLander
 from VIRAL import VIRAL
-import multiprocessing as mp
 
 def parse_logger():
     """
@@ -60,12 +53,11 @@ def main():
             # "min_p": 0.05, #alternative au top_p, vise a s'aéssurer de la balance entre qualité et diversité (0.0 par défaut)
             # "seed": 42, # a utiliser pour la reproductibilité des résultats (important si publication)
         }
+    env_type = CartPole(Algo.PPO)
     viral = VIRAL(
-        learning_algo=Algo.PPO,
-        env_type=Environments.CARTPOLE, 
-        success_function=Environments.CARTPOLE.task_function, options=additional_options)
+        env_type=env_type, options=additional_options)
     res = viral.generate_reward_function(
-        task_description=Environments.CARTPOLE.task_description,
+        task_description=Prompt.CARTPOLE,
         iterations=2,
     )
     for state in viral.memory:

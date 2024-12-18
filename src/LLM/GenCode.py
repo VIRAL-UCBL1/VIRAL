@@ -4,10 +4,10 @@ import gymnasium as gym
 import numpy as np
 from State.State import State
 from LLM.OllamaChat import OllamaChat
-from Environments.Environments import Environments
+from Environments import EnvType
 
 class GenCode:
-    def __init__(self, env: Environments, llm: OllamaChat):
+    def __init__(self, env: EnvType, llm: OllamaChat):
         """Generate the code from a response, it can be handle error, and refine from the llm new responses
 
         Args:
@@ -16,7 +16,7 @@ class GenCode:
         """
         self.current_index = 0
         self.llm = llm
-        self.env = env
+        self.env_name = str(env)
         self.logger = getLogger('VIRAL')
         self.response = None
         self.reward_func = None
@@ -71,7 +71,7 @@ class GenCode:
             self.response = self.llm.generate_response(stream=True)
             self.response = self.llm.print_Generator_and_return(self.response)
         try:
-            env = gym.make(self.env.value)
+            env = gym.make(self.env_name)
             self.get_clean_response()
             reward_func = self.compile_reward_function()
             state, _ = env.reset()

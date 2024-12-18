@@ -3,7 +3,7 @@ from logging import getLogger
 from typing import Callable
 
 from Environments.Algo import Algo
-from Environments.Environments import Environments
+from Environments import EnvType
 from LLM.OllamaChat import OllamaChat
 from State.State import State
 from LLM.GenCode import GenCode
@@ -13,10 +13,7 @@ from PolicyTrainer.PolicyTrainer import PolicyTrainer
 class VIRAL:
     def __init__(
         self,
-        learning_algo: Algo,
-        env_type: Environments,
-        success_function: Callable,
-        objectives_metrics: list[callable] = [],
+        env_type: EnvType,
         model: str = "qwen2.5-coder",
         options: dict = {},
     ):
@@ -43,17 +40,13 @@ class VIRAL:
         """,
             options=options,
         )
-        self.env_type: Environments = env_type
+        self.env_type: EnvType = env_type
         self.gen_code: GenCode = GenCode(self.env_type, self.llm)
-        self.success_function = success_function
-        self.objectives_metrics = objectives_metrics
-        self.learning_algo: Algo = learning_algo
         self.logger = getLogger("VIRAL")
         self.logger.info(f"additional options: {options}")
         self.memory: list[State] = [State(0)]
         self.policy_trainer: PolicyTrainer = PolicyTrainer(
-            self.memory, self.learning_algo, self.env_type,
-            self.success_function
+            self.memory, self.env_type
         )
 
     def generate_reward_function(
@@ -109,12 +102,12 @@ class VIRAL:
         ### INIT STAGE ###
         for i in [1, 2]:
             prompt = f"""
-        Complete the reward function for a {self.env_type.value} environment.
+        Complete the reward function for a {self.env_type} environment.
         Task Description: {task_description} Iteration {i+1}/{2}
 
         complete this sentence:
         def reward_func(observations:np.ndarray, terminated: bool, truncated: bool) -> float:
-            \"\"\"Reward function for {self.env_type.value}
+            \"\"\"Reward function for {self.env_type}
 
             Args:
                 observations (np.ndarray): observation on the current state
