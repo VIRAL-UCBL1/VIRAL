@@ -9,7 +9,6 @@ from log.log_config import init_logger
 from RLAlgo.DirectSearch import DirectSearch
 from RLAlgo.Reinforce import Reinforce
 from Environments.Algo import Algo
-from utils.CustomRewardWrapper import CustomRewardWrapper
 from Environments.Environments import Environments
 from utils.ObjectivesMetrics import objective_metric_CartPole
 from VIRAL import VIRAL
