@@ -53,9 +53,11 @@ nav:
       
 plugins:
   - search
+  - autorefs
   - mkdocstrings:
       handlers:
         python:
           options:
             docstring_style: google
             show_signature: true
+            show_source: false
