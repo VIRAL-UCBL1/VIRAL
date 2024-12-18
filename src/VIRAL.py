@@ -13,13 +13,13 @@ from stable_baselines3 import PPO
 from stable_baselines3.common.env_util import make_vec_env
 from stable_baselines3.common.vec_env import SubprocVecEnv
 
-from utils.Algo import Algo
+from Environments.Algo import Algo
 from utils.CustomRewardWrapper import CustomRewardWrapper
-from utils.Environments import Environments
-from utils.OllamaChat import OllamaChat
-from utils.State import State
+from Environments.Environments import Environments
+from LLM.OllamaChat import OllamaChat
+from State.State import State
 from utils.TrainingInfoCallback import TrainingInfoCallback
-from utils.GenCode import GenCode
+from LLM.GenCode import GenCode
 import os
 
 

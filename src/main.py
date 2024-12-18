@@ -8,9 +8,9 @@ from stable_baselines3.common.env_util import make_vec_env
 from log.log_config import init_logger
 from RLAlgo.DirectSearch import DirectSearch
 from RLAlgo.Reinforce import Reinforce
-from utils.Algo import Algo
+from Environments.Algo import Algo
 from utils.CustomRewardWrapper import CustomRewardWrapper
-from utils.Environments import Environments
+from Environments.Environments import Environments
 from utils.ObjectivesMetrics import objective_metric_CartPole
 from VIRAL import VIRAL
 import multiprocessing as mp

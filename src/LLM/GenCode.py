@@ -2,9 +2,9 @@ from logging import getLogger
 from typing import Callable
 import gymnasium as gym
 import numpy as np
-from utils.State import State
-from utils.OllamaChat import OllamaChat
-from utils.Environments import Environments
+from State.State import State
+from LLM.OllamaChat import OllamaChat
+from Environments.Environments import Environments
 
 class GenCode:
     def __init__(self, env: Environments, llm: OllamaChat):

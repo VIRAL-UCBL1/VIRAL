@@ -8076,3 +8076,51 @@ None
 00:15:07 VIRAL.py:178 INFO
 	additional options: {'temperature': 1}
 
+02:12:07 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 549706}
+
+02:12:23 VIRAL.py:175 INFO
+	additional options: {'temperature': 1}
+
+02:12:23 GenCode.py:87 WARNING
+	The answer does not contain a valid function definition.
+
+02:12:29 VIRAL.py:175 INFO
+	additional options: {'temperature': 1}
+
+02:12:30 GenCode.py:87 WARNING
+	The answer does not contain a valid function definition.
+
+02:16:17 OllamaChat.py:32 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        , Options: {'seed': 923416}
+
+02:16:19 VIRAL.py:175 INFO
+	additional options: {'temperature': 1}
+
+02:16:19 GenCode.py:87 WARNING
+	The answer does not contain a valid function definition.
+
+02:16:25 VIRAL.py:175 INFO
+	additional options: {'temperature': 1}
+
+02:16:26 GenCode.py:87 WARNING
+	The answer does not contain a valid function definition.
+
