@@ -44,10 +44,26 @@ def main():
     memory.
     """
     logger = parse_logger()
+    additional_options = {
+            "temperature": 1,
+            # "num_predict": 3, # l'impression que ça change rien a creuser
+            # "mirostat" : 1,
+            # "mirostat_eta" : 0.01, #gère la vitesse de réponses du model (0.1 par défaut) plus c'est petit plus c'est lent
+            # "mirostat_tau" : 4.0, #gère la balance entre la diversité et la coherence des réponses (5.0 par défaut) plus c'est petit plus c'est focus et cohérent
+            # num_ctx": 2048, # nombre de tokens contextuels (2048 par défaut peut être pas nécessaire de changer)
+            # repeat_last_n": 64, # combien le model regarde en arrière pour éviter de répéter les réponses (64 par défaut large pour nous)
+            # "repeat_penalty": 1.5, # pénalité pour éviter de répéter les réponses (1.1 par défaut au mac 1.5 intéressant a modificer je pense)
+            # "stop": "stop you here" # pour stopper la génération de texte pas intéressant pour nous
+            # "tfs_z": 1.2, #reduire l'impacte des token les moins "pertinents" (1.0 par défaut pour désactiver 2.0 max)
+            # "top_k": 30, #reduit la probabilité de générer des non-sens (40 par défaut, 100 pour générer des réponses plus diverses, 10 pour des réponses plus "conservatrices")
+            # "top_p": 0.95, #marche avec le top_k une forte valeur pour des texte plus diverses (0.9 par défaut)
+            # "min_p": 0.05, #alternative au top_p, vise a s'aéssurer de la balance entre qualité et diversité (0.0 par défaut)
+            # "seed": 42, # a utiliser pour la reproductibilité des résultats (important si publication)
+        }
     viral = VIRAL(
         learning_algo=Algo.PPO,
         env_type=Environments.CARTPOLE, 
-        success_function=Environments.CARTPOLE.task_function)
+        success_function=Environments.CARTPOLE.task_function, options=additional_options)
     res = viral.generate_reward_function(
         task_description=Environments.CARTPOLE.task_description,
         iterations=2,
