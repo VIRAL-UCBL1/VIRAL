@@ -125,11 +125,10 @@ class VIRAL:
             self.memory.append(state)
 
         best_idx, worst_idx = self.policy_trainer.evaluate_policy(1, 2)
-        self.logger.debug(f"state to refine: {worst_idx}")
         ### SECOND STAGE ###
         for n in range(iterations - 1):
-            self.logger.debug(f"state to refine: {worst_idx}")
-            new_idx = self.self_refine_reward(worst_idx)
+            self.logger.debug(f"state to refine: {best_idx}")
+            new_idx = self.self_refine_reward(best_idx)
             best_idx, worst_idx = self.policy_trainer.evaluate_policy(best_idx, new_idx)
         return self.memory
 
@@ -192,6 +191,7 @@ class VIRAL:
         refined_response = self.llm.generate_response(stream=True)
         refined_response = self.llm.print_Generator_and_return(refined_response)
         state = self.gen_code.get(refined_response)
+        state.set_src(self.memory[idx])
         self.memory.append(state)
 
         return len(self.memory) - 1

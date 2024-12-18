@@ -60,7 +60,7 @@ def main():
         env_type=env_type, options=additional_options)
     res = viral.generate_reward_function(
         task_description=Prompt.CARTPOLE,
-        iterations=2,
+        iterations=10,
     )
     for state in viral.memory:
         logger.info(state)

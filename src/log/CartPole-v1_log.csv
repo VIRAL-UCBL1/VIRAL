@@ -1,0 +1,147 @@
+llm;reward_function;src;SR
+qwen2.5-coder;;[0];0.85
+qwen2.5-coder;"def reward_func(observations: np.ndarray, terminated: bool, truncated: bool) -> float:
+    """"""Reward function for CartPole-v1
+
+    Args:
+        observations (np.ndarray): observation on the current state
+        terminated (bool): episode is terminated due a failure
+        truncated (bool): episode is truncated due a success
+
+    Returns:
+        float: The reward for the current step
+    """"""
+    x, x_dot, theta, theta_dot = observations
+    
+    # Penalize large angles and angular velocities
+    angle_cost = 0.5 * abs(theta)
+    
+    # Penalize high cart positions
+    position_cost = 0.1 * abs(x) ** 2
+    
+    # Reward for maintaining stability
+    if not terminated and not truncated:
+        reward = 1.0 - (angle_cost + position_cost)
+    else:
+        reward = -1.0
+    
+    return reward";[2];0.98
+qwen2.5-coder;"def reward_func(observations: np.ndarray, terminated: bool, truncated: bool) -> float:
+    """"""Reward function for CartPole-v1
+
+    Args:
+        observations (np.ndarray): observation on the current state
+        terminated (bool): episode is terminated due a failure
+        truncated (bool): episode is truncated due a success
+
+    Returns:
+        float: The reward for the current step
+    """"""
+    x, x_dot, theta, theta_dot = observations
+    
+    # Penalize large angles and angular velocities
+    angle_cost = 0.2 * abs(theta)
+    
+    # Penalize high cart positions
+    position_cost = 0.1 * abs(x) ** 2
+    
+    # Reward for maintaining stability
+    if not terminated and not truncated:
+        reward = 1.0 - (angle_cost + position_cost)
+    else:
+        reward = -1.0
+    
+    return reward";[1];0.99
+qwen2.5-coder;"def reward_func(observations: np.ndarray, terminated: bool, truncated: bool) -> float:
+    """"""Reward function for CartPole-v1
+
+    Args:
+        observations (np.ndarray): observation on the current state
+        terminated (bool): episode is terminated due a failure
+        truncated (bool): episode is truncated due a success
+
+    Returns:
+        float: The reward for the current step
+    """"""
+    x, x_dot, theta, theta_dot = observations
+    
+    # Penalize large angles and angular velocities
+    angle_cost = 0.5 * abs(theta)
+    
+    # Penalize high cart positions
+    position_cost = 0.1 * abs(x) ** 2
+    
+    # Reward for maintaining stability
+    if not terminated and not truncated:
+        reward = 1.0 - (angle_cost + position_cost)
+    else:
+        reward = -1.0
+    
+    # Boost reward when the cart is near the center
+    center_position_threshold = 0.15
+    if abs(x) < center_position_threshold:
+        reward += 1.0
+    
+    return reward";[1, 3];0.79
+qwen2.5-coder;"def reward_func(observations: np.ndarray, terminated: bool, truncated: bool) -> float:
+    """"""Reward function for CartPole-v1
+
+    Args:
+        observations (np.ndarray): observation on the current state
+        terminated (bool): episode is terminated due a failure
+        truncated (bool): episode is truncated due a success
+
+    Returns:
+        float: The reward for the current step
+    """"""
+    x, x_dot, theta, theta_dot = observations
+    
+    # Penalize large angles and angular velocities
+    angle_cost = 0.2 * abs(theta)
+    
+    # Penalize high cart positions
+    position_cost = 0.1 * abs(x) ** 2
+    
+    # Reward for maintaining stability
+    if not terminated and not truncated:
+        reward = 1.0 - (angle_cost + position_cost)
+    else:
+        reward = -1.0
+    
+    # Boost reward when the cart is near the center
+    center_position_threshold = 0.15
+    if abs(x) < center_position_threshold:
+        reward += 2.0
+    
+    return reward";[1, 4];0.0
+qwen2.5-coder;"def reward_func(observations: np.ndarray, terminated: bool, truncated: bool) -> float:
+    """"""Reward function for CartPole-v1
+
+    Args:
+        observations (np.ndarray): observation on the current state
+        terminated (bool): episode is terminated due a failure
+        truncated (bool): episode is truncated due a success
+
+    Returns:
+        float: The reward for the current step
+    """"""
+    x, x_dot, theta, theta_dot = observations
+    
+    # Penalize large angles and angular velocities
+    angle_cost = 0.2 * abs(theta)
+    
+    # Penalize high cart positions
+    position_cost = 0.1 * abs(x) ** 2
+    
+    # Reward for maintaining stability
+    if not terminated and not truncated:
+        reward = 1.0 - (angle_cost + position_cost)
+    else:
+        reward = -1.0
+    
+    # Boost reward when the cart is near the center
+    center_position_threshold = 0.15
+    if abs(x) < center_position_threshold:
+        reward += 3.0
+    
+    return reward";[1, 5];0.0
