@@ -1,11 +1,12 @@
 import argparse
 from logging import getLogger
 
+from Environments import Algo, CartPole, LunarLander, Prompt
 from log.log_config import init_logger
 from RLAlgo.DirectSearch import DirectSearch
 from RLAlgo.Reinforce import Reinforce
-from Environments import Prompt, Algo, CartPole, LunarLander
 from VIRAL import VIRAL
+
 
 def parse_logger():
     """

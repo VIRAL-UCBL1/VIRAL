@@ -2,12 +2,12 @@ import random
 from logging import getLogger
 from typing import Callable
 
-from Environments.Algo import Algo
 from Environments import EnvType
-from LLM.OllamaChat import OllamaChat
-from State.State import State
+from Environments.Algo import Algo
 from LLM.GenCode import GenCode
+from LLM.OllamaChat import OllamaChat
 from PolicyTrainer.PolicyTrainer import PolicyTrainer
+from State.State import State
 
 
 class VIRAL:
@@ -98,7 +98,7 @@ class VIRAL:
             - Supports flexible environment types
             - Provides a systematic approach to reward function generation
             - Logging at various stages for debugging and tracking
-        """        
+        """
         ### INIT STAGE ###
         for i in [1, 2]:
             prompt = f"""

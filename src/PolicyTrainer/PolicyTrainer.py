@@ -1,20 +1,21 @@
+import os
+from logging import getLogger
+from multiprocessing import Process, Queue
+from queue import Empty
+from time import sleep
 from typing import Callable
+
+import numpy as np
 from stable_baselines3 import PPO
 from stable_baselines3.common.env_util import make_vec_env
-from stable_baselines3.common.vec_env import SubprocVecEnv #TODO maybe emilien want to use this
-from multiprocessing import Process, Queue
-from logging import getLogger
-from time import sleep
-from queue import Empty
+from stable_baselines3.common.vec_env import \
+    SubprocVecEnv  # TODO maybe emilien want to use this
 
+from Environments.Algo import Algo
+from Environments.EnvType import EnvType
 from PolicyTrainer.CustomRewardWrapper import CustomRewardWrapper
 from PolicyTrainer.TrainingInfoCallback import TrainingInfoCallback
 from State.State import State
-from Environments.Algo import Algo
-from Environments.EnvType import EnvType
-
-import numpy as np
-import os
 
 
 class PolicyTrainer:
@@ -39,7 +40,7 @@ class PolicyTrainer:
             self.multi_process[0].start()
             self.to_get = 1
         else:
-            self._learning(self.memory[0], self.queue)
+            self._learning(self.memory[0])
 
     def _learning(self, state: State, queue: Queue = None) -> None:
         """train a policy on an environment"""
