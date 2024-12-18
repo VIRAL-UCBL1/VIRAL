@@ -6,7 +6,6 @@ repo_branch: main
 edit_uri: edit/main/docs/
 view_uri: blob/main/docs/
 
-
 theme:
   name: material
   icon:
@@ -36,7 +35,7 @@ theme:
     - content.tabs.link
     - navigation.sections
 nav:
-  - Home: index.md
+  - Home: README.md
   - Setup: setup.md
   - Documentation:
       - Main: code_docs/main.md
@@ -50,6 +49,7 @@ nav:
           - DirectSearch: code_docs/RLAlgo/DirectSearch.md
           - PPO: code_docs/RLAlgo/PPO.md
           - Reinforce: code_docs/RLAlgo/Reinforce.md
+  - License: LICENSE
       
 plugins:
   - search
