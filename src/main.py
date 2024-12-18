@@ -14,6 +14,7 @@ from utils.Environments import Environments
 from utils.ObjectivesMetrics import objective_metric_CartPole
 from VIRAL import VIRAL
 import multiprocessing as mp
+
 def parse_logger():
     """
     Parses command-line arguments to configure the logger.
@@ -54,7 +55,6 @@ def main():
     )
     for state in viral.memory:
         logger.info(state)
-
 
 if __name__ == "__main__":
     main()

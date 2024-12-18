@@ -5,12 +5,10 @@ from multiprocessing import Process, Queue
 from queue import Empty
 from logging import getLogger
 from time import sleep
-from typing import Callable, Dict, List
-from venv import logger
+from typing import Callable
 
 import gymnasium as gym
 import numpy as np
-import torch
 from stable_baselines3 import PPO
 from stable_baselines3.common.env_util import make_vec_env
 from stable_baselines3.common.vec_env import SubprocVecEnv
@@ -21,6 +19,7 @@ from utils.Environments import Environments
 from utils.OllamaChat import OllamaChat
 from utils.State import State
 from utils.TrainingInfoCallback import TrainingInfoCallback
+from utils.GenCode import GenCode
 import os
 
 
@@ -30,7 +29,7 @@ class VIRAL:
         learning_algo: Algo,
         env_type : Environments,
         success_function: Callable,
-        objectives_metrics: List[callable] = [],
+        objectives_metrics: list[callable] = [],
         model: str = "qwen2.5-coder",
         options: dict = {},
     ):
@@ -58,6 +57,7 @@ class VIRAL:
             options=options,
         )
         self.env_type : Environments = env_type
+        self.gen_code: GenCode = GenCode(self.env_type, self.llm)
         self.success_function = success_function
         self.env = None
         self.objectives_metrics = objectives_metrics
@@ -65,10 +65,9 @@ class VIRAL:
         self.learning_method = None
         self.logger = getLogger("VIRAL")
         # self._learning(self.memory[0])
-
+        self.memory: list[State] = [State(0)]
         if os.name == "posix":
             self.queue = Queue()
-            self.memory: List[State] = [State(0)]
             self.multi_process: list[Process] = []
             self.multi_process.append(
                 Process(
@@ -81,13 +80,11 @@ class VIRAL:
             )
             self.multi_process[0].start()
             self.to_get = 1
-        else:
-            self.memory: List[State] = [State(0)]
 
 
     def generate_reward_function(
         self, task_description: str, iterations: int = 1
-    ) -> List[State]:
+    ) -> list[State]:
         """
         Generate and iteratively improve a reward function using a Language Model (LLM).
 
@@ -106,7 +103,7 @@ class VIRAL:
                                         Defaults to 1.
 
         Returns:
-            List[State]: A list of generated and refined reward function states, 
+            list[State]: A list of generated and refined reward function states, 
                         containing information about each function's performance 
                         and implementation.
 
@@ -177,8 +174,8 @@ class VIRAL:
             )
             self.logger.info(f"additional options: {additional_options}")
             response = self.llm.print_Generator_and_return(response, i)
-            reward_func, response = self.get_runnable_function(response)
-            self.memory.append(State(i, reward_func, response))
+            state: State = self.gen_code.get(response)
+            self.memory.append(state)
 
         best_idx, worst_idx = self.evaluate_policy(1, 2)
         self.logger.debug(f"state to refine: {worst_idx}")
@@ -188,181 +185,6 @@ class VIRAL:
             best_idx, worst_idx = self.evaluate_policy(best_idx, new_idx)
             self.logger.debug(f"state to refine: {worst_idx}")
         return self.memory
-
-    def get_code(self, response: str) -> str:
-        """
-        Clean and validate a code response by removing code block markers and ensuring a function definition.
-
-        This method is designed to process code responses, typically extracted from text or code blocks,
-        by performing the following operations:\n
-        1. Remove leading and trailing code block markers (```),
-        2. Remove the 'python' language identifier,
-        3. Strip any additional whitespace
-        4. Validate that the response contains a function definition
-
-        Args:
-            response (str): The raw code response to be cleaned and validated.
-
-        Returns:
-            str: The cleaned code response containing a function definition.
-
-        Raises:
-            ValueError: If the response does not contain a valid function definition 
-                        (i.e., if "def " is not present in the cleaned response).
-
-        Logging:
-            Logs the cleaned code at DEBUG level for debugging purposes.
-    """
-        cleaned_response = response.strip("```").replace("python", "").strip()
-        if "def " not in cleaned_response:
-            raise ValueError("The answer does not contain a valid function definition.")
-        self.logger.debug("Code nettoyé pour compilation :\n" + cleaned_response)
-        return cleaned_response
-
-    def get_runnable_function(self, response: str, error: str = None) -> Callable:
-        """
-        Process and validate a reward function for a gym environment.
-
-        This method attempts to generate and validate a reward function by:\n
-        1. Handling potential previous errors
-        2. Creating a gym environment
-        3. Cleaning and compiling the code
-        4. Testing the reward function with a sample action
-        5. Recursively handling various potential errors
-
-        Args:
-            response (str): The code response containing the reward function definition.
-            error (str, optional): Previous error message to be added to LLM context. 
-                                    Defaults to None.
-
-        Returns:
-            tuple: A tuple containing:
-                - Callable: The compiled and validated reward function
-                - str: The original response code
-
-        Raises:
-            - ValueError: Invalid function definition
-            - SyntaxError: Syntax issues in the function
-            - RuntimeError: Execution problems during function testing
-        
-        Note:
-            - Uses recursion to handle potential errors
-            - Relies on get_code, compile_reward_function, and test_reward_function methods
-            - Provides a robust mechanism for generating valid reward functions
-    """
-        if error is not None:
-            self.llm.add_message(error)
-            response = self.llm.generate_response(stream=True)
-            response = self.llm.print_Generator_and_return(response)
-        try:
-            env = gym.make(self.env_type.value)
-            response = self.get_code(response)
-            reward_func = self.compile_reward_function(response)
-            state, _ = env.reset()
-            action = env.action_space.sample()
-            next_observation, _, terminated, truncated, _ = env.step(action)
-            self.test_reward_function(
-                reward_func,
-                observations=next_observation,
-                terminated=terminated,
-                truncated=truncated,
-            )
-        except ValueError as e:
-            self.logger.warning(str(e))
-            return self.get_runnable_function(response, str(e))
-        except SyntaxError as e:
-            self.logger.warning(f"Error syntax {e}")
-            return self.get_runnable_function(response, str(e))
-        except RuntimeError as e:
-            self.logger.warning(f"Error execution {e}")
-            return self.get_runnable_function(response, str(e))
-
-        return reward_func, response
-
-    def compile_reward_function(self, response: str) -> Callable:
-        """
-        Compile a reward function dynamically from a string response.
-
-        This method takes a code string representing a reward function and dynamically 
-        compiles it into an executable Python function. It provides a secure way to 
-        generate reward functions for reinforcement learning environments.
-
-        Key Features:
-            - Dynamically executes code in an isolated global namespace
-            - Provides access to NumPy functions
-            - Extracts the compiled function by its name
-            - Robust error handling for syntax issues
-
-        Args:
-            response (str): A string containing a complete Python function definition 
-                            for a reward function.
-
-        Returns:
-            Callable: The compiled reward function that can be called with appropriate 
-                    arguments in a gym environment.
-
-        Raises:
-            SyntaxError: If the provided code contains invalid Python syntax.
-            ValueError: If the function cannot be extracted from the compiled namespace.
-
-        Notes:
-            - Uses `exec()` for dynamic code compilation
-            - Provides NumPy (`np`) in the execution namespace
-            - Assumes the last function defined in the response is the reward function
-    """
-
-        exec_globals = {}
-        exec_globals["np"] = np
-        try:
-            exec(response, exec_globals)
-        except SyntaxError as e:
-            raise SyntaxError(f"Syntax error in the generated code : {e}")
-
-        reward_function_name = response.split("(")[0].split()[
-            -1
-        ]  # récup le nom de la fonction
-        reward_function = exec_globals.get(reward_function_name)
-
-        return reward_function
-
-    def test_reward_function(self, reward_function: Callable, *args, **kwargs):
-        """
-        Test the compiled reward function with provided inputs to validate its execution.
-
-        This method serves as a crucial validation step in the reward function generation 
-        process. It attempts to execute the reward function with the given arguments and 
-        logs the output or raises an error if execution fails.
-
-        Purpose:
-            - Verify the reward function can be executed without errors
-            - Log the reward function's output for debugging
-            - Ensure the function returns a valid result in the context of a gym environment
-
-        Args:
-            reward_function (Callable): The compiled reward function to be tested.
-            *args: Variable length argument list to pass to the reward function.
-                Typically includes observations, actions, or environment states.
-            **kwargs: Arbitrary keyword arguments to pass to the reward function.
-                May include additional context like 'terminated' or 'truncated' flags.
-
-        Raises:
-            RuntimeError: If the reward function fails to execute successfully.
-                This includes any exceptions that occur during function invocation.
-
-        Logging:
-            - Logs the reward function's output at DEBUG level when successful
-            - Provides detailed error information if execution fails
-
-        Notes:
-            - Designed to be flexible with varying function signatures
-            - Critical for validating dynamically generated reward functions
-            - Part of the reward function generation quality control process
-        """
-        try:
-            reward = reward_function(*args, **kwargs)
-            self.logger.debug(f"Reward function output: {reward}")
-        except Exception as e:
-            raise RuntimeError(f"Error during reward function execution: {e}")
 
     def self_refine_reward(self, idx: int) -> Callable:
         """
@@ -422,8 +244,8 @@ class VIRAL:
         self.llm.add_message(refinement_prompt)
         refined_response = self.llm.generate_response(stream=True)
         refined_response = self.llm.print_Generator_and_return(refined_response)
-        reward_func, refined_response = self.get_runnable_function(refined_response)
-        self.memory.append(State(len(self.memory), reward_func, refined_response))
+        state = self.gen_code.get(refined_response)
+        self.memory.append(state)
 
         return len(self.memory) - 1
 
@@ -450,7 +272,7 @@ class VIRAL:
         Evaluate policy performance for multiple reward functions
 
         Args:
-            objectives_metrics (List[callable]): Custom objective metrics
+            objectives_metrics (list[callable]): Custom objective metrics
             num_episodes (int): Number of evaluation episodes
 
         Returns:

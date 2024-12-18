@@ -1,6 +1,6 @@
 import requests
 import json
-from typing import List, Dict, Union, Optional, Generator
+from typing import Dict, Union, Optional, Generator
 from logging import getLogger
 
 
@@ -23,7 +23,7 @@ class OllamaChat:
             options (dict, optional): Advanced model generation parameters.
         """
         self.model = model
-        self.messages: List[Dict[str, str]] = []
+        self.messages: list[Dict[str, str]] = []
         self.options = options or {}
 
         self.logger = getLogger("VIRAL")
