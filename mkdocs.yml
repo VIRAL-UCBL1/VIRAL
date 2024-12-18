@@ -49,7 +49,7 @@ nav:
           - DirectSearch: code_docs/RLAlgo/DirectSearch.md
           - PPO: code_docs/RLAlgo/PPO.md
           - Reinforce: code_docs/RLAlgo/Reinforce.md
-  - License: LICENSE
+  - License: LICENSE.md
       
 plugins:
   - search
