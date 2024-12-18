@@ -26,8 +26,8 @@ jobs:
       - name: Copy README and LICENSE to docs
         run: |
           cp README.md docs/
-          cp LICENSE docs/
-          
+          cp LICENSE docs/LICENSE.md
+
       - name: Build MkDocs Site
         run: mkdocs build --config-file ./mkdocs.yml
 
