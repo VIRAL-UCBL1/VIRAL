@@ -2,6 +2,7 @@ import argparse
 from logging import getLogger
 
 from log.log_config import init_logger
+from log.LoggerCSV import LoggerCSV
 from RLAlgo.DirectSearch import DirectSearch
 from RLAlgo.Reinforce import Reinforce
 from Environments import Prompt, Algo, CartPole, LunarLander
@@ -54,6 +55,7 @@ def main():
             # "seed": 42, # a utiliser pour la reproductibilité des résultats (important si publication)
         }
     env_type = CartPole(Algo.PPO)
+    LoggerCSV(env_type, 'qwen2.5-coder')
     viral = VIRAL(
         env_type=env_type, options=additional_options)
     res = viral.generate_reward_function(

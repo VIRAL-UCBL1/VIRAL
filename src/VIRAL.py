@@ -2,7 +2,6 @@ import random
 from logging import getLogger
 from typing import Callable
 
-from Environments.Algo import Algo
 from Environments import EnvType
 from LLM.OllamaChat import OllamaChat
 from State.State import State
@@ -129,9 +128,9 @@ class VIRAL:
         self.logger.debug(f"state to refine: {worst_idx}")
         ### SECOND STAGE ###
         for n in range(iterations - 1):
+            self.logger.debug(f"state to refine: {worst_idx}")
             new_idx = self.self_refine_reward(worst_idx)
             best_idx, worst_idx = self.policy_trainer.evaluate_policy(best_idx, new_idx)
-            self.logger.debug(f"state to refine: {worst_idx}")
         return self.memory
 
     def self_refine_reward(self, idx: int) -> Callable:
@@ -196,3 +195,13 @@ class VIRAL:
         self.memory.append(state)
 
         return len(self.memory) - 1
+    
+    def human_feedback(self, idx: int) -> Callable:
+        # get metrics
+        self.logger.info('for the state ')
+        # ask if you want to see a video
+            # test and see what's append
+
+        # ask if need a feedback
+
+        

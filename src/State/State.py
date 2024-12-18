@@ -1,8 +1,9 @@
 from typing import Callable
 from logging import getLogger
+from log.LoggerCSV import getLoggerCSV
+import csv
 
 logger = getLogger("VIRAL")
-
 
 class State:
     def __init__(
@@ -43,8 +44,8 @@ class State:
         Example:
             # Creating a new state for a reward function
             state = State(
-                idx=1, 
-                reward_func=my_reward_func, 
+                idx=1,
+                reward_func=my_reward_func,
                 reward_func_str="def reward_func(...):",
                 policy=None,
                 perfomances=None
@@ -61,7 +62,7 @@ class State:
             - Designed for tracking reward function iterations
             - Provides flexibility in managing function states
             - Supports logging and debugging of reward function generation process
-    """
+        """
 
         self.idx = idx
         if self.idx == 0 and (reward_func is not None or reward_func_str is not None):
@@ -71,6 +72,7 @@ class State:
         self.reward_func = reward_func
         self.reward_func_str = reward_func_str
         self.policy = policy
+        self.logger_csv = getLoggerCSV()
         self.performances = perfomances
 
     def set_policy(self, policy):
@@ -78,6 +80,8 @@ class State:
 
     def set_performances(self, performances: dict):
         self.performances = performances
+        if self.idx != 0:
+            self.logger_csv.to_csv(self)
 
     def __repr__(self):
         if self.performances is None:
