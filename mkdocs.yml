@@ -54,6 +54,7 @@ nav:
     - Prompt: code_docs/Environments/Prompt.md
   - LLM:
     - GenCode: code_docs/LLM/GenCode.md
+    - LLMOptions: code_docs/LLM/LLMOptions.md
     - OllamaChat: code_docs/LLM/OllamaChat.md
   - PolicyTrainer:
     - CustomRewardWrapper: code_docs/PolicyTrainer/CustomRewardWrapper.md
