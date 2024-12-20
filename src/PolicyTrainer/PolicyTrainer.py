@@ -39,7 +39,7 @@ class PolicyTrainer:
             self.multi_process[0].start()
             self.to_get = 1
         else:
-            self._learning(self.memory[0], self.queue)
+            self._learning(self.memory[0])
 
     def _learning(self, state: State, queue: Queue = None) -> None:
         """train a policy on an environment"""
