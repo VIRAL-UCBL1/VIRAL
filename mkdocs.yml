@@ -2,62 +2,71 @@ site_name: VIRAL - Vision-grounded Integration for Reward design And Learning
 site_url: https://viral-ucbl1.github.io/
 repo_url: https://github.com/VIRAL-UCBL1/VIRAL
 repo_name: VIRAL-UCBL1/VIRAL
-repo_branch: main
-edit_uri: edit/main/docs/
-view_uri: blob/main/docs/
-
 theme:
   name: material
   icon:
     repo: fontawesome/brands/github
-  palette: 
-    - scheme: default
-      primary: indigo
-      toggle:
-        icon: material/brightness-7 
-        name: Switch to dark mode
-    - scheme: slate
-      primary: indigo
-      toggle:
-        icon: material/brightness-4
-        name: Switch to light mode
+  palette:
+  - scheme: default
+    primary: indigo
+    toggle:
+      icon: material/brightness-7
+      name: Switch to dark mode
+  - scheme: slate
+    primary: indigo
+    toggle:
+      icon: material/brightness-4
+      name: Switch to light mode
   language: en
   features:
-    - navigation.tabs
-    - search.highlight
-    - search.suggest
-    - search.share
-    - content.code.copy
-    - content.code.prettify
-    - content.action.edit
-    - content.action.view
-    - content.code.annotate
-    - content.tabs.link
-    - navigation.sections
-nav:
-  - Home: README.md
-  - Setup: setup.md
-  - Documentation:
-      - Main: code_docs/main.md
-      - VIRAL: code_docs/VIRAL.md
-      - Utils: 
-        - OllamaChat: code_docs/OllamaChat.md
-        - State: code_docs/State.md
-        - Utils: code_docs/utils.md
-        - ObjectivesMetrics: code_docs/ObjectivesMetrics.md
-      - RL Algo:
-          - DirectSearch: code_docs/RLAlgo/DirectSearch.md
-          - PPO: code_docs/RLAlgo/PPO.md
-          - Reinforce: code_docs/RLAlgo/Reinforce.md
-  - License: LICENSE.md
-      
+  - navigation.tabs
+  - search.highlight
+  - search.suggest
+  - search.share
+  - content.code.copy
+  - content.code.prettify
+  - content.action.edit
+  - content.action.view
+  - content.code.annotate
+  - content.tabs.link
+  - navigation.sections
 plugins:
-  - search
-  - autorefs
-  - mkdocstrings:
-      handlers:
-        python:
-          options:
-            docstring_style: google
-            show_signature: true
-            show_source: false
+- search
+- autorefs
+- mkdocstrings:
+    handlers:
+      python:
+        options:
+          docstring_style: google
+          show_signature: true
+          show_source: false
+nav:
+- Home: README.md
+- Setup: setup.md
+- Documentation:
+  - main: code_docs/main.md
+  - VIRAL: code_docs/VIRAL.md
+  - Environments:
+    - Algo: code_docs/Environments/Algo.md
+    - CartPole: code_docs/Environments/CartPole.md
+    - EnvType: code_docs/Environments/EnvType.md
+    - LunarLander: code_docs/Environments/LunarLander.md
+    - Prompt: code_docs/Environments/Prompt.md
+  - LLM:
+    - GenCode: code_docs/LLM/GenCode.md
+    - OllamaChat: code_docs/LLM/OllamaChat.md
+  - PolicyTrainer:
+    - CustomRewardWrapper: code_docs/PolicyTrainer/CustomRewardWrapper.md
+    - PolicyTrainer: code_docs/PolicyTrainer/PolicyTrainer.md
+    - TrainingInfoCallback: code_docs/PolicyTrainer/TrainingInfoCallback.md
+  - RLAlgo:
+    - DirectSearch: code_docs/RLAlgo/DirectSearch.md
+    - Reinforce: code_docs/RLAlgo/Reinforce.md
+  - State:
+    - State: code_docs/State/State.md
+  - log:
+    - LoggerCSV: code_docs/log/LoggerCSV.md
+    - log_config: code_docs/log/log_config.md
+  - utils:
+    - utils: code_docs/utils/utils.md
+- License: LICENSE.md
