@@ -49,10 +49,9 @@ class TrainingInfoCallback(BaseCallback):
         lengths = self.training_metrics["episode_lengths"]
 
         self.custom_metrics = {
+            "rewards": rewards,
             "mean_reward": np.mean(rewards) if rewards.all() else 0,
             "std_reward": np.std(rewards) if len(rewards) > 1 else 0,
-            "mean_length": np.mean(lengths) if lengths else 0,
-            "total_episodes": len(rewards),
         }
 
     def get_metrics(self):
