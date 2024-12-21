@@ -89,5 +89,5 @@ class State:
         if self.performances is None:
             repr = f"state {self.idx}: \nreward function: \n\n{self.reward_func_str}\n\n isn't trained yet"
         else:
-            repr = f"state {self.idx}: \nreward function: \n\n{self.reward_func_str}\n\n Performances: \n\n{self.performances}\n\n Policy: {self.policy}"
+            repr = f"state {self.idx}: \nreward function: \n\n{self.reward_func_str}\n\n success_rate: \n\n{self.performances['test_success_rate']}\n\n Policy: {self.policy}"
         return repr

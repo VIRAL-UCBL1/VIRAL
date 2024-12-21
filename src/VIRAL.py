@@ -14,7 +14,8 @@ class VIRAL:
         self,
         env_type: EnvType,
         model: str,
-        training_time : int = 25000,
+        hf: bool = False,
+        training_time: int = 25000,
         options: dict = {},
     ):
         """
@@ -40,6 +41,7 @@ class VIRAL:
         """,
             options=options,
         )
+        self.hf = hf
         self.env_type: EnvType = env_type
         self.gen_code: GenCode = GenCode(self.env_type, self.llm)
         self.logger = getLogger("VIRAL")
@@ -98,9 +100,9 @@ class VIRAL:
             - Supports flexible environment types
             - Provides a systematic approach to reward function generation
             - Logging at various stages for debugging and tracking
-        """        
+        """
         ### INIT STAGE ###
-        for i in range(1, n_init+1):  # TODO make it work for 4_init
+        for i in range(1, n_init + 1):  # TODO make it work for 4_init
             prompt = f"""
         Complete the reward function for a {self.env_type} environment.
         Task Description: {task_description} Iteration {i}/{n_init+1}
@@ -119,8 +121,7 @@ class VIRAL:
             \"\"\"
         """
             self.llm.add_message(prompt)
-            response = self.llm.generate_response(
-                stream=True)
+            response = self.llm.generate_response(stream=True)
             response = self.llm.print_Generator_and_return(response, i)
             state: State = self.gen_code.get(response)
             self.memory.append(state)
@@ -130,7 +131,9 @@ class VIRAL:
         for _ in range(n_refine):
             self.logger.debug(f"state to refine: {worst_idx}")
             new_idx = self.self_refine_reward(worst_idx)
-            best_idx, worst_idx = self.policy_trainer.evaluate_policy(worst_idx, new_idx)
+            best_idx, worst_idx = self.policy_trainer.evaluate_policy(
+                worst_idx, new_idx
+            )
         return self.memory
 
     def self_refine_reward(self, idx: int) -> Callable:
@@ -176,18 +179,19 @@ class VIRAL:
             - Maintains a history of function iterations
         """
         refinement_prompt = f"""
-        improve the reward function to:
+        refine the reward function to:
         - Increase success rate
         - Optimize reward signal
         - Maintain task objectives
 
-        your best reward function:
+        previous performance:
+        {self.memory[idx].performances['test_success_rate']}
+
+        reward function to refine:
         {self.memory[idx].reward_func_str}
-
-        performance:
-        {self.memory[idx].performances}
         """
-
+        if self.hf:
+            refinement_prompt = self.human_feedback(refinement_prompt, idx)
         self.llm.add_message(refinement_prompt)
         refined_response = self.llm.generate_response(stream=True)
         refined_response = self.llm.print_Generator_and_return(refined_response)
@@ -196,13 +200,13 @@ class VIRAL:
         self.memory.append(state)
 
         return len(self.memory) - 1
-    
-    def human_feedback(self, idx: int) -> Callable:
-        # get metrics
-        self.logger.info('for the state ')
-        # ask if you want to see a video
-            # test and see what's append
 
-        # ask if need a feedback
-
-        
+    def human_feedback(self, prompt: str, idx: int) -> Callable:
+        self.logger.info(self.memory[idx])
+        visualise = input("do you need to visualise policy ?\ny/n:")
+        if visualise.lower() in ["y", "yes"]:
+            self.policy_trainer.test_policy_hf(self.memory[idx].policy)
+        feedback = input("add a comment, (press enter if you don't have one)\n:")
+        if feedback:
+            prompt = feedback + "\n" + prompt
+        return prompt

@@ -1,7 +1,12 @@
+from re import S
 from typing import Callable
+from gymnasium import make
+from stable_baselines3.common.base_class import BaseAlgorithm
 from stable_baselines3 import PPO
 from stable_baselines3.common.env_util import make_vec_env
-from stable_baselines3.common.vec_env import SubprocVecEnv #TODO maybe emilien want to use this
+from stable_baselines3.common.vec_env import (
+    SubprocVecEnv,
+)  # TODO maybe emilien want to use this
 from multiprocessing import Process, Queue
 from logging import getLogger
 from time import sleep
@@ -44,7 +49,9 @@ class PolicyTrainer:
 
     def _learning(self, state: State, queue: Queue = None) -> None:
         """train a policy on an environment"""
-        self.logger.debug(f"state {state.idx} begin is learning with reward function: {state.reward_func_str}")
+        self.logger.debug(
+            f"state {state.idx} begin is learning with reward function: {state.reward_func_str}"
+        )
         vec_env, model, numvenv = self._generate_env_model(state.reward_func)
         training_callback = TrainingInfoCallback()
         policy = model.learn(total_timesteps=self.timeout, callback=training_callback)
@@ -59,7 +66,9 @@ class PolicyTrainer:
         else:
             self.memory[state.idx].set_performances(metrics)
             self.memory[state.idx].set_policy(policy)
-            self.logger.debug(f"state {state.idx} has finished learning with performances: {metrics}")
+            self.logger.debug(
+                f"state {state.idx} has finished learning with performances: {metrics}"
+            )
 
     def evaluate_policy(self, idx1: int, idx2: int) -> int:
         """
@@ -79,11 +88,13 @@ class PolicyTrainer:
             for i in [idx1, idx2]:
                 if self.memory[i].performances is None:
                     self.multi_process.append(
-                        Process(target=self._learning, args=(self.memory[i], self.queue))
+                        Process(
+                            target=self._learning, args=(self.memory[i], self.queue)
+                        )
                     )
                     self.multi_process[-1].start()
                     self.to_get += 1
-                    to_join.append(len(self.multi_process)-1)
+                    to_join.append(len(self.multi_process) - 1)
 
             while self.to_get != 0:
                 try:
@@ -126,17 +137,17 @@ class PolicyTrainer:
         env,
         policy,
         numvenv,
-        nb_episodes=100,
+        nb_episodes=10,
     ) -> float:
         all_rewards = []
         nb_success = 0
 
-        obs = env.reset()
 
         for _ in range(nb_episodes // numvenv):
+            obs = env.reset() # TODO ça se met là ou pas? en discuter...
             episode_rewards = np.zeros(numvenv)
             dones = [False] * numvenv
-            
+
             while not all(dones):
                 actions, _ = policy.predict(obs)
                 obs, rewards, new_dones, infos = env.step(actions)
@@ -146,11 +157,23 @@ class PolicyTrainer:
                         dones[i] = True
                         if self.success_func(env.envs[i], info):
                             nb_success += 1
-            
+
             all_rewards.extend(episode_rewards)
 
         success_rate = nb_success / nb_episodes
         return success_rate
+
+    def test_policy_hf(self, policy_path, nb_episodes = 100):
+        env = make(self.env_name, render_mode='human')
+        if self.algo == Algo.PPO:
+            policy = PPO.load(policy_path)
+        for _ in range(nb_episodes):
+            obs, _ = env.reset() # TODO ça se met là ou pas? en discuter...
+            done = False
+            while not done:
+                actions, _ = policy.predict(obs)
+                obs, _, term, trunc, _ = env.step(actions)
+                done = term or trunc
 
     def _generate_env_model(self, reward_func):
         """
@@ -159,14 +182,14 @@ class PolicyTrainer:
         numenvs = 2
         # SubprocVecEnv sauf on utilisera cuda derrière
         vec_env = make_vec_env(
-            self.env_name, 
-            n_envs=numenvs, 
-            wrapper_class=CustomRewardWrapper, 
-            wrapper_kwargs={"llm_reward_function": reward_func})
+            self.env_name,
+            n_envs=numenvs,
+            wrapper_class=CustomRewardWrapper,
+            wrapper_kwargs={"llm_reward_function": reward_func},
+        )
         if self.algo == Algo.PPO:
             model = PPO("MlpPolicy", vec_env, verbose=1, device="cpu")
         else:
             raise ValueError("The learning algorithm is not implemented.")
 
         return vec_env, model, numenvs
-
