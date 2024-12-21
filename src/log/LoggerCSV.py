@@ -32,7 +32,7 @@ class LoggerCSV:
             raise ValueError(f'State {state.idx} is not completed')
         if not os.path.exists(self.csv_file):
             with open(self.csv_file, 'w') as file:
-                file.write('llm;reward_function;src;SR\n')
+                file.write('env;llm;reward_function;SR\n')
         with open(self.csv_file, 'a', newline='') as csvfile:
             spamwriter = csv.writer(csvfile, delimiter=';')
-            spamwriter.writerow([self.llm, state.reward_func_str, state.src, state.performances['test_success_rate']])
+            spamwriter.writerow([self.env_type, self.llm, state.reward_func_str, state.performances['test_success_rate']])

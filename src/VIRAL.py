@@ -13,7 +13,8 @@ class VIRAL:
     def __init__(
         self,
         env_type: EnvType,
-        model: str = "qwen2.5-coder",
+        model: str,
+        training_time : int = 25000,
         options: dict = {},
     ):
         """
@@ -45,11 +46,11 @@ class VIRAL:
         self.logger.info(f"additional options: {options}")
         self.memory: list[State] = [State(0)]
         self.policy_trainer: PolicyTrainer = PolicyTrainer(
-            self.memory, self.env_type
+            self.memory, self.env_type, timeout=training_time
         )
 
     def generate_reward_function(
-        self, task_description: str, iterations: int = 1
+        self, task_description: str, n_init: int = 2, n_refine: int = 1
     ) -> list[State]:
         """
         Generate and iteratively improve a reward function using a Language Model (LLM).
@@ -99,10 +100,10 @@ class VIRAL:
             - Logging at various stages for debugging and tracking
         """        
         ### INIT STAGE ###
-        for i in [1, 2]:
+        for i in range(1, n_init+1):  # TODO make it work for 4_init
             prompt = f"""
         Complete the reward function for a {self.env_type} environment.
-        Task Description: {task_description} Iteration {i+1}/{2}
+        Task Description: {task_description} Iteration {i}/{n_init+1}
 
         complete this sentence:
         def reward_func(observations:np.ndarray, terminated: bool, truncated: bool) -> float:
@@ -126,7 +127,7 @@ class VIRAL:
 
         best_idx, worst_idx = self.policy_trainer.evaluate_policy(1, 2)
         ### SECOND STAGE ###
-        for n in range(iterations - 1):
+        for _ in range(n_refine - 1):
             self.logger.debug(f"state to refine: {best_idx}")
             new_idx = self.self_refine_reward(best_idx)
             best_idx, worst_idx = self.policy_trainer.evaluate_policy(best_idx, new_idx)

@@ -18,9 +18,10 @@ import os
 
 
 class PolicyTrainer:
-    def __init__(self, memory: list[State], env_type: EnvType):
+    def __init__(self, memory: list[State], env_type: EnvType, timeout: int):
         self.logger = getLogger("VIRAL")
         self.memory = memory
+        self.timeout = timeout
         self.algo = env_type.algo
         self.env_name = str(env_type)
         self.success_func = env_type.success_func
@@ -46,7 +47,7 @@ class PolicyTrainer:
         self.logger.debug(f"state {state.idx} begin is learning with reward function: {state.reward_func_str}")
         vec_env, model, numvenv = self._generate_env_model(state.reward_func)
         training_callback = TrainingInfoCallback()
-        policy = model.learn(total_timesteps=25000, callback=training_callback)
+        policy = model.learn(total_timesteps=self.timeout, callback=training_callback)
         policy.save(f"model/policy{state.idx}.model")
         metrics = training_callback.get_metrics()
         self.logger.debug(f"{state.idx} TRAINING METRICS: {metrics}")

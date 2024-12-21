@@ -40,13 +40,13 @@ def main():
     """
     logger = parse_logger()
     env_type = CartPole(Algo.PPO)
-    LoggerCSV(env_type, 'qwen2.5-coder')
+    model = 'qwen2.5-coder'
+
+    LoggerCSV(env_type, model)
     viral = VIRAL(
-        env_type=env_type, options=additional_options)
-    res = viral.generate_reward_function(
-        task_description=Prompt.CARTPOLE,
-        iterations=10,
-    )
+        env_type=env_type, model=model, training_time=25000, options=additional_options)
+    viral.generate_reward_function(
+        task_description=Prompt.CARTPOLE, n_refine=2)
     for state in viral.memory:
         logger.info(state)
 
