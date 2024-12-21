@@ -1,8 +1,8 @@
 import numpy as np
 from stable_baselines3.common.callbacks import BaseCallback
 
+
 class TrainingInfoCallback(BaseCallback):
-    # TODO refaire ces methodes, ne pas hésiter a tout delete :)
     def __init__(self):
         super().__init__()
         self.training_metrics = {
@@ -30,9 +30,13 @@ class TrainingInfoCallback(BaseCallback):
 
         for i in range(self.num_envs):
             if dones[i]:
-                self.training_metrics["episode_rewards"].append(self.current_episode_rewards[i])
-                self.training_metrics["episode_lengths"].append(self.current_episode_lengths[i])
-                
+                self.training_metrics["episode_rewards"].append(
+                    self.current_episode_rewards[i]
+                )
+                self.training_metrics["episode_lengths"].append(
+                    self.current_episode_lengths[i]
+                )
+
                 self.current_episode_rewards[i] = 0
                 self.current_episode_lengths[i] = 0
 
@@ -41,13 +45,14 @@ class TrainingInfoCallback(BaseCallback):
     def _on_training_end(self) -> None:
         """Méthode appelée à la fin de l'entraînement."""
         rewards = self.training_metrics["episode_rewards"]
+        rewards /= np.linalg.norm(rewards)
         lengths = self.training_metrics["episode_lengths"]
-        
+
         self.custom_metrics = {
-            "mean_reward": np.mean(rewards) if rewards else 0,
+            "mean_reward": np.mean(rewards) if rewards.all() else 0,
             "std_reward": np.std(rewards) if len(rewards) > 1 else 0,
             "mean_length": np.mean(lengths) if lengths else 0,
-            "total_episodes": len(rewards)
+            "total_episodes": len(rewards),
         }
 
     def get_metrics(self):

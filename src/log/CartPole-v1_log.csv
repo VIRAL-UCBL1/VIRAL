@@ -1,5 +1,5 @@
-env;llm;reward_function;SR
-CartPole-v1;qwen2.5-coder;;0.66
+env;llm;reward_function;mean_reward;std_reward;SR
+CartPole-v1;qwen2.5-coder;;0.02696223509481337;0.03718524599948514;0.96
 CartPole-v1;qwen2.5-coder;"import numpy as np
 
 def reward_func(observations:np.ndarray, terminated: bool, truncated: bool) -> float:
@@ -13,19 +13,28 @@ def reward_func(observations:np.ndarray, terminated: bool, truncated: bool) -> f
     Returns:
         float: The reward for the current step
     """"""
-    x, x_dot, theta, theta_dot = observations
+    # Extract cart position, pole angle, cart velocity, and pole angular velocity from observations
+    cart_position = observations[0]
+    pole_angle = observations[2]
     
-    # Penalize large positions and angles
-    position_reward = -abs(x) * 0.1
-    angle_reward = -abs(theta) * 0.1
+    # Define thresholds for cart's position and pole angle where we want to penalize more
+    position_threshold = 1.0
+    angle_threshold = 0.2
     
-    # Reward for successful balance
-    if not terminated and not truncated:
-        reward = 1.0 + position_reward + angle_reward
+    if terminated or truncated:
+        return -1.0  # Immediate negative reward on failure or truncation
     else:
-        reward = -1.0
-    
-    return reward";0.82
+        # Reward function that penalizes the cart for deviating from the center and being upright
+        position_penalty = abs(cart_position) / position_threshold
+        angle_penalty = abs(pole_angle) / angle_threshold
+        
+        reward = 1.0 - (position_penalty + angle_penalty)
+        
+        # Additional bonus for staying upright
+        if observations[2] >= -angle_threshold and observations[2] <= angle_threshold:
+            reward += 0.1
+        
+        return max(0, reward)";0.027757944101507073;0.034113523946475786;0.1
 CartPole-v1;qwen2.5-coder;"import numpy as np
 
 def reward_func(observations:np.ndarray, terminated: bool, truncated: bool) -> float:
@@ -39,22 +48,62 @@ def reward_func(observations:np.ndarray, terminated: bool, truncated: bool) -> f
     Returns:
         float: The reward for the current step
     """"""
-    x, x_dot, theta, theta_dot = observations
+    # Calculate the cart's position and angle from the observations
+    cart_position = observations[0]
     
-    # Penalize large positions and angles
-    position_reward = -abs(x) * 0.1
-    angle_reward = -abs(theta) * 0.1
+    # Define a threshold for cart's position where we want to penalize more
+    position_threshold = 1.2
     
-    # Reward for successful balance
-    if not terminated and not truncated:
-        reward = 1.0 + position_reward + angle_reward
+    if terminated or truncated:
+        return -1.0  # Immediate negative reward on failure or truncation
     else:
-        reward = -1.0
-    
-    return reward";0.82
+        # Reward function that penalizes the cart for deviating from the center and staying upright
+        reward = 1.0 - abs(cart_position) / position_threshold
+        
+        # Additional bonus for staying upright
+        if observations[2] >= -0.05 and observations[2] <= 0.05:
+            reward += 0.1
+        
+        return max(0, reward)";0.026374822492406334;0.0367336155795367;0.91
 CartPole-v1;qwen2.5-coder;"import numpy as np
 
 def reward_func(observations:np.ndarray, terminated: bool, truncated: bool) -> float:
+    """"""Reward function for CartPole-v1
+
+    Args:
+        observations (np.ndarray): observation on the current state
+        terminated (bool): episode is terminated due a failure
+        truncated (bool): episode is truncated due to a success
+
+    Returns:
+        float: The reward for the current step
+    """"""
+    # Extract cart position, pole angle, cart velocity, and pole angular velocity from observations
+    cart_position = observations[0]
+    pole_angle = observations[2]
+    
+    # Define thresholds for cart's position and pole angle where we want to penalize more
+    position_threshold = 1.5
+    angle_threshold = 0.1
+    
+    if terminated:
+        return -1.0  # Immediate negative reward on failure
+    elif truncated:
+        return 1.0  # Immediate positive reward on success
+    else:
+        # Reward function that penalizes the cart for deviating from the center and being upright
+        position_penalty = abs(cart_position) / position_threshold
+        angle_penalty = abs(pole_angle) / angle_threshold
+        
+        reward = 1.0 - (position_penalty + angle_penalty)
+        
+        # Additional bonus for staying upright
+        if observations[2] >= -angle_threshold and observations[2] <= angle_threshold:
+            reward += 0.5
+        
+        return max(0, reward)";0.025510631637204084;0.03717160204610684;0.54
+CartPole-v1;qwen2.5-coder;;0.027757509571379402;0.03416877461248517;0.61
+CartPole-v1;qwen2.5-coder;"def reward_func(observations: np.ndarray, terminated: bool, truncated: bool) -> float:
     """"""Reward function for CartPole-v1
 
     Args:
@@ -66,15 +115,42 @@ def reward_func(observations:np.ndarray, terminated: bool, truncated: bool) -> f
         float: The reward for the current step
     """"""
     x, x_dot, theta, theta_dot = observations
-    
-    # Penalize large positions and angles
-    position_reward = -abs(x) * 0.1
-    angle_reward = -abs(theta) * 0.1
-    
-    # Reward for successful balance
-    if not terminated and not truncated:
-        reward = 2.0 + position_reward + angle_reward
+    if terminated or truncated:
+        return -1.0
     else:
-        reward = -2.0
-    
-    return reward";0.1
+        return 1.0";0.02669575997598389;0.03468494214446945;0.62
+CartPole-v1;qwen2.5-coder;"def reward_func(observations: np.ndarray, terminated: bool, truncated: bool) -> float:
+    """"""Reward function for CartPole-v1
+
+    Args:
+        observations (np.ndarray): observation on the current state
+        terminated (bool): episode is terminated due a failure
+        truncated (bool): episode is truncated due a success
+
+    Returns:
+        float: The reward for the current step
+    """"""
+    x, x_dot, theta, theta_dot = observations
+    if terminated or truncated:
+        return -1.0
+    else:
+        return 1.0 - abs(theta)";0.025657870132265434;0.03668353467576244;0.86
+CartPole-v1;qwen2.5-coder;"def reward_func(observations: np.ndarray, terminated: bool, truncated: bool) -> float:
+    """"""Reward function for CartPole-v1
+
+    Args:
+        observations (np.ndarray): observation on the current state
+        terminated (bool): episode is terminated due a failure
+        truncated (bool): episode is truncated due a success
+
+    Returns:
+        float: The reward for the current step
+    """"""
+    x, x_dot, theta, theta_dot = observations
+    if terminated or truncated:
+        return -1.0
+    else:
+        distance_from_center = abs(x)
+        angle_reward = 1.0 - abs(theta) * (np.pi / 12)  # Penalize larger angles more
+        proximity_bonus = 0.5 * (1 - distance_from_center / 2.4)  # Reward for staying close to the center
+        return angle_reward + proximity_bonus";0.02791410438589648;0.033387754795323826;0.41

@@ -2,3 +2,4 @@ __pycache__
 **/model/*.model
 site/
 .vscode/
+src/log/log.txt

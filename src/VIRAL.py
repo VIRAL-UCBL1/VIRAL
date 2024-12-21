@@ -128,9 +128,9 @@ class VIRAL:
         best_idx, worst_idx = self.policy_trainer.evaluate_policy(1, 2)
         ### SECOND STAGE ###
         for _ in range(n_refine - 1):
-            self.logger.debug(f"state to refine: {best_idx}")
-            new_idx = self.self_refine_reward(best_idx)
-            best_idx, worst_idx = self.policy_trainer.evaluate_policy(best_idx, new_idx)
+            self.logger.debug(f"state to refine: {worst_idx}")
+            new_idx = self.self_refine_reward(worst_idx)
+            best_idx, worst_idx = self.policy_trainer.evaluate_policy(worst_idx, new_idx)
         return self.memory
 
     def self_refine_reward(self, idx: int) -> Callable:
