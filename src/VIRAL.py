@@ -30,14 +30,8 @@ class VIRAL:
         self.llm = OllamaChat(
             model=model,
             system_prompt="""
-        You are an expert in Reinforcement Learning specialized in designing reward functions.
-        Strict criteria:
-        - Complete ONLY the reward function code
-        - Use Python format
-        - Give no additional explanations
-        - Focus on the Gymnasium environment 
-        - Take into the observation of the state, the terminated and truncated boolean
-        - STOP immediately your completion after the last return
+        You are an expert in Reinforcement Learning, specialized in designing python reward functions.
+        STOP immediately your completion after the end of the function.
         """,
             options=options,
         )
@@ -104,21 +98,14 @@ class VIRAL:
         ### INIT STAGE ###
         for i in range(1, n_init + 1):  # TODO make it work for 4_init
             prompt = f"""
+        Iteration {i}/{n_init+1},
         Complete the reward function for a {self.env_type} environment.
-        Task Description: {task_description} Iteration {i}/{n_init+1}
 
-        complete this sentence:
+        {task_description}
+
+        complete this code by thinking step by step:
+
         def reward_func(observations:np.ndarray, terminated: bool, truncated: bool) -> float:
-            \"\"\"Reward function for {self.env_type}
-
-            Args:
-                observations (np.ndarray): observation on the current state
-                terminated (bool): episode is terminated due a failure
-                truncated (bool): episode is truncated due a success
-
-            Returns:
-                float: The reward for the current step
-            \"\"\"
         """
             self.llm.add_message(prompt)
             response = self.llm.generate_response(stream=True)

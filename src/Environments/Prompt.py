@@ -10,7 +10,7 @@ class Prompt(Enum):
     3 Pole Angular Velocity -Inf Inf
     Since the goal is to keep the pole upright for as long as possible.
     """
-    LUNAR_LANDER = """ The goal is  to land safely
+    LUNAR_LANDER = """ The goal is to land safely
     Action Space : Discrete(4) 
     Observation Space Box([ -2.5 -2.5 -10. -10. -6.2831855 -10. -0. -0. ], [ 2.5 2.5 10. 10. 6.2831855 10. 1. 1. ], (8,), float32),
     There are four discrete actions available:
