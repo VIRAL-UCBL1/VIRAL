@@ -1,10 +1,11 @@
 from logging import getLogger
 from typing import Callable
-import gymnasium as gym
 import numpy as np
 from State.State import State
 from LLM.OllamaChat import OllamaChat
 from Environments import EnvType
+from stable_baselines3.common.env_util import make_vec_env
+
 
 class GenCode:
     def __init__(self, env: EnvType, llm: OllamaChat):
@@ -17,6 +18,7 @@ class GenCode:
         self.current_index = 0
         self.llm = llm
         self.env_name = str(env)
+        self.success_func = env.success_func
         self.logger = getLogger('VIRAL')
         self.response = None
         self.reward_func = None
@@ -71,17 +73,17 @@ class GenCode:
             self.response = self.llm.generate_response(stream=True)
             self.response = self.llm.print_Generator_and_return(self.response)
         try:
-            env = gym.make(self.env_name)
+            env = make_vec_env(self.env_name)
             self.get_clean_response()
             reward_func = self.compile_reward_function()
-            state, _ = env.reset()
-            action = env.action_space.sample()
-            next_observation, _, terminated, truncated, _ = env.step(action)
+            _ = env.reset()
+            action = env.envs[0].action_space.sample()
+            obs, _, _, infos = env.step([action])
+            is_success = self.success_func(obs[0], infos[0])
             self.test_reward_function(
                 reward_func,
-                observations=next_observation,
-                terminated=terminated,
-                truncated=truncated,
+                observations=obs[0],
+                is_success=is_success
             )
         except ValueError as e:
             self.logger.warning(str(e))

@@ -30,8 +30,14 @@ class VIRAL:
         self.llm = OllamaChat(
             model=model,
             system_prompt="""
-        You are an expert in Reinforcement Learning, specialized in designing python reward functions.
-        STOP immediately your completion after the end of the function.
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
         """,
             options=options,
         )
@@ -46,7 +52,7 @@ class VIRAL:
         )
 
     def generate_reward_function(
-        self, task_description: str, n_init: int = 2, n_refine: int = 1
+        self, prompt_info: dict, n_init: int = 2, n_refine: int = 1
     ) -> list[State]:
         """
         Generate and iteratively improve a reward function using a Language Model (LLM).
@@ -97,15 +103,20 @@ class VIRAL:
         """
         ### INIT STAGE ###
         for i in range(1, n_init + 1):  # TODO make it work for 4_init
-            prompt = f"""
-        Iteration {i}/{n_init+1},
-        Complete the reward function for a {self.env_type} environment.
+            prompt = f"""Iteration {i}/{n_init}, Complete the reward function for a {self.env_type} environment.
+        {prompt_info}
 
-        {task_description}
+        complete this sentence:
+        def reward_func(observations:np.ndarray, is_success:bool) -> float:
+            \"\"\"Reward function for {self.env_type}
 
-        complete this code by thinking step by step:
+            Args:
+                observations (np.ndarray): observation on the current state
+                is_success (bool): True if the goal is achieved, False otherwise.
 
-        def reward_func(observations:np.ndarray, terminated: bool, truncated: bool) -> float:
+            Returns:
+                float: The reward for the current step
+            \"\"\"
         """
             self.llm.add_message(prompt)
             response = self.llm.generate_response(stream=True)

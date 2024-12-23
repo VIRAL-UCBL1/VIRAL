@@ -57,7 +57,7 @@ class PolicyTrainer:
         policy = model.learn(total_timesteps=self.timeout, callback=training_callback)
         policy.save(f"model/policy{state.idx}.model")
         metrics = training_callback.get_metrics()
-        self.logger.debug(f"{state.idx} TRAINING METRICS: {metrics}")
+        #self.logger.debug(f"{state.idx} TRAINING METRICS: {metrics}")
         sr_test = self.test_policy(vec_env, policy, numvenv)
         # ajoute au dict metrics les performances sans ecraser les anciennes
         metrics["test_success_rate"] = sr_test
@@ -102,7 +102,7 @@ class PolicyTrainer:
                     self.memory[get[0]].set_policy(get[1])
                     self.memory[get[0]].set_performances(get[2])
                     self.logger.debug(
-                        f"state {get[0]} has finished learning with performances: {get[2]}"
+                        f"state {get[0]} has finished learning with performances: {get[2]['test_success_rate']}"
                     )
                     self.to_get -= 1
                 except Empty:
@@ -185,10 +185,10 @@ class PolicyTrainer:
             self.env_name,
             n_envs=numenvs,
             wrapper_class=CustomRewardWrapper,
-            wrapper_kwargs={"llm_reward_function": reward_func},
+            wrapper_kwargs={"success_func": self.success_func, "llm_reward_function": reward_func},
         )
         if self.algo == Algo.PPO:
-            model = PPO("MlpPolicy", vec_env, verbose=1, device="cpu")
+            model = PPO("MlpPolicy", vec_env, verbose=0, device="cpu")
         else:
             raise ValueError("The learning algorithm is not implemented.")
 
