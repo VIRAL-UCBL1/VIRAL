@@ -15,13 +15,13 @@ class TrainingInfoCallback(BaseCallback):
         self.num_envs = None
 
     def _on_training_start(self):
-        """Initialisation au début de l'entraînement"""
+        """Init at the begin of the training"""
         self.num_envs = self.training_env.num_envs
         self.current_episode_rewards = np.zeros(self.num_envs)
         self.current_episode_lengths = np.zeros(self.num_envs, dtype=int)
 
     def _on_step(self) -> bool:
-        """Méthode appelée à chaque étape de l'entraînement."""
+        """call every steps"""
         rewards = self.locals["rewards"]
         dones = self.locals["dones"]
 
@@ -43,7 +43,7 @@ class TrainingInfoCallback(BaseCallback):
         return True
 
     def _on_training_end(self) -> None:
-        """Méthode appelée à la fin de l'entraînement."""
+        """call at the end of the training"""
         rewards = self.training_metrics["episode_rewards"]
         rewards /= np.linalg.norm(rewards)
         lengths = self.training_metrics["episode_lengths"]
@@ -55,8 +55,9 @@ class TrainingInfoCallback(BaseCallback):
         }
 
     def get_metrics(self):
-        """
-        Méthode pour récupérer les métriques calculées.
-        :return: Dictionnaire des métriques
+        """for get metrics
+
+        Returns:
+            dict: contain metrics harvested
         """
         return self.custom_metrics

@@ -21,8 +21,11 @@ class VIRAL:
         """
         Initialize VIRAL architecture for dynamic reward function generation
             Args:
+                env_type (EnvType): refer to parameter of an gym Env
                 model (str): Language model for reward generation
-                learning_method (str): Reinforcement learning method
+                hf (bool, optional): active the human feedback
+                training_time (int, optional): timeout for model.learn()
+                options (dict, optional): options for the llm 
         """
         if options.get("seed") is None:
             options["seed"] = random.randint(0, 1000000)
@@ -51,6 +54,11 @@ class VIRAL:
         )
 
     def generate_context(self, prompt_info: dict):
+        """Generate more contexte for Step back prompting
+
+        Args:
+            prompt_info (dict): contain a task, and observation space
+        """
         prompt = f"{prompt_info}\nDescribe which observation can achive the goal."
         sys_prompt = (
             f"You're a physics expert, specializing in {self.env_type} motion analysis.\n"
@@ -207,7 +215,16 @@ class VIRAL:
 
         return len(self.memory) - 1
 
-    def human_feedback(self, prompt: str, idx: int) -> Callable:
+    def human_feedback(self, prompt: str, idx: int) -> str:
+        """implement human feedback 
+
+        Args:
+            prompt (str): user prompt
+            idx (int): state.idx to refine
+
+        Returns:
+            str: return the modified prompt
+        """
         self.logger.info(self.memory[idx])
         visualise = input("do you need to visualise policy ?\ny/n:")
         if visualise.lower() in ["y", "yes"]:

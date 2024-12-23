@@ -110,6 +110,8 @@ class OllamaChat:
         Generate a simple response without historic.
 
         Args:
+            prompt (str): user prompt
+            sys_prompt (str, optional): system prompt
             stream (bool, optional): Stream response in real-time
             additional_options (dict, optional): Temporary generation options
 

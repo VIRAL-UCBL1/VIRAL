@@ -12,6 +12,8 @@ from logging import getLogger
 from time import sleep
 from queue import Empty
 
+from stable_baselines3.common.vec_env.base_vec_env import VecEnv
+
 from PolicyTrainer.CustomRewardWrapper import CustomRewardWrapper
 from PolicyTrainer.TrainingInfoCallback import TrainingInfoCallback
 from State.State import State
@@ -24,6 +26,13 @@ import os
 
 class PolicyTrainer:
     def __init__(self, memory: list[State], env_type: EnvType, timeout: int):
+        """initialise the policy trainer
+
+        Args:
+            memory (list[State]): 
+            env_type (EnvType): parameter of the env
+            timeout (int): for the model.learn()
+        """
         self.logger = getLogger("VIRAL")
         self.memory = memory
         self.timeout = timeout
@@ -48,7 +57,12 @@ class PolicyTrainer:
             self._learning(self.memory[0])
 
     def _learning(self, state: State, queue: Queue = None) -> None:
-        """train a policy on an environment"""
+        """train a policy on an environment
+
+        Args:
+            state (State): 
+            queue (Queue, optional): handle modification to return. Defaults to None.
+        """
         self.logger.debug(
             f"state {state.idx} begin is learning with reward function: {state.reward_func_str}"
         )
@@ -71,7 +85,7 @@ class PolicyTrainer:
             )
 
     def evaluate_policy(self, idx1: int, idx2: int) -> int:
-        """
+        """ TODO to be change, i think evaluate if the policy give is better than the original
         Evaluate policy performance for multiple reward functions
 
         Args:
@@ -134,11 +148,22 @@ class PolicyTrainer:
 
     def test_policy(
         self,
-        env,
+        env: VecEnv,
         policy,
-        numvenv,
-        nb_episodes=10,
+        numvenv: int,
+        nb_episodes: int = 100,
     ) -> float:
+        """test a policy already train
+
+        Args:
+            env (VecEnv): envs
+            policy (): can be PPO or other RLAlgo
+            numvenv (int): number of env in the vec
+            nb_episodes (int, optional): . Defaults to 100.
+
+        Returns:
+            float: _description_
+        """
         all_rewards = []
         nb_success = 0
 
@@ -163,7 +188,13 @@ class PolicyTrainer:
         success_rate = nb_success / nb_episodes
         return success_rate
 
-    def test_policy_hf(self, policy_path, nb_episodes = 100):
+    def test_policy_hf(self, policy_path: str, nb_episodes: int = 100):
+        """visualise a policy
+
+        Args:
+            policy_path (str): the path of the policy to load
+            nb_episodes (int, optional): . Defaults to 100.
+        """
         env = make(self.env_name, render_mode='human')
         if self.algo == Algo.PPO:
             policy = PPO.load(policy_path)
@@ -175,9 +206,17 @@ class PolicyTrainer:
                 obs, _, term, trunc, _ = env.step(actions)
                 done = term or trunc
 
-    def _generate_env_model(self, reward_func):
-        """
-        Generate the environment model
+    def _generate_env_model(self, reward_func) -> tuple[VecEnv, PPO, int]:
+        """Generate the environment model
+
+        Args:
+            reward_func (Callable): the generated reward function
+
+        Raises:
+            ValueError: if algo not implemented
+
+        Returns:
+            tuple[VecEnv, PPO, int]: the envs, the model, the number of envs
         """
         numenvs = 2
         # SubprocVecEnv sauf on utilisera cuda derrière
