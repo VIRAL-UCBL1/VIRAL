@@ -29,14 +29,14 @@ class VIRAL:
 
         self.llm = OllamaChat(
             model=model,
-            system_prompt="""
+            system_prompt=f"""
         You are an expert in Reinforcement Learning specialized in designing reward functions.
         Strict criteria:
         - Complete ONLY the reward function code
         - Use Python format
         - Give no additional explanations
-        - Focus on the Gymnasium environment 
-        - Take into the observation of the state, the terminated and truncated boolean
+        - Focus on the {env_type} environment 
+        - Take into the observation of the state, the is_success boolean flag
         - STOP immediately your completion after the last return
         """,
             options=options,
@@ -45,11 +45,21 @@ class VIRAL:
         self.env_type: EnvType = env_type
         self.gen_code: GenCode = GenCode(self.env_type, self.llm)
         self.logger = getLogger("VIRAL")
-        self.logger.info(f"additional options: {options}")
         self.memory: list[State] = [State(0)]
         self.policy_trainer: PolicyTrainer = PolicyTrainer(
             self.memory, self.env_type, timeout=training_time
         )
+
+    def generate_context(self, prompt_info: dict):
+        prompt = f"{prompt_info}\nDescribe which observation can achive the goal."
+        sys_prompt = (
+            f"You're a physics expert, specializing in {self.env_type} motion analysis.\n"
+            + "you can refer to some laws of physics \n"
+            + "be Concise, short and begin your explaination with: CONTEXT:"
+        )
+        self.llm.add_message(prompt)
+        response = self.llm.generate_simple_response(prompt, sys_prompt, stream=True)
+        response = self.llm.print_Generator_and_return(response)
 
     def generate_reward_function(
         self, prompt_info: dict, n_init: int = 2, n_refine: int = 1
@@ -103,10 +113,8 @@ class VIRAL:
         """
         ### INIT STAGE ###
         for i in range(1, n_init + 1):  # TODO make it work for 4_init
-            prompt = f"""Iteration {i}/{n_init}, Complete the reward function for a {self.env_type} environment.
-        {prompt_info}
-
-        complete this sentence:
+            prompt = f"""Iteration {i}/{n_init},
+        Complete this sentence using the CONTEXT section as a guide:
         def reward_func(observations:np.ndarray, is_success:bool) -> float:
             \"\"\"Reward function for {self.env_type}
 

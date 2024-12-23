@@ -3,7 +3,7 @@ from enum import Enum
 
 class Prompt(Enum):
     CARTPOLE = {
-        "task description": "Balance a pole on a cart",
+        "goal": "Balance a pole on a cart",
         "observable states": """Num Observation Min Max
 0 Cart Position -4.8 4.8
 1 Cart Velocity -Inf Inf

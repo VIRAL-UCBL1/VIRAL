@@ -5,7 +5,7 @@ from logging import getLogger
 
 
 OLLAMA_CHAT_API_URL = "http://localhost:11434/api/chat"
-
+OLLAMA_API_URL = "http://localhost:11434/api/generate"
 
 class OllamaChat:
     def __init__(
@@ -87,6 +87,66 @@ class OllamaChat:
                             json_response = json.loads(line.decode("utf-8"))
                             if "message" in json_response:
                                 chunk = json_response["message"].get("content", "")
+                                full_response += chunk
+                                yield chunk
+                        except json.JSONDecodeError:
+                            continue
+
+                if full_response:
+                    self.add_message(full_response, role="assistant")
+
+            return stream_response()
+
+        except requests.exceptions.RequestException as e:
+            self.logger.error(f"Connection error: {e}")
+            return ""
+    
+    def generate_simple_response(self,
+            prompt: str,
+            sys_prompt: str = None,
+            stream: bool = False, additional_options: Optional[Dict] = {}
+    ):
+        """
+        Generate a simple response without historic.
+
+        Args:
+            stream (bool, optional): Stream response in real-time
+            additional_options (dict, optional): Temporary generation options
+
+        Returns:
+            Response as string or streaming generator
+        """
+        if self.seed is not None:
+            additional_options['seed'] = self.seed
+        generation_options = {**self.options, **(additional_options or {})}
+
+
+        payload = {
+            "model": self.model,
+            "prompt": prompt,
+            "system": sys_prompt,
+            "stream": stream,
+            "options": generation_options,
+        }
+
+        try:
+            response = requests.post(OLLAMA_API_URL, json=payload, stream=stream)
+
+            response.raise_for_status()
+            if not stream:
+                full_response = response.json()
+                assistant_response = full_response["response"]
+                self.add_message(assistant_response, role="assistant")
+                return assistant_response
+
+            def stream_response():
+                full_response = ""
+                for line in response.iter_lines():
+                    if line:
+                        try:
+                            json_response = json.loads(line.decode("utf-8"))
+                            if "response" in json_response:
+                                chunk = json_response["response"]
                                 full_response += chunk
                                 yield chunk
                         except json.JSONDecodeError:

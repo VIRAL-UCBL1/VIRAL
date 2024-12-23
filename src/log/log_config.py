@@ -8,7 +8,7 @@ def init_logger(
     
     LOG_FILE: str = log_file
     LOG_LEVEL: str = log_level
-    FORMAT: str = "%(asctime)s %(filename)s:%(lineno)d %(levelprefix)s\n\t%(message)s\n"
+    FORMAT: str = "\n%(asctime)s %(filename)s:%(lineno)d %(levelprefix)s\n\t%(message)s"
 
     class CustomFormatter(logging.Formatter):
         """Custom formatter"""
