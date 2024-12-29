@@ -82,6 +82,6 @@ class LoggerCSV:
                     ','.join(map(str, state.performances["rewards"])),
                     state.performances["mean_reward"],
                     state.performances["std_reward"],
-                    state.performances["test_success_rate"],
+                    state.performances["sr"],
                 ]
             )

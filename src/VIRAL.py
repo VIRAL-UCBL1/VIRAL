@@ -1,6 +1,5 @@
 import random
 from logging import getLogger
-from typing import Callable
 
 from Environments import EnvType
 from LLM.OllamaChat import OllamaChat
@@ -35,12 +34,13 @@ class VIRAL:
             system_prompt=f"""
         You are an expert in Reinforcement Learning specialized in designing reward functions.
         Strict criteria:
-        - Complete ONLY the reward function code
-        - Use Python format
-        - Give no additional explanations
-        - Focus on the {env_type} environment 
-        - Take into the observation of the state, the is_success boolean flag
-        - STOP immediately your completion after the last return
+        1. Take care of Generate ALWAYS DIFFERENTS reward function per Iterations
+        2. Complete ONLY the reward function code
+        3. Give no additional explanations
+        4. STOP immediately your completion after the last return
+        5. Focus on the {env_type} environment
+        6. Assuming Numpy already imported as np
+        7. Take into the observation of the state, the is_success boolean flag
         """,
             options=options,
         )
@@ -63,6 +63,7 @@ class VIRAL:
         sys_prompt = (
             f"You're a physics expert, specializing in {self.env_type} motion analysis.\n"
             + "you can refer to some laws of physics \n"
+            + "Don't explain obvious thinks, you talk to an expert \n"
             + "be Concise, short and begin your explaination with: CONTEXT:"
         )
         self.llm.add_message(prompt)
@@ -70,7 +71,7 @@ class VIRAL:
         response = self.llm.print_Generator_and_return(response)
 
     def generate_reward_function(
-        self, prompt_info: dict, n_init: int = 2, n_refine: int = 1
+        self, n_init: int = 2, n_refine: int = 1
     ) -> list[State]:
         """
         Generate and iteratively improve a reward function using a Language Model (LLM).
@@ -136,21 +137,21 @@ class VIRAL:
         """
             self.llm.add_message(prompt)
             response = self.llm.generate_response(stream=True)
-            response = self.llm.print_Generator_and_return(response, i)
+            response = self.llm.print_Generator_and_return(response, len(self.memory)-1)
             state: State = self.gen_code.get(response)
             self.memory.append(state)
 
-        best_idx, worst_idx = self.policy_trainer.evaluate_policy(1, 2)
+        are_worsts, are_betters, threshold = self.policy_trainer.evaluate_policy(range(1, n_init + 1))
         ### SECOND STAGE ###
         for _ in range(n_refine):
-            self.logger.debug(f"state to refine: {worst_idx}")
-            new_idx = self.self_refine_reward(worst_idx)
-            best_idx, worst_idx = self.policy_trainer.evaluate_policy(
-                worst_idx, new_idx
-            )
+            if are_worsts == []:
+                break
+            self.logger.debug(f"states to refines: {are_worsts}")
+            news_idx = self.self_refine_reward(are_worsts)
+            are_worsts, are_betters, _ = self.policy_trainer.evaluate_policy(news_idx)
         return self.memory
 
-    def self_refine_reward(self, idx: int) -> Callable:
+    def self_refine_reward(self, list_idx: list[int]) -> list[int]:
         """
         Iteratively improve a reward function using self-refinement techniques.
 
@@ -192,28 +193,29 @@ class VIRAL:
             - Provides a systematic approach to reward function improvement
             - Maintains a history of function iterations
         """
-        refinement_prompt = f"""
-        refine the reward function to:
-        - Increase success rate
-        - Optimize reward signal
-        - Maintain task objectives
+        news_idx: list[int] = []
+        for idx in list_idx:
+            refinement_prompt = f"""
+            refine the reward function to:
+            - Increase success rate
+            - Optimize reward signal
+            - Maintain task objectives
 
-        previous performance:
-        {self.memory[idx].performances['test_success_rate']}
+            previous performance:
+            {self.memory[idx].performances['sr']}
 
-        reward function to refine:
-        {self.memory[idx].reward_func_str}
-        """
-        if self.hf:
-            refinement_prompt = self.human_feedback(refinement_prompt, idx)
-        self.llm.add_message(refinement_prompt)
-        refined_response = self.llm.generate_response(stream=True)
-        refined_response = self.llm.print_Generator_and_return(refined_response)
-        state = self.gen_code.get(refined_response)
-        state.set_src(self.memory[idx])
-        self.memory.append(state)
-
-        return len(self.memory) - 1
+            reward function to refine:
+            {self.memory[idx].reward_func_str}
+            """
+            if self.hf:
+                refinement_prompt = self.human_feedback(refinement_prompt, idx)
+            self.llm.add_message(refinement_prompt)
+            refined_response = self.llm.generate_response(stream=True)
+            refined_response = self.llm.print_Generator_and_return(refined_response, len(self.memory) - 1)
+            state = self.gen_code.get(refined_response)
+            self.memory.append(state)
+            news_idx.append(len(self.memory) - 1)
+        return news_idx
 
     def human_feedback(self, prompt: str, idx: int) -> str:
         """implement human feedback 

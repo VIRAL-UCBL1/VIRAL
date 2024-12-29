@@ -74,7 +74,7 @@ class PolicyTrainer:
         #self.logger.debug(f"{state.idx} TRAINING METRICS: {metrics}")
         sr_test = self.test_policy(vec_env, policy, numvenv)
         # ajoute au dict metrics les performances sans ecraser les anciennes
-        metrics["test_success_rate"] = sr_test
+        metrics["sr"] = sr_test
         if os.name == "posix":
             queue.put([state.idx, f"model/policy{state.idx}.model", metrics])
         else:
@@ -84,8 +84,8 @@ class PolicyTrainer:
                 f"state {state.idx} has finished learning with performances: {metrics}"
             )
 
-    def evaluate_policy(self, idx1: int, idx2: int) -> int:
-        """ TODO to be change, i think evaluate if the policy give is better than the original
+    def evaluate_policy(self, list_idx: list[int]) -> tuple[list[int], list[int], float]:
+        """
         Evaluate policy performance for multiple reward functions
 
         Args:
@@ -99,7 +99,7 @@ class PolicyTrainer:
             if len(self.memory) < 2:
                 self.logger.error("At least two reward functions are required.")
             to_join: list = []
-            for i in [idx1, idx2]:
+            for i in list_idx:
                 if self.memory[i].performances is None:
                     self.multi_process.append(
                         Process(
@@ -116,7 +116,7 @@ class PolicyTrainer:
                     self.memory[get[0]].set_policy(get[1])
                     self.memory[get[0]].set_performances(get[2])
                     self.logger.debug(
-                        f"state {get[0]} has finished learning with performances: {get[2]['test_success_rate']}"
+                        f"state {get[0]} has finished learning with performances: {get[2]['sr']}"
                     )
                     self.to_get -= 1
                 except Empty:
@@ -124,27 +124,35 @@ class PolicyTrainer:
 
             for p in to_join:
                 self.multi_process[p].join()
-            if (
-                self.memory[idx1].performances["test_success_rate"]
-                > self.memory[idx2].performances["test_success_rate"]
-            ):
-                return idx1, idx2
-            else:
-                return idx2, idx1
+
+            are_worsts: list[int] = []
+            are_betters: list[int] = []
+            threshold: float = self.memory[0].performances["sr"]
+            self.logger.info(f"the threshold is {threshold}")
+            for i in list_idx:
+                if threshold > self.memory[i].performances["sr"]:
+                    are_worsts.append(i)
+                else:
+                    are_betters.append(i)
+            return are_worsts, are_betters, threshold
+
         else:
             if len(self.memory) < 2:
                 self.logger.error("At least two reward functions are required.")
-            for i in [idx1, idx2]:
+            for i in list_idx:
                 if self.memory[i].performances is None:
                     self._learning(self.memory[i])
-            # TODO comparaison sur le success rate pour l'instant
-            if (
-                self.memory[idx1].performances["test_success_rate"]
-                > self.memory[idx2].performances["test_success_rate"]
-            ):
-                return idx1, idx2
-            else:
-                return idx2, idx1
+            
+            are_worsts: list[int] = []
+            are_betters: list[int] = []
+            threshold: float = self.memory[0].performances["sr"]
+            self.logger.info(f"the threshold is {threshold}")
+            for i in list_idx:
+                if threshold > self.memory[i].performances["sr"]:
+                    are_worsts.append(i)
+                else:
+                    are_betters.append(i)
+            return are_worsts, are_betters, threshold
 
     def test_policy(
         self,

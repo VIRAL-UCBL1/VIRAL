@@ -51,14 +51,14 @@ Args:
 """
 
 additional_options = {
-        "temperature": 0.7,
+        # "temperature": 1,
         # "num_predict": 3, # l'impression que ça change rien a creuser
         # "mirostat" : 1,
         # "mirostat_eta" : 0.01, #gère la vitesse de réponses du model (0.1 par défaut) plus c'est petit plus c'est lent
         # "mirostat_tau" : 4.0, #gère la balance entre la diversité et la coherence des réponses (5.0 par défaut) plus c'est petit plus c'est focus et cohérent
         # num_ctx": 2048, # nombre de tokens contextuels (2048 par défaut peut être pas nécessaire de changer)
-        # repeat_last_n": 64, # combien le model regarde en arrière pour éviter de répéter les réponses (64 par défaut large pour nous)
-        # "repeat_penalty": 1.1, # pénalité pour éviter de répéter les réponses (1.1 par défaut au mac 1.5 intéressant a modificer je pense)
+        # "repeat_last_n": 128, # combien le model regarde en arrière pour éviter de répéter les réponses (64 par défaut large pour nous)
+        # "repeat_penalty": 1.3, # pénalité pour éviter de répéter les réponses (1.1 par défaut au mac 1.5 intéressant a modificer je pense)
         # "stop": "stop you here" # pour stopper la génération de texte pas intéressant pour nous
         # "tfs_z": 1.2, #reduire l'impacte des token les moins "pertinents" (1.0 par défaut pour désactiver 2.0 max)
         # "top_k": 30, #reduit la probabilité de générer des non-sens (40 par défaut, 100 pour générer des réponses plus diverses, 10 pour des réponses plus "conservatrices")

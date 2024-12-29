@@ -19,7 +19,7 @@ class GenCode:
         self.llm = llm
         self.env_name = str(env)
         self.success_func = env.success_func
-        self.logger = getLogger('VIRAL')
+        self.logger = getLogger("VIRAL")
         self.response = None
         self.reward_func = None
 
@@ -81,9 +81,7 @@ class GenCode:
             obs, _, _, infos = env.step([action])
             is_success = self.success_func(obs[0], infos[0])
             self.test_reward_function(
-                reward_func,
-                observations=obs[0],
-                is_success=is_success
+                reward_func, observations=obs[0], is_success=is_success
             )
         except ValueError as e:
             self.logger.warning(str(e))
@@ -121,9 +119,19 @@ class GenCode:
         Logging:
             Logs the cleaned code at DEBUG level for debugging purposes.
         """
-        cleaned_response = self.response.strip("```").replace("python", "").strip()
-        if "def " not in cleaned_response:
+        start_idx = self.response.find("```")
+        end_idx = self.response.find("```", start_idx + 1)
+        if "def " not in self.response:
             raise ValueError("The answer does not contain a valid function definition.")
+        if start_idx != -1 and end_idx != -1:
+            cleaned_response = (
+                self.response[start_idx:end_idx]
+                .strip("```")
+                .replace("python", "")
+                .strip()
+            )
+        else:
+            cleaned_response = self.response
         self.logger.debug("Code nettoyé pour compilation :\n" + cleaned_response)
         self.response = cleaned_response
 
@@ -177,8 +185,8 @@ class GenCode:
         """
         Test the compiled reward function with provided inputs to validate its execution.
 
-        This method serves as a crucial validation step in the reward function generation 
-        process. It attempts to execute the reward function with the given arguments and 
+        This method serves as a crucial validation step in the reward function generation
+        process. It attempts to execute the reward function with the given arguments and
         logs the output or raises an error if execution fails.
 
         Purpose:
