@@ -4,9 +4,6 @@ from gymnasium import make
 from stable_baselines3.common.base_class import BaseAlgorithm
 from stable_baselines3 import PPO
 from stable_baselines3.common.env_util import make_vec_env
-from stable_baselines3.common.vec_env import (
-    SubprocVecEnv,
-)  # TODO maybe emilien want to use this
 from multiprocessing import Process, Queue
 from logging import getLogger
 from time import sleep
@@ -177,18 +174,20 @@ class PolicyTrainer:
 
 
         for _ in range(nb_episodes // numvenv):
-            obs = env.reset() # TODO ça se met là ou pas? en discuter...
+            obs = env.reset()
             episode_rewards = np.zeros(numvenv)
             dones = [False] * numvenv
 
             while not all(dones):
                 actions, _ = policy.predict(obs)
                 obs, rewards, new_dones, infos = env.step(actions)
+                infos = infos
                 episode_rewards += np.array(rewards)
                 for i, (done, info) in enumerate(zip(new_dones, infos)):
                     if done:
                         dones[i] = True
-                        if self.success_func(env.envs[i], info):
+                        is_success, _ = self.success_func(env.envs[i], info)
+                        if is_success:
                             nb_success += 1
 
             all_rewards.extend(episode_rewards)
@@ -196,7 +195,7 @@ class PolicyTrainer:
         success_rate = nb_success / nb_episodes
         return success_rate
 
-    def test_policy_hf(self, policy_path: str, nb_episodes: int = 100):
+    def test_policy_hf(self, policy_path: str, nb_episodes: int = 10):
         """visualise a policy
 
         Args:
@@ -207,12 +206,13 @@ class PolicyTrainer:
         if self.algo == Algo.PPO:
             policy = PPO.load(policy_path)
         for _ in range(nb_episodes):
-            obs, _ = env.reset() # TODO ça se met là ou pas? en discuter...
+            obs, _ = env.reset()
             done = False
             while not done:
                 actions, _ = policy.predict(obs)
                 obs, _, term, trunc, _ = env.step(actions)
                 done = term or trunc
+        env.close()
 
     def _generate_env_model(self, reward_func) -> tuple[VecEnv, PPO, int]:
         """Generate the environment model
@@ -227,7 +227,6 @@ class PolicyTrainer:
             tuple[VecEnv, PPO, int]: the envs, the model, the number of envs
         """
         numenvs = 2
-        # SubprocVecEnv sauf on utilisera cuda derrière
         vec_env = make_vec_env(
             self.env_name,
             n_envs=numenvs,

@@ -40,7 +40,7 @@ class VIRAL:
         4. STOP immediately your completion after the last return
         5. Focus on the {env_type} environment
         6. Assuming Numpy already imported as np
-        7. Take into the observation of the state, the is_success boolean flag
+        7. Take into the observation of the state, the is_success boolean flag, the is_failure boolean flag
         """,
             options=options,
         )
@@ -68,7 +68,7 @@ class VIRAL:
         )
         self.llm.add_message(prompt)
         response = self.llm.generate_simple_response(prompt, sys_prompt, stream=True)
-        response = self.llm.print_Generator_and_return(response)
+        response = self.llm.print_Generator_and_return(response, -1)
 
     def generate_reward_function(
         self, n_init: int = 2, n_refine: int = 1
@@ -124,12 +124,13 @@ class VIRAL:
         for i in range(1, n_init + 1):  # TODO make it work for 4_init
             prompt = f"""Iteration {i}/{n_init},
         Complete this sentence using the CONTEXT section as a guide:
-        def reward_func(observations:np.ndarray, is_success:bool) -> float:
+        def reward_func(observations:np.ndarray, is_success:bool, is_failure:bool) -> float:
             \"\"\"Reward function for {self.env_type}
 
             Args:
                 observations (np.ndarray): observation on the current state
-                is_success (bool): True if the goal is achieved, False otherwise.
+                is_success (bool): True if the goal is achieved, False otherwise
+                is_failure (bool): True if the episode ends unsuccessfully, False otherwise
 
             Returns:
                 float: The reward for the current step

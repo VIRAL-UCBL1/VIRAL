@@ -78,10 +78,12 @@ class GenCode:
             reward_func = self.compile_reward_function()
             _ = env.reset()
             action = env.envs[0].action_space.sample()
-            obs, _, _, infos = env.step([action])
-            is_success = self.success_func(obs[0], infos[0])
+            obs, _, dones, infos = env.step([action])
+            infos[0]["terminated"] = False
+            is_success, is_failure = self.success_func(obs[0], infos[0])
             self.test_reward_function(
-                reward_func, observations=obs[0], is_success=is_success
+                reward_func, observations=obs[0], is_success=is_success,
+                is_failure=is_failure
             )
         except ValueError as e:
             self.logger.warning(str(e))

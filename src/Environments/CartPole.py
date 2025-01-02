@@ -22,9 +22,9 @@ class CartPole(EnvType):
 			bool : True if the episode is truncated, False otherwise
 		"""
 		if info["TimeLimit.truncated"]:
-			return True
+			return True, False
 		else:
-			return False
+			return False, True
 
 	def objective_metric(self, states)-> list[dict[str, float]]:
 		"""
