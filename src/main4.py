@@ -1,12 +1,16 @@
 import argparse
 from logging import getLogger
 
+from stable_baselines3 import PPO
+
 from log.log_config import init_logger
 from log.LoggerCSV import LoggerCSV
 from RLAlgo.DirectSearch import DirectSearch
 from RLAlgo.Reinforce import Reinforce
 from Environments import Prompt, Algo, CartPole, LunarLander
 from VIRAL import VIRAL
+from PolicyTrainer.PolicyTrainer import PolicyTrainer
+
 from LLM.LLMOptions import additional_options
 
 def parse_logger():
@@ -43,12 +47,8 @@ def main():
     model = 'qwen2.5-coder'
     human_feedback = True
     LoggerCSV(env_type, model)
-    viral = VIRAL(
-        env_type=env_type, model=model, hf=human_feedback, training_time=200_000, numenvs=4, options=additional_options)
-    are_worsts, are_betters, threshold = viral.policy_trainer.evaluate_policy([])
-    viral.policy_trainer.test_policy_hf("model/policy0.model", 5)
-    for state in viral.memory:
-        viral.logger.info(state)
+    p = PolicyTrainer([], env_type, 1, 2)
+    p.test_policy_hf("model/policy0.model", 5)
 
 if __name__ == "__main__":
     main()
