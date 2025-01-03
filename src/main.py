@@ -44,7 +44,7 @@ def main():
     human_feedback = True
     LoggerCSV(env_type, model)
     viral = VIRAL(
-        env_type=env_type, model=model, hf=human_feedback, training_time=20000, options=additional_options)
+        env_type=env_type, model=model, hf=human_feedback, training_time=25000, options=additional_options)
     viral.generate_context(Prompt.CARTPOLE)
     viral.generate_reward_function(n_init=1, n_refine=3)
     for state in viral.memory:

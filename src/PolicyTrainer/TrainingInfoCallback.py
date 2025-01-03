@@ -17,9 +17,8 @@ class TrainingInfoCallback(BaseCallback):
 
     def _on_training_start(self):
         """Init at the begin of the training"""
-        self.num_envs = self.training_env.num_envs
-        self.current_episode_rewards = np.zeros(self.num_envs)
-        self.current_episode_lengths = np.zeros(self.num_envs, dtype=int)
+        self.current_episode_rewards = 0
+        self.current_episode_lengths = 0
 
     def _on_step(self) -> bool:
         """call every steps"""
@@ -27,24 +26,20 @@ class TrainingInfoCallback(BaseCallback):
         rewards = self.locals["rewards"]
         dones = self.locals["dones"]
 
-        self.current_episode_rewards += rewards
+        self.current_episode_rewards += rewards[0]
         self.current_episode_lengths += 1
-
-        for i in range(self.num_envs):
-            if dones[i]:
-                self.training_metrics["episode_observations"].append(
-                    obs
+        self.training_metrics["episode_observations"].append(
+                    obs[0]
                 )
-                self.training_metrics["episode_rewards"].append(
-                    self.current_episode_rewards[i]
-                )
-                self.training_metrics["episode_lengths"].append(
-                    self.current_episode_lengths[i]
-                )
-
-                self.current_episode_rewards[i] = 0
-                self.current_episode_lengths[i] = 0
-
+        if dones[0]:
+            self.training_metrics["episode_rewards"].append(
+                self.current_episode_rewards
+            )
+            self.training_metrics["episode_lengths"].append(
+                self.current_episode_lengths
+            )
+            self.current_episode_rewards = 0
+            self.current_episode_lengths = 0
         return True
 
     def _on_training_end(self) -> None:

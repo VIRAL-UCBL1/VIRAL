@@ -11,7 +11,7 @@ class LunarLander(EnvType):
 	def __repr__(self):
 		return "LunarLander-v3"
 
-	def success_func(self, env: gym.Env, info: dict) -> bool:
+	def success_func(self, env: gym.Env, info: dict) -> tuple[bool|bool]:
 		"""
 		Cette fonction vérifie si le lander est "awake" et met à jour l'info.
 		"""
@@ -22,9 +22,9 @@ class LunarLander(EnvType):
 
 		# check if the lander is awake
 		if hasattr(base_env, "lander") and not base_env.lander.awake:
-			return True
+			return True, False
 		else:
-			return False
+			return False, True
 
 	def objective_metric(self, states)-> list[dict[str, float]]:
 		pass # TODO
