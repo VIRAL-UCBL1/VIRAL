@@ -10,7 +10,7 @@ class CartPole(EnvType):
 	def __repr__(self):
 		return "CartPole-v1"
 
-	def success_func(self, env: gym.Env, info: dict) -> bool:
+	def success_func(self, env: gym.Env, info: dict) -> tuple[bool|bool]:
 		"""
 		Cartpole Evaluation Function
 

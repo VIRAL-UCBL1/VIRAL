@@ -65,7 +65,7 @@ class PolicyTrainer:
         )
         vec_env, model, numvenv = self._generate_env_model(state.reward_func)
         training_callback = TrainingInfoCallback()
-        policy = model.learn(total_timesteps=self.timeout, callback=training_callback)
+        policy = model.learn(total_timesteps=self.timeout, callback=training_callback) # , progress_bar=Truey
         policy.save(f"model/policy{state.idx}.model")
         metrics = training_callback.get_metrics()
         #self.logger.debug(f"{state.idx} TRAINING METRICS: {metrics}")

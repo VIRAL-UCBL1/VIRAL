@@ -82,8 +82,8 @@ class GenCode:
             infos[0]["terminated"] = False
             is_success, is_failure = self.success_func(obs[0], infos[0])
             self.test_reward_function(
-                reward_func, observations=obs[0], is_success=is_success,
-                is_failure=is_failure
+                reward_func, observations=obs[0], is_success=0,
+                is_failure=0
             )
         except ValueError as e:
             self.logger.warning(str(e))
