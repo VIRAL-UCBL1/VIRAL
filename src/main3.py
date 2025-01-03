@@ -28,8 +28,6 @@ def parse_logger():
     else:
         init_logger("DEBUG")
 
-    return getLogger()
-
 def main():
     """
     Main entry point of the script.
@@ -44,9 +42,10 @@ def main():
     human_feedback = True
     LoggerCSV(env_type, model)
     viral = VIRAL(
-        env_type=env_type, model=model, hf=human_feedback, training_time=500_000, numenvs=3, options=additional_options)
-    viral.generate_context(Prompt.LUNAR_LANDER)
-    viral.generate_reward_function(n_init=1, n_refine=3)
+        env_type=env_type, model=model, hf=human_feedback, training_time=2_000, numenvs=1, options=additional_options)
+    viral.test_reward_func("""def reward_function(observations, is_success, is_failure):
+    # Your reward calculation logic here
+    return 0.0271  # Placeholder return value""")
     for state in viral.memory:
         viral.logger.info(state)
 

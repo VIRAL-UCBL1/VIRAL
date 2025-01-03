@@ -61,7 +61,7 @@ def init_logger(
                 "formatter": "custom",
                 "class": "logging.FileHandler",
                 "filename": LOG_FILE,
-                "level": "INFO",
+                "level": "DEBUG",
             }
         },
         "loggers": {

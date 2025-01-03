@@ -22,7 +22,7 @@ import os
 
 
 class PolicyTrainer:
-    def __init__(self, memory: list[State], env_type: EnvType, timeout: int):
+    def __init__(self, memory: list[State], env_type: EnvType, timeout: int, numenvs):
         """initialise the policy trainer
 
         Args:
@@ -33,6 +33,7 @@ class PolicyTrainer:
         self.logger = getLogger("VIRAL")
         self.memory = memory
         self.timeout = timeout
+        self.numenvs = numenvs
         self.algo = env_type.algo
         self.env_name = str(env_type)
         self.success_func = env_type.success_func
@@ -63,9 +64,9 @@ class PolicyTrainer:
         self.logger.info(
             f"state {state.idx} begin is learning"
         )
-        vec_env, model, numvenv = self._generate_env_model(state.reward_func)
+        vec_env, model, numvenv = self._generate_env_model(state.reward_func, self.numenvs)
         training_callback = TrainingInfoCallback()
-        policy = model.learn(total_timesteps=self.timeout, callback=training_callback) # , progress_bar=Truey
+        policy = model.learn(total_timesteps=self.timeout, callback=training_callback, progress_bar=True) # , progress_bar=True
         policy.save(f"model/policy{state.idx}.model")
         metrics = training_callback.get_metrics()
         #self.logger.debug(f"{state.idx} TRAINING METRICS: {metrics}")
@@ -195,7 +196,7 @@ class PolicyTrainer:
         success_rate = nb_success / nb_episodes
         return success_rate
 
-    def test_policy_hf(self, policy_path: str, nb_episodes: int = 10):
+    def test_policy_hf(self, policy_path: str, nb_episodes: int = 5):
         """visualise a policy
 
         Args:
@@ -214,7 +215,7 @@ class PolicyTrainer:
                 done = term or trunc
         env.close()
 
-    def _generate_env_model(self, reward_func) -> tuple[VecEnv, PPO, int]:
+    def _generate_env_model(self, reward_func, numenvs = 2) -> tuple[VecEnv, PPO, int]:
         """Generate the environment model
 
         Args:
@@ -226,7 +227,6 @@ class PolicyTrainer:
         Returns:
             tuple[VecEnv, PPO, int]: the envs, the model, the number of envs
         """
-        numenvs = 2
         vec_env = make_vec_env(
             self.env_name,
             n_envs=numenvs,

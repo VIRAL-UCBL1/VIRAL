@@ -38,15 +38,14 @@ def main():
     logger, and run VIRAL. It uses CLI interface.
     memory.
     """
-    parse_logger()
+    logger = parse_logger()
     env_type = LunarLander(Algo.PPO)
     model = 'qwen2.5-coder'
     human_feedback = True
     LoggerCSV(env_type, model)
     viral = VIRAL(
-        env_type=env_type, model=model, hf=human_feedback, training_time=500_000, numenvs=3, options=additional_options)
-    viral.generate_context(Prompt.LUNAR_LANDER)
-    viral.generate_reward_function(n_init=1, n_refine=3)
+        env_type=env_type, model=model, hf=human_feedback, training_time=500_000, numenvs=6, options=additional_options)
+    are_worsts, are_betters, threshold = viral.policy_trainer.evaluate_policy([])
     for state in viral.memory:
         viral.logger.info(state)
 

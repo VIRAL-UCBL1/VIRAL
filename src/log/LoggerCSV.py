@@ -4,7 +4,7 @@ from logging import getLogger
 import csv
 
 
-def getLoggerCSV():
+def getLoggerCSV(): #TODO don't work
     """Retrieve the instance of the CSV logger.
 
     Raises:
