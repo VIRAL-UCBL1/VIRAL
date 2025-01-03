@@ -134,7 +134,7 @@ class GenCode:
             )
         else:
             cleaned_response = self.response
-        self.logger.debug("Code nettoyé pour compilation :\n" + cleaned_response)
+        # self.logger.debug("Code nettoyé pour compilation :\n" + cleaned_response)
         self.response = cleaned_response
 
     def compile_reward_function(self) -> Callable:

@@ -60,8 +60,8 @@ class PolicyTrainer:
             state (State): 
             queue (Queue, optional): handle modification to return. Defaults to None.
         """
-        self.logger.debug(
-            f"state {state.idx} begin is learning with reward function: {state.reward_func_str}"
+        self.logger.info(
+            f"state {state.idx} begin is learning"
         )
         vec_env, model, numvenv = self._generate_env_model(state.reward_func)
         training_callback = TrainingInfoCallback()

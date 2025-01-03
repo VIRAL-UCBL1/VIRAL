@@ -6,7 +6,8 @@ class TrainingInfoCallback(BaseCallback):
     def __init__(self):
         super().__init__()
         self.training_metrics = {
-            "episode_rewards": [],  
+            "episode_rewards": [], 
+            "episode_observations": [], 
             "episode_lengths": [], 
         }
 
@@ -22,6 +23,7 @@ class TrainingInfoCallback(BaseCallback):
 
     def _on_step(self) -> bool:
         """call every steps"""
+        obs = self.locals["new_obs"]
         rewards = self.locals["rewards"]
         dones = self.locals["dones"]
 
@@ -30,6 +32,9 @@ class TrainingInfoCallback(BaseCallback):
 
         for i in range(self.num_envs):
             if dones[i]:
+                self.training_metrics["episode_observations"].append(
+                    obs
+                )
                 self.training_metrics["episode_rewards"].append(
                     self.current_episode_rewards[i]
                 )
@@ -49,6 +54,7 @@ class TrainingInfoCallback(BaseCallback):
         lengths = self.training_metrics["episode_lengths"]
 
         self.custom_metrics = {
+            "observations": self.training_metrics["episode_observations"],
             "rewards": rewards,
             "mean_reward": np.mean(rewards) if rewards.all() else 0,
             "std_reward": np.std(rewards) if len(rewards) > 1 else 0,

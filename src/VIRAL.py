@@ -203,11 +203,12 @@ class VIRAL:
             - Maintain task objectives
 
             previous performance:
-            {self.memory[idx].performances['sr']}
+            {self.memory[idx].performances}
 
             reward function to refine:
             {self.memory[idx].reward_func_str}
             """
+            self.logger.debug(self.memory[idx].performances)
             if self.hf:
                 refinement_prompt = self.human_feedback(refinement_prompt, idx)
             self.llm.add_message(refinement_prompt)
