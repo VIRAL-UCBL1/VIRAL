@@ -80,7 +80,7 @@ class GenCode:
             action = env.envs[0].action_space.sample()
             obs, _, dones, infos = env.step([action])
             infos[0]["terminated"] = False
-            is_success, is_failure = self.success_func(obs[0], infos[0])
+            is_success, is_failure = self.success_func(env.envs[0], infos[0])
             self.test_reward_function(
                 reward_func, observations=obs[0], is_success=0,
                 is_failure=0

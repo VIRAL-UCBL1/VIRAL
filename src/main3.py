@@ -37,15 +37,27 @@ def main():
     memory.
     """
     parse_logger()
-    env_type = LunarLander(Algo.PPO)
+    env_type = CartPole(Algo.PPO)
     model = 'qwen2.5-coder'
     human_feedback = True
     LoggerCSV(env_type, model)
     viral = VIRAL(
-        env_type=env_type, model=model, hf=human_feedback, training_time=2_000, numenvs=1, options=additional_options)
-    viral.test_reward_func("""def reward_function(observations, is_success, is_failure):
-    # Your reward calculation logic here
-    return 0.0271  # Placeholder return value""")
+        env_type=env_type, model=model, hf=human_feedback, training_time=50_000, numenvs=2, options=additional_options)
+    viral.test_reward_func("""def reward_func(observations:np.ndarray, is_success:bool, is_failure:bool) -> float:    
+    x, x_dot, theta, theta_dot = observations
+    
+    if is_success:
+        return 10.0
+    elif is_failure:
+        return -10.0
+    else:
+        # Reward based on how close to vertical the pole is and how stable it is
+        proximity_to_vertical = np.cos(theta)
+        stability_factor = np.exp(-abs(theta_dot))
+        
+        reward = proximity_to_vertical * stability_factor
+        
+        return reward""")
     for state in viral.memory:
         viral.logger.info(state)
 

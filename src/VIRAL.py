@@ -2,10 +2,10 @@ import random
 from logging import getLogger
 
 from Environments import EnvType
-from LLM.GenCode import GenCode
 from LLM.OllamaChat import OllamaChat
-from PolicyTrainer.PolicyTrainer import PolicyTrainer
 from State.State import State
+from LLM.GenCode import GenCode
+from PolicyTrainer.PolicyTrainer import PolicyTrainer
 
 
 class VIRAL:

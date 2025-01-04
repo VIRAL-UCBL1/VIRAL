@@ -34,7 +34,7 @@ class CustomRewardWrapper(gym.Wrapper):
             is_success = 0
             is_failure = 0
             if terminated or truncated:
-                is_success, is_failure = self.success_func(observation, info)
+                is_success, is_failure = self.success_func(self.env, info)
             reward = self.llm_reward_function(observation, is_success, is_failure)
         else:
             reward = original_reward

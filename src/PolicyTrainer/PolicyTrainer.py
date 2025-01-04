@@ -180,7 +180,10 @@ class PolicyTrainer:
                 obs, reward, term, trunc, info = env.step(actions)
                 episode_rewards += reward
                 done = trunc or term
+
                 if done:
+                    info["TimeLimit.truncated"] = trunc
+                    info["terminated"] = term
                     is_success, _ = self.success_func(env, info)
                     if is_success:
                         nb_success += 1
