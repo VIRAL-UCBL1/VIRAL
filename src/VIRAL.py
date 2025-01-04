@@ -60,7 +60,7 @@ class VIRAL:
         Args:
             prompt_info (dict): contain a task, and observation space
         """
-        prompt = f"{prompt_info}\nDescribe which observation can achive the goal."
+        prompt = f"{prompt_info}\nDescribe which observation can achive the Goal:\n{prompt_info['Goal']}."
         sys_prompt = (
             f"You're a physics expert, specializing in {self.env_type} motion analysis.\n"
             + "you can refer to some laws of physics \n"

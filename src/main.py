@@ -43,11 +43,9 @@ def main():
     human_feedback = True
     LoggerCSV(env_type, model)
     viral = VIRAL(
-        env_type=env_type, model=model, hf=human_feedback, training_time=300_000, numenvs=2, options=additional_options)
-    viral.generate_context(Prompt.HOPPER)
+        env_type=env_type, model=model, hf=human_feedback, training_time=500_000, numenvs=2, options=additional_options)
+    viral.generate_context(Prompt.HOPPER.value)
     viral.generate_reward_function(n_init=1, n_refine=2, focus="DON'T USE IS_SUCCESS BOOLEANS")
-    viral.logger.info("render 0")
-    viral.policy_trainer.test_policy_hf("model/policy0.model", 5)
     viral.logger.info("render 1")
     viral.policy_trainer.test_policy_hf("model/policy1.model", 5)
     for state in viral.memory:
