@@ -1,7 +1,4 @@
-from re import S
-from typing import Callable
 from gymnasium import make
-from stable_baselines3.common.base_class import BaseAlgorithm
 from stable_baselines3 import PPO
 from stable_baselines3.common.env_util import make_vec_env
 from multiprocessing import Process, Queue
@@ -36,6 +33,7 @@ class PolicyTrainer:
         self.numenvs = numenvs
         self.algo = env_type.algo
         self.algo_param = env_type.algo_param
+        self.objective_metric = env_type.objective_metric
         self.env_name = str(env_type)
         self.success_func = env_type.success_func
         if os.name == "posix":
@@ -72,7 +70,8 @@ class PolicyTrainer:
         metrics = training_callback.get_metrics()
         #self.logger.debug(f"{state.idx} TRAINING METRICS: {metrics}")
         sr_test = self.test_policy(policy)
-        # ajoute au dict metrics les performances sans ecraser les anciennes
+        objective_metric = self.objective_metric(metrics.pop('observations'))
+        metrics.update(objective_metric)
         metrics["sr"] = sr_test
         if os.name == "posix":
             queue.put([state.idx, f"model/policy{state.idx}.model", metrics])
@@ -211,6 +210,8 @@ class PolicyTrainer:
                 actions, _ = policy.predict(obs)
                 obs, _, term, trunc, info = env.step(actions)
                 if term or trunc:
+                    info["TimeLimit.truncated"] = trunc
+                    info["terminated"] = term
                     is_success, _ = self.success_func(env, info)
                     if is_success:
                         nb_success += 1
