@@ -22,7 +22,7 @@ import os
 
 
 class PolicyTrainer:
-    def __init__(self, memory: list[State], env_type: EnvType, timeout: int):
+    def __init__(self, memory: list[State], env_type: EnvType, timeout: int, numenvs):
         """initialise the policy trainer
 
         Args:
@@ -33,6 +33,7 @@ class PolicyTrainer:
         self.logger = getLogger("VIRAL")
         self.memory = memory
         self.timeout = timeout
+        self.numenvs = numenvs
         self.algo = env_type.algo
         self.env_name = str(env_type)
         self.success_func = env_type.success_func
@@ -63,13 +64,13 @@ class PolicyTrainer:
         self.logger.info(
             f"state {state.idx} begin is learning"
         )
-        vec_env, model, numvenv = self._generate_env_model(state.reward_func)
+        vec_env, model, numvenv = self._generate_env_model(state.reward_func, self.numenvs)
         training_callback = TrainingInfoCallback()
-        policy = model.learn(total_timesteps=self.timeout, callback=training_callback) # , progress_bar=Truey
+        policy = model.learn(total_timesteps=self.timeout, callback=training_callback, progress_bar=True) # , progress_bar=True
         policy.save(f"model/policy{state.idx}.model")
         metrics = training_callback.get_metrics()
         #self.logger.debug(f"{state.idx} TRAINING METRICS: {metrics}")
-        sr_test = self.test_policy(vec_env, policy, numvenv)
+        sr_test = self.test_policy(policy)
         # ajoute au dict metrics les performances sans ecraser les anciennes
         metrics["sr"] = sr_test
         if os.name == "posix":
@@ -94,7 +95,7 @@ class PolicyTrainer:
         """
         if os.name == "posix":
             if len(self.memory) < 2:
-                self.logger.error("At least two reward functions are required.")
+                self.logger.warning("At least two reward functions are required.")
             to_join: list = []
             for i in list_idx:
                 if self.memory[i].performances is None:
@@ -153,9 +154,7 @@ class PolicyTrainer:
 
     def test_policy(
         self,
-        env: VecEnv,
         policy,
-        numvenv: int,
         nb_episodes: int = 100,
     ) -> float:
         """test a policy already train
@@ -171,31 +170,26 @@ class PolicyTrainer:
         """
         all_rewards = []
         nb_success = 0
-
-
-        for _ in range(nb_episodes // numvenv):
-            obs = env.reset()
-            episode_rewards = np.zeros(numvenv)
-            dones = [False] * numvenv
-
-            while not all(dones):
+        env = make(self.env_name)
+        for _ in range(nb_episodes):
+            obs, _ = env.reset()
+            episode_rewards = 0
+            done = False
+            while not done:
                 actions, _ = policy.predict(obs)
-                obs, rewards, new_dones, infos = env.step(actions)
-                infos = infos
-                episode_rewards += np.array(rewards)
-                for i, (done, info) in enumerate(zip(new_dones, infos)):
-                    if done:
-                        dones[i] = True
-                        is_success, _ = self.success_func(env.envs[i], info)
-                        if is_success:
-                            nb_success += 1
-
-            all_rewards.extend(episode_rewards)
+                obs, reward, term, trunc, info = env.step(actions)
+                episode_rewards += reward
+                done = trunc or term
+                if done:
+                    is_success, _ = self.success_func(env, info)
+                    if is_success:
+                        nb_success += 1
+            all_rewards.append(episode_rewards)
 
         success_rate = nb_success / nb_episodes
         return success_rate
 
-    def test_policy_hf(self, policy_path: str, nb_episodes: int = 10):
+    def test_policy_hf(self, policy_path: str, nb_episodes: int = 5):
         """visualise a policy
 
         Args:
@@ -205,16 +199,21 @@ class PolicyTrainer:
         env = make(self.env_name, render_mode='human')
         if self.algo == Algo.PPO:
             policy = PPO.load(policy_path)
+        nb_success = 1
         for _ in range(nb_episodes):
             obs, _ = env.reset()
             done = False
             while not done:
                 actions, _ = policy.predict(obs)
-                obs, _, term, trunc, _ = env.step(actions)
+                obs, _, term, trunc, info = env.step(actions)
+                if term or trunc:
+                    is_success, _ = self.success_func(env, info)
+                    if is_success:
+                        nb_success += 1
                 done = term or trunc
         env.close()
 
-    def _generate_env_model(self, reward_func) -> tuple[VecEnv, PPO, int]:
+    def _generate_env_model(self, reward_func, numenvs = 2) -> tuple[VecEnv, PPO, int]:
         """Generate the environment model
 
         Args:
@@ -226,7 +225,6 @@ class PolicyTrainer:
         Returns:
             tuple[VecEnv, PPO, int]: the envs, the model, the number of envs
         """
-        numenvs = 2
         vec_env = make_vec_env(
             self.env_name,
             n_envs=numenvs,
@@ -234,7 +232,9 @@ class PolicyTrainer:
             wrapper_kwargs={"success_func": self.success_func, "llm_reward_function": reward_func},
         )
         if self.algo == Algo.PPO:
-            model = PPO("MlpPolicy", vec_env, verbose=0, device="cpu")
+            model = PPO("MlpPolicy", vec_env, verbose=0, device="cpu", 
+                        ent_coef=0.01, gae_lambda=0.98, gamma=0.999, n_epochs=4, n_steps=1024,
+                        normalize_advantage=False)
         else:
             raise ValueError("The learning algorithm is not implemented.")
 

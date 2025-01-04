@@ -1,14 +1,17 @@
 import argparse
 from logging import getLogger
 
-from Environments import Algo, CartPole, LunarLander, Pacman, Prompt
-from LLM.LLMOptions import additional_options
+from stable_baselines3 import PPO
+
 from log.log_config import init_logger
 from log.LoggerCSV import LoggerCSV
 from RLAlgo.DirectSearch import DirectSearch
 from RLAlgo.Reinforce import Reinforce
+from Environments import Prompt, Algo, CartPole, LunarLander
 from VIRAL import VIRAL
+from PolicyTrainer.PolicyTrainer import PolicyTrainer
 
+from LLM.LLMOptions import additional_options
 
 def parse_logger():
     """
@@ -42,14 +45,10 @@ def main():
     parse_logger()
     env_type = LunarLander(Algo.PPO)
     model = 'qwen2.5-coder'
-    human_feedback = False
+    human_feedback = True
     LoggerCSV(env_type, model)
-    viral = VIRAL(
-        env_type=env_type, model=model, hf=human_feedback, training_time=500_000, numenvs=3, options=additional_options)
-    viral.generate_context(Prompt.LUNAR_LANDER)
-    viral.generate_reward_function(n_init=1, n_refine=3)
-    for state in viral.memory:
-        viral.logger.info(state)
+    p = PolicyTrainer([], env_type, 1, 2)
+    p.test_policy_hf("model/policy0.model", 5)
 
 if __name__ == "__main__":
     main()

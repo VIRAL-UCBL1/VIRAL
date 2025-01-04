@@ -15,6 +15,7 @@ class VIRAL:
         model: str,
         hf: bool = False,
         training_time: int = 25000,
+        numenvs: int = 2,
         options: dict = {},
     ):
         """
@@ -50,7 +51,7 @@ class VIRAL:
         self.logger = getLogger("VIRAL")
         self.memory: list[State] = [State(0)]
         self.policy_trainer: PolicyTrainer = PolicyTrainer(
-            self.memory, self.env_type, timeout=training_time
+            self.memory, self.env_type, timeout=training_time, numenvs=numenvs
         )
 
     def generate_context(self, prompt_info: dict):
@@ -237,3 +238,9 @@ class VIRAL:
         if feedback:
             prompt = feedback + "\n" + prompt
         return prompt
+
+    def test_reward_func(self, reward_func: str):
+        state: State = self.gen_code.get(reward_func)
+        self.memory.append(state)
+        are_worsts, are_betters, threshold = self.policy_trainer.evaluate_policy([state.idx])
+

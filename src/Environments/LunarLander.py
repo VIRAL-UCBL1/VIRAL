@@ -21,7 +21,7 @@ class LunarLander(EnvType):
 		# print(base_env.lander)  # print the lander object
 
 		# check if the lander is awake
-		if hasattr(base_env, "lander") and not base_env.lander.awake:
+		if not base_env.lander.awake:
 			return True, False
 		else:
 			return False, True
