@@ -66,21 +66,22 @@ class PolicyTrainer:
         )
         vec_env, model, numvenv = self._generate_env_model(state.reward_func, self.numenvs)
         training_callback = TrainingInfoCallback()
-        policy = model.learn(total_timesteps=self.timeout, callback=training_callback) # , progress_bar=True
-        policy.save(f"model/policy{state.idx}.model")
+        policy = model.learn(total_timesteps=self.timeout, callback=training_callback, progress_bar=True) # , progress_bar=True
+        policy.save(f"model/{self.env_name}_{state.idx}.pth")
         metrics = training_callback.get_metrics()
         #self.logger.debug(f"{state.idx} TRAINING METRICS: {metrics}")
         sr_test = self.test_policy(policy)
         objective_metric = self.objective_metric(metrics.pop('observations'))
-        metrics.update(objective_metric)
+        if objective_metric is not None:
+            metrics.update(objective_metric)
         metrics["sr"] = sr_test
         if os.name == "posix":
-            queue.put([state.idx, f"model/policy{state.idx}.model", metrics])
+            queue.put([state.idx, f"model/{self.env_name}_{state.idx}.pth", metrics])
         else:
             self.memory[state.idx].set_performances(metrics)
             self.memory[state.idx].set_policy(policy)
-            self.logger.debug(
-                f"state {state.idx} has finished learning with performances: {metrics}"
+        self.logger.debug(
+                f"state {state.idx} has finished learning"
             )
 
     def evaluate_policy(self, list_idx: list[int]) -> tuple[list[int], list[int], float]:
@@ -99,7 +100,7 @@ class PolicyTrainer:
                 self.logger.warning("At least two reward functions are required.")
             to_join: list = []
             for i in list_idx:
-                if self.memory[i].performances is None:
+                if self.memory[i].policy is None:
                     self.multi_process.append(
                         Process(
                             target=self._learning, args=(self.memory[i], self.queue)
@@ -119,7 +120,7 @@ class PolicyTrainer:
                     )
                     self.to_get -= 1
                 except Empty:
-                    sleep(0.1)
+                    sleep(0.5)
 
             for p in to_join:
                 self.multi_process[p].join()

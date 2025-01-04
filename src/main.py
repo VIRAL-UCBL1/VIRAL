@@ -38,18 +38,18 @@ def main():
     memory.
     """
     parse_logger()
-    env_type = Hopper(Algo.PPO)
+    env_type = LunarLander(Algo.PPO)
     model = 'qwen2.5-coder'
-    human_feedback = True
+    human_feedback = False
     LoggerCSV(env_type, model)
     viral = VIRAL(
-        env_type=env_type, model=model, hf=human_feedback, training_time=500_000, numenvs=2, options=additional_options)
-    viral.generate_context(Prompt.HOPPER.value)
-    viral.generate_reward_function(n_init=1, n_refine=2, focus="DON'T USE IS_SUCCESS BOOLEANS")
-    viral.logger.info("render 1")
-    viral.policy_trainer.test_policy_hf("model/policy1.model", 5)
+        env_type=env_type, model=model, hf=human_feedback, training_time=300_000,
+        numenvs=2, options=additional_options)
+    viral.generate_context(Prompt.LUNAR_LANDER.value)
+    viral.generate_reward_function(n_init=1, n_refine=2)
     for state in viral.memory:
         viral.logger.info(state)
 
 if __name__ == "__main__":
-    main()
+    for _ in range(10):
+        main()
