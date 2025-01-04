@@ -7,7 +7,7 @@ from log.log_config import init_logger
 from log.LoggerCSV import LoggerCSV
 from RLAlgo.DirectSearch import DirectSearch
 from RLAlgo.Reinforce import Reinforce
-from Environments import Prompt, Algo, CartPole, LunarLander
+from Environments import Prompt, Algo, CartPole, LunarLander, Hopper
 from VIRAL import VIRAL
 from PolicyTrainer.PolicyTrainer import PolicyTrainer
 
@@ -43,12 +43,9 @@ def main():
     memory.
     """
     parse_logger()
-    env_type = LunarLander(Algo.PPO)
-    model = 'qwen2.5-coder'
-    human_feedback = True
-    LoggerCSV(env_type, model)
+    env_type = Hopper(Algo.PPO)
     p = PolicyTrainer([], env_type, 1, 2)
-    p.test_policy_hf("model/policy0.model", 5)
+    p.test_policy_hf("model/policy1.model", 5)
 
 if __name__ == "__main__":
     main()

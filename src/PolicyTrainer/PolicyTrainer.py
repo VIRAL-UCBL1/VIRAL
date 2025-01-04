@@ -36,22 +36,23 @@ class PolicyTrainer:
         self.objective_metric = env_type.objective_metric
         self.env_name = str(env_type)
         self.success_func = env_type.success_func
-        if os.name == "posix":
-            self.queue = Queue()
-            self.multi_process: list[Process] = []
-            self.multi_process.append(
-                Process(
-                    target=self._learning,
-                    args=(
-                        self.memory[0],
-                        self.queue,
-                    ),
+        if len(self.memory) > 0:
+            if os.name == "posix":
+                self.queue = Queue()
+                self.multi_process: list[Process] = []
+                self.multi_process.append(
+                    Process(
+                        target=self._learning,
+                        args=(
+                            self.memory[0],
+                            self.queue,
+                        ),
+                    )
                 )
-            )
-            self.multi_process[0].start()
-            self.to_get = 1
-        else:
-            self._learning(self.memory[0])
+                self.multi_process[0].start()
+                self.to_get = 1
+            else:
+                self._learning(self.memory[0])
 
     def _learning(self, state: State, queue: Queue = None) -> None:
         """train a policy on an environment
@@ -65,7 +66,7 @@ class PolicyTrainer:
         )
         vec_env, model, numvenv = self._generate_env_model(state.reward_func, self.numenvs)
         training_callback = TrainingInfoCallback()
-        policy = model.learn(total_timesteps=self.timeout, callback=training_callback, progress_bar=True) # , progress_bar=True
+        policy = model.learn(total_timesteps=self.timeout, callback=training_callback) # , progress_bar=True
         policy.save(f"model/policy{state.idx}.model")
         metrics = training_callback.get_metrics()
         #self.logger.debug(f"{state.idx} TRAINING METRICS: {metrics}")

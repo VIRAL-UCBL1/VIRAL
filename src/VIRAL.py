@@ -72,7 +72,7 @@ class VIRAL:
         response = self.llm.print_Generator_and_return(response, -1)
 
     def generate_reward_function(
-        self, n_init: int = 2, n_refine: int = 1
+        self, n_init: int = 2, n_refine: int = 1, focus: str = ""
     ) -> list[State]:
         """
         Generate and iteratively improve a reward function using a Language Model (LLM).
@@ -124,6 +124,7 @@ class VIRAL:
         ### INIT STAGE ###
         for i in range(1, n_init + 1):  # TODO make it work for 4_init
             prompt = f"""Iteration {i}/{n_init},
+            {focus}
         Complete this sentence using the CONTEXT section as a guide:
         def reward_func(observations:np.ndarray, is_success:bool, is_failure:bool) -> float:
             \"\"\"Reward function for {self.env_type}
