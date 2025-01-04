@@ -2,10 +2,10 @@ import random
 from logging import getLogger
 
 from Environments import EnvType
-from LLM.OllamaChat import OllamaChat
-from State.State import State
 from LLM.GenCode import GenCode
+from LLM.OllamaChat import OllamaChat
 from PolicyTrainer.PolicyTrainer import PolicyTrainer
+from State.State import State
 
 
 class VIRAL:
@@ -138,7 +138,7 @@ class VIRAL:
         """
             self.llm.add_message(prompt)
             response = self.llm.generate_response(stream=True)
-            response = self.llm.print_Generator_and_return(response, len(self.memory)-1)
+            response = self.llm.print_Generator_and_return(response, len(self.memory)-1) #TODO if  response doesn't work the chat is stuck and regenate the same response over and over (je pensais qu'on avais fix mais apparament pas)
             state: State = self.gen_code.get(response)
             self.memory.append(state)
 

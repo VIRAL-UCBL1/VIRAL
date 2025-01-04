@@ -1,13 +1,14 @@
 import argparse
 from logging import getLogger
 
+from Environments import Algo, CartPole, LunarLander, Pacman, Prompt
+from LLM.LLMOptions import additional_options
 from log.log_config import init_logger
 from log.LoggerCSV import LoggerCSV
 from RLAlgo.DirectSearch import DirectSearch
 from RLAlgo.Reinforce import Reinforce
-from Environments import Prompt, Algo, CartPole, LunarLander
 from VIRAL import VIRAL
-from LLM.LLMOptions import additional_options
+
 
 def parse_logger():
     """
@@ -39,13 +40,14 @@ def main():
     memory.
     """
     logger = parse_logger()
-    env_type = CartPole(Algo.PPO)
+    # env_type = CartPole(Algo.PPO)
+    env_type = Pacman(Algo.PPO)
     model = 'qwen2.5-coder'
-    human_feedback = True
+    human_feedback = False
     LoggerCSV(env_type, model)
     viral = VIRAL(
-        env_type=env_type, model=model, hf=human_feedback, training_time=25000, options=additional_options)
-    viral.generate_context(Prompt.CARTPOLE)
+        env_type=env_type, model=model, hf=human_feedback, training_time=1000, options=additional_options)
+    viral.generate_context(Prompt.PACMAN)
     viral.generate_reward_function(n_init=1, n_refine=3)
     for state in viral.memory:
         logger.info(state)

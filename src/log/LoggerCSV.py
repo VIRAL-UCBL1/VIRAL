@@ -1,7 +1,9 @@
-import os
-from Environments import EnvType
-from logging import getLogger
 import csv
+import os
+import re
+from logging import getLogger
+
+from Environments import EnvType
 
 
 def getLoggerCSV():
@@ -52,8 +54,9 @@ class LoggerCSV:
         if self._initialized:
             return
         self.env_type = env_type
+        safe_env_type = re.sub(r'[^a-zA-Z0-9_]', '_', str(env_type))
         self.llm = llm
-        self.csv_file = f"log/{env_type}_log.csv"
+        self.csv_file = f"log/{safe_env_type}_log.csv"
         self.logger = getLogger("VIRAL")
         self._initialized = True
 

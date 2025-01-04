@@ -21,6 +21,25 @@ class Prompt(Enum):
     3: fire right orientation engine
     The state is an 8-dimensional vector: the coordinates of the lander in x & y, its linear velocities in x & y, its angle, its angular velocity, and two booleans that represent whether each leg is in contact with the ground or not.
     """
+    
+    PACMAN = {
+    "goal": "Collect all food items and avoid ghosts unless a Power Pellet is consumed, enabling Pacman to eat ghosts.",
+    "action space": """
+    Value Action Description
+    0     NOOP   No action performed
+    1     UP     Move Pacman up
+    2     RIGHT  Move Pacman right
+    3     LEFT   Move Pacman left
+    4     DOWN   Move Pacman down
+    """,
+        "observation space": """
+    Type              Shape               Description
+    rgb               Box(0, 255, (210, 160, 3), uint8)  Full-color 3D representation of the environment
+    grayscale         Box(0, 255, (210, 160), uint8)     Grayscale version of the visual environment
+    ram               Box(0, 255, (128,), uint8)         RAM representation of the game state
+    """
+    }
+
 
     def __new__(cls, value):
         obj = object.__new__(cls)
