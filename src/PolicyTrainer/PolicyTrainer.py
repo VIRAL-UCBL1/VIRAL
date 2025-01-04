@@ -35,6 +35,7 @@ class PolicyTrainer:
         self.timeout = timeout
         self.numenvs = numenvs
         self.algo = env_type.algo
+        self.algo_param = env_type.algo_param
         self.env_name = str(env_type)
         self.success_func = env_type.success_func
         if os.name == "posix":
@@ -235,9 +236,7 @@ class PolicyTrainer:
             wrapper_kwargs={"success_func": self.success_func, "llm_reward_function": reward_func},
         )
         if self.algo == Algo.PPO:
-            model = PPO("MlpPolicy", vec_env, verbose=0, device="cpu", 
-                        ent_coef=0.01, gae_lambda=0.98, gamma=0.999, n_epochs=4, n_steps=1024,
-                        normalize_advantage=False)
+            model = PPO(env=vec_env, **self.algo_param)
         else:
             raise ValueError("The learning algorithm is not implemented.")
 

@@ -12,7 +12,12 @@ from .EnvType import EnvType
 class Pacman(EnvType):
     def __init__(self, algo: Algo):
         # Appel du constructeur de la classe mère
-        super().__init__(algo)
+        algo_param = {
+			"policy": "MlpPolicy",
+			"verbose": 0,
+			"device": "cpu",
+			}
+        super().__init__(algo, algo_param)
 
     def __repr__(self):
         # Chercher automatiquement le chemin d'installation des ROMs

@@ -1,8 +1,8 @@
 import gymnasium as gym
-from Environments import Algo
 from .EnvType import EnvType
+from Environments import Algo
 
-class CartPole(EnvType):
+class Walker(EnvType):
 	def __init__(self, algo: Algo):
         # Appel du constructeur de la classe mère
 		algo_param = {
@@ -12,8 +12,7 @@ class CartPole(EnvType):
 			}
 		super().__init__(algo, algo_param)
 
-	def __repr__(self):
-		return "CartPole-v1"
+
 
 	def success_func(self, env: gym.Env, info: dict) -> tuple[bool|bool]:
 		"""
@@ -26,10 +25,11 @@ class CartPole(EnvType):
 		Returns:
 			bool : True if the episode is truncated, False otherwise
 		"""
+		
 		if info["TimeLimit.truncated"]:
-			return True, False
+			return True
 		else:
-			return False, True
+			return False
 
 	def objective_metric(self, states)-> list[dict[str, float]]:
 		"""
