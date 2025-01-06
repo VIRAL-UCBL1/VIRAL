@@ -4,3 +4,4 @@ from .LunarLander import LunarLander
 from .Pacman import Pacman
 from .Prompt import Prompt
 from .Hopper import Hopper
+from .Highway import Highway
