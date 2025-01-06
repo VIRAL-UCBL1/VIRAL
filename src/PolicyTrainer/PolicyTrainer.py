@@ -1,4 +1,5 @@
 from gymnasium import make
+from stable_baselines3 import PPO, DQN
 from gymnasium.wrappers import RecordVideo
 from stable_baselines3 import PPO
 from stable_baselines3.common.env_util import make_vec_env
@@ -205,6 +206,8 @@ class PolicyTrainer:
         env = make(self.env_name, render_mode='human')
         if self.algo == Algo.PPO:
             policy = PPO.load(policy_path)
+        elif self.algo == Algo.DQN:
+            policy = DQN.load(policy_path)
         nb_success = 0
         for _ in range(nb_episodes):
             obs, _ = env.reset()
@@ -259,6 +262,8 @@ class PolicyTrainer:
         )
         if self.algo == Algo.PPO:
             model = PPO(env=vec_env, **self.algo_param)
+        elif self.algo == Algo.DQN:
+            model = DQN(env=vec_env, **self.algo_param)
         else:
             raise ValueError("The learning algorithm is not implemented.")
 
