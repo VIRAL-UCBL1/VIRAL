@@ -47,6 +47,3 @@ class Highway(EnvType):
         """
         # Implémentation spécifique à votre cas d'utilisation
         pass  # TODO
-
-    def get_prompt(self):
-        pass # TODO

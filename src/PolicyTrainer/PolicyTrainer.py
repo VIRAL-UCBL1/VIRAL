@@ -15,7 +15,7 @@ from PolicyTrainer.TrainingInfoCallback import TrainingInfoCallback
 from State.State import State
 from Environments.Algo import Algo
 from Environments.EnvType import EnvType
-
+import gymnasium as gym
 import numpy as np
 import os
 
@@ -260,10 +260,13 @@ class PolicyTrainer:
             wrapper_class=CustomRewardWrapper,
             wrapper_kwargs={"success_func": self.success_func, "llm_reward_function": reward_func},
         )
+
+        env = gym.make("highway-fast-v0", render_mode="rgb_array")
         if self.algo == Algo.PPO:
             model = PPO(env=vec_env, **self.algo_param)
         elif self.algo == Algo.DQN:
-            model = DQN(env=vec_env, **self.algo_param)
+            # use gym.make instead of make_vec_env for DQN. gym 10min / vec_env 2h
+            model = DQN(env=env, **self.algo_param)
         else:
             raise ValueError("The learning algorithm is not implemented.")
 
