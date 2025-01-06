@@ -43,9 +43,9 @@ def main():
     memory.
     """
     parse_logger()
-    env_type = LunarLander(Algo.PPO)
+    env_type = Hopper(Algo.PPO)
     p = PolicyTrainer([], env_type, 1, 2)
-    p.test_policy_hf("model/LunarLander-v3_1.pth", 5)
+    p.test_policy_hf("model/Hopper-v5_1.pth", 5)
 
 if __name__ == "__main__":
     main()

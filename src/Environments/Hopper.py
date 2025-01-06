@@ -28,6 +28,8 @@ class Hopper(EnvType):
 		
 		if info["terminated"]:
 			return False, True
+		elif info["x_position"] > 5.0:
+			return True, False
 		else:
 			return False, False
 

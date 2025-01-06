@@ -27,7 +27,7 @@ class Prompt(Enum):
     """,
     }
     HOPPER = {
-        "Goal": "move forward as quickly as possible",
+        "Goal": "Control the Hopper to move in the forward direction",
         "Observation Space": """Box(-inf, inf, (11,), float64)
 
 The observation space consists of the following parts (in order):
