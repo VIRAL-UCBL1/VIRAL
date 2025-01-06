@@ -1,4 +1,5 @@
 from gymnasium import make
+from gymnasium.wrappers import RecordVideo
 from stable_baselines3 import PPO
 from stable_baselines3.common.env_util import make_vec_env
 from multiprocessing import Process, Queue
@@ -204,7 +205,7 @@ class PolicyTrainer:
         env = make(self.env_name, render_mode='human')
         if self.algo == Algo.PPO:
             policy = PPO.load(policy_path)
-        nb_success = 1
+        nb_success = 0
         for _ in range(nb_episodes):
             obs, _ = env.reset()
             done = False
@@ -219,6 +220,23 @@ class PolicyTrainer:
                     if is_success:
                         nb_success += 1
                 done = term or trunc
+        env.close()
+
+    def test_policy_video(self, policy_path: str, nb_episodes: int = 3):
+        env = make(self.env_name, render_mode='rgb_array')
+        env = RecordVideo(
+            env, video_folder=f"records/{self.env_name}", name_prefix=policy_path, episode_trigger=lambda e: True
+        )
+        if self.algo == Algo.PPO:
+            policy = PPO.load(policy_path)
+
+        for videos in range(nb_episodes):
+            done = truncated = False
+            obs, info = env.reset()
+            while not (done or truncated):
+                action, _states = policy.predict(obs, deterministic=True)
+                obs, reward, done, truncated, info = env.step(action)
+                env.render()
         env.close()
 
     def _generate_env_model(self, reward_func, numenvs = 2) -> tuple[VecEnv, PPO, int]:
