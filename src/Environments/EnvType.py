@@ -3,9 +3,10 @@ import gymnasium as gym
 from Environments import Algo
 
 class EnvType:
-	def __init__(self, algo: Algo, algo_param: dict):
+	def __init__(self, algo: Algo, algo_param: dict, prompt: dict):
 		self.algo: Algo = algo
 		self.algo_param: dict = algo_param
+		self.prompt: dict = prompt
 	
 	@abstractmethod
 	def __repr__(self):

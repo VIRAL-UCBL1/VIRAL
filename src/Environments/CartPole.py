@@ -10,7 +10,15 @@ class CartPole(EnvType):
 			"verbose": 0,
 			"device": "cpu",
 			}
-		super().__init__(algo, algo_param)
+		prompt = {
+        "Goal": "Balance a pole on a cart",
+        "Observation Space": """Num Observation Min Max
+0 Cart Position -4.8 4.8
+1 Cart Velocity -Inf Inf
+2 Pole Angle ~ -0.418 rad (-24°) ~ 0.418 rad (24°)
+3 Pole Angular Velocity -Inf Inf""",
+    	}
+		super().__init__(algo, algo_param, prompt)
 
 	def __repr__(self):
 		return "CartPole-v1"
