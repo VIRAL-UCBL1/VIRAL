@@ -2,10 +2,10 @@ import random
 from logging import getLogger
 
 from Environments import EnvType
-from LLM.GenCode import GenCode
 from LLM.OllamaChat import OllamaChat
-from PolicyTrainer.PolicyTrainer import PolicyTrainer
 from State.State import State
+from LLM.GenCode import GenCode
+from PolicyTrainer.PolicyTrainer import PolicyTrainer
 
 
 class VIRAL:
@@ -60,7 +60,7 @@ class VIRAL:
         Args:
             prompt_info (dict): contain a task, and observation space
         """
-        prompt = f"{prompt_info}\nDescribe which observation can achive the goal."
+        prompt = f"{prompt_info}\nDescribe which observation can achive the Goal:\n{prompt_info['Goal']}."
         sys_prompt = (
             f"You're a physics expert, specializing in {self.env_type} motion analysis.\n"
             + "you can refer to some laws of physics \n"
@@ -72,7 +72,7 @@ class VIRAL:
         response = self.llm.print_Generator_and_return(response, -1)
 
     def generate_reward_function(
-        self, n_init: int = 2, n_refine: int = 1
+        self, n_init: int = 2, n_refine: int = 1, focus: str = ""
     ) -> list[State]:
         """
         Generate and iteratively improve a reward function using a Language Model (LLM).
@@ -124,6 +124,7 @@ class VIRAL:
         ### INIT STAGE ###
         for i in range(1, n_init + 1):  # TODO make it work for 4_init
             prompt = f"""Iteration {i}/{n_init},
+            {focus}
         Complete this sentence using the CONTEXT section as a guide:
         def reward_func(observations:np.ndarray, is_success:bool, is_failure:bool) -> float:
             \"\"\"Reward function for {self.env_type}

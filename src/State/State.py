@@ -96,7 +96,8 @@ class State:
             performances (dict):
         """
         self.performances = performances
-        self.logger_csv.to_csv(self)
+        if self.idx != 0:
+            self.logger_csv.to_csv(self)
 
     def __repr__(self):
         if self.performances is None:

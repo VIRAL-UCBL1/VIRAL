@@ -1,5 +1,5 @@
 __pycache__
-**/model/*.model
+**/model/*.pth
 site/
 .vscode/
 src/log/log.txt

@@ -5,7 +5,12 @@ from .EnvType import EnvType
 class CartPole(EnvType):
 	def __init__(self, algo: Algo):
         # Appel du constructeur de la classe mère
-		super().__init__(algo)
+		algo_param = {
+			"policy": "MlpPolicy",
+			"verbose": 0,
+			"device": "cpu",
+			}
+		super().__init__(algo, algo_param)
 
 	def __repr__(self):
 		return "CartPole-v1"
@@ -26,7 +31,7 @@ class CartPole(EnvType):
 		else:
 			return False, True
 
-	def objective_metric(self, states)-> list[dict[str, float]]:
+	def objective_metric(self, states)-> dict[str, float]:
 		"""
 		Objective metric for the CartPole environment.
 		Calculates a score for the given state on a particular observation of the CartPole environment.
@@ -49,9 +54,8 @@ class CartPole(EnvType):
 			pole_position_diff += abs(pole_position)
 		pole_position_diff = pole_position_diff / len(states)
 
-		result = [
-			{"pole_angle_diff": pole_angle_diff},
-			{"pole_position_diff": pole_position_diff},
-		]
+		result = {"pole_angle_diff": pole_angle_diff,
+			"pole_position_diff": pole_position_diff
+		}
 
 		return result

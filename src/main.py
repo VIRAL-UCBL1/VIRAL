@@ -1,12 +1,10 @@
 import argparse
 from logging import getLogger
 
-from Environments import Algo, CartPole, LunarLander, Pacman, Prompt
+from Environments import Algo, CartPole, LunarLander, Pacman, Hopper, Prompt
 from LLM.LLMOptions import additional_options
 from log.log_config import init_logger
 from log.LoggerCSV import LoggerCSV
-from RLAlgo.DirectSearch import DirectSearch
-from RLAlgo.Reinforce import Reinforce
 from VIRAL import VIRAL
 
 
@@ -45,11 +43,13 @@ def main():
     human_feedback = False
     LoggerCSV(env_type, model)
     viral = VIRAL(
-        env_type=env_type, model=model, hf=human_feedback, training_time=500_000, numenvs=3, options=additional_options)
-    viral.generate_context(Prompt.LUNAR_LANDER)
-    viral.generate_reward_function(n_init=1, n_refine=3)
+        env_type=env_type, model=model, hf=human_feedback, training_time=300_000,
+        numenvs=2, options=additional_options)
+    viral.generate_context(Prompt.LUNAR_LANDER.value)
+    viral.generate_reward_function(n_init=1, n_refine=2)
     for state in viral.memory:
         viral.logger.info(state)
 
 if __name__ == "__main__":
-    main()
+    for _ in range(10):
+        main()

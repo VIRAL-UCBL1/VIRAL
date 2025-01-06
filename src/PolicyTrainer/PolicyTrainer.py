@@ -1,7 +1,4 @@
-from re import S
-from typing import Callable
 from gymnasium import make
-from stable_baselines3.common.base_class import BaseAlgorithm
 from stable_baselines3 import PPO
 from stable_baselines3.common.env_util import make_vec_env
 from multiprocessing import Process, Queue
@@ -35,24 +32,27 @@ class PolicyTrainer:
         self.timeout = timeout
         self.numenvs = numenvs
         self.algo = env_type.algo
+        self.algo_param = env_type.algo_param
+        self.objective_metric = env_type.objective_metric
         self.env_name = str(env_type)
         self.success_func = env_type.success_func
-        if os.name == "posix":
-            self.queue = Queue()
-            self.multi_process: list[Process] = []
-            self.multi_process.append(
-                Process(
-                    target=self._learning,
-                    args=(
-                        self.memory[0],
-                        self.queue,
-                    ),
+        if len(self.memory) > 0:
+            if os.name == "posix":
+                self.queue = Queue()
+                self.multi_process: list[Process] = []
+                self.multi_process.append(
+                    Process(
+                        target=self._learning,
+                        args=(
+                            self.memory[0],
+                            self.queue,
+                        ),
+                    )
                 )
-            )
-            self.multi_process[0].start()
-            self.to_get = 1
-        else:
-            self._learning(self.memory[0])
+                self.multi_process[0].start()
+                self.to_get = 1
+            else:
+                self._learning(self.memory[0])
 
     def _learning(self, state: State, queue: Queue = None) -> None:
         """train a policy on an environment
@@ -67,19 +67,21 @@ class PolicyTrainer:
         vec_env, model, numvenv = self._generate_env_model(state.reward_func, self.numenvs)
         training_callback = TrainingInfoCallback()
         policy = model.learn(total_timesteps=self.timeout, callback=training_callback, progress_bar=True) # , progress_bar=True
-        policy.save(f"model/policy{state.idx}.model")
+        policy.save(f"model/{self.env_name}_{state.idx}.pth")
         metrics = training_callback.get_metrics()
         #self.logger.debug(f"{state.idx} TRAINING METRICS: {metrics}")
         sr_test = self.test_policy(policy)
-        # ajoute au dict metrics les performances sans ecraser les anciennes
+        objective_metric = self.objective_metric(metrics.pop('observations'))
+        if objective_metric is not None:
+            metrics.update(objective_metric)
         metrics["sr"] = sr_test
         if os.name == "posix":
-            queue.put([state.idx, f"model/policy{state.idx}.model", metrics])
+            queue.put([state.idx, f"model/{self.env_name}_{state.idx}.pth", metrics])
         else:
             self.memory[state.idx].set_performances(metrics)
             self.memory[state.idx].set_policy(policy)
-            self.logger.debug(
-                f"state {state.idx} has finished learning with performances: {metrics}"
+        self.logger.debug(
+                f"state {state.idx} has finished learning"
             )
 
     def evaluate_policy(self, list_idx: list[int]) -> tuple[list[int], list[int], float]:
@@ -98,7 +100,7 @@ class PolicyTrainer:
                 self.logger.warning("At least two reward functions are required.")
             to_join: list = []
             for i in list_idx:
-                if self.memory[i].performances is None:
+                if self.memory[i].policy is None:
                     self.multi_process.append(
                         Process(
                             target=self._learning, args=(self.memory[i], self.queue)
@@ -118,7 +120,7 @@ class PolicyTrainer:
                     )
                     self.to_get -= 1
                 except Empty:
-                    sleep(0.1)
+                    sleep(0.5)
 
             for p in to_join:
                 self.multi_process[p].join()
@@ -180,7 +182,10 @@ class PolicyTrainer:
                 obs, reward, term, trunc, info = env.step(actions)
                 episode_rewards += reward
                 done = trunc or term
+
                 if done:
+                    info["TimeLimit.truncated"] = trunc
+                    info["terminated"] = term
                     is_success, _ = self.success_func(env, info)
                     if is_success:
                         nb_success += 1
@@ -207,6 +212,8 @@ class PolicyTrainer:
                 actions, _ = policy.predict(obs)
                 obs, _, term, trunc, info = env.step(actions)
                 if term or trunc:
+                    info["TimeLimit.truncated"] = trunc
+                    info["terminated"] = term
                     is_success, _ = self.success_func(env, info)
                     if is_success:
                         nb_success += 1
@@ -232,9 +239,7 @@ class PolicyTrainer:
             wrapper_kwargs={"success_func": self.success_func, "llm_reward_function": reward_func},
         )
         if self.algo == Algo.PPO:
-            model = PPO("MlpPolicy", vec_env, verbose=0, device="cpu", 
-                        ent_coef=0.01, gae_lambda=0.98, gamma=0.999, n_epochs=4, n_steps=1024,
-                        normalize_advantage=False)
+            model = PPO(env=vec_env, **self.algo_param)
         else:
             raise ValueError("The learning algorithm is not implemented.")
 

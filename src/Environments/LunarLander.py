@@ -6,7 +6,18 @@ from utils.utils import unwrap_env
 class LunarLander(EnvType):
 	def __init__(self, algo: Algo):
         # Appel du constructeur de la classe mère
-		super().__init__(algo)
+		algo_param = {
+			"policy": "MlpPolicy",
+			"verbose": 0,
+			"device": "cpu",
+			"ent_coef": 0.01,
+			"gae_lambda": 0.98,
+			"gamma": 0.999,
+			"n_epochs": 4,
+			"n_steps": 1024,
+			"normalize_advantage": False
+		}
+		super().__init__(algo, algo_param)
 
 	def __repr__(self):
 		return "LunarLander-v3"
