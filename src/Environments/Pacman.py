@@ -17,7 +17,16 @@ class Pacman(EnvType):
 			"verbose": 0,
 			"device": "cpu",
 			}
-        super().__init__(algo, algo_param)
+        prompt = {
+        "Goal": "Collect all food items and avoid ghosts unless a Power Pellet is consumed, enabling Pacman to eat ghosts.",
+        "Observation Space": """
+    Type              Shape               Description
+    rgb               Box(0, 255, (210, 160, 3), uint8)  Full-color 3D representation of the environment
+    grayscale         Box(0, 255, (210, 160), uint8)     Grayscale version of the visual environment
+    ram               Box(0, 255, (128,), uint8)         RAM representation of the game state
+    """,
+    }
+        super().__init__(algo, algo_param, prompt)
 
     def __repr__(self):
         # Chercher automatiquement le chemin d'installation des ROMs
