@@ -1,7 +1,7 @@
 import argparse
 from logging import getLogger
 
-from Environments import Algo, CartPole, LunarLander, Pacman, Hopper, Prompt
+from Environments import Algo, CartPole, LunarLander, Pacman, Hopper
 from LLM.LLMOptions import additional_options
 from log.log_config import init_logger
 from log.LoggerCSV import LoggerCSV
@@ -45,7 +45,7 @@ def main():
     viral = VIRAL(
         env_type=env_type, model=model, hf=human_feedback, training_time=300_000,
         numenvs=2, options=additional_options)
-    viral.generate_context(Prompt.HOPPER.value)
+    viral.generate_context(env_type.prompt)
     viral.generate_reward_function(n_init=1, n_refine=2)
     for state in viral.memory:
         viral.logger.info(state)
