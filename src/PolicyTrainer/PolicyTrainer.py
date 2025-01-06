@@ -225,7 +225,7 @@ class PolicyTrainer:
     def test_policy_video(self, policy_path: str, nb_episodes: int = 3):
         env = make(self.env_name, render_mode='rgb_array')
         env = RecordVideo(
-            env, video_folder=f"records/{self.env_name}", name_prefix=policy_path, episode_trigger=lambda e: True
+            env, video_folder=f"records/{self.env_name}", episode_trigger=lambda e: True
         )
         if self.algo == Algo.PPO:
             policy = PPO.load(policy_path)
