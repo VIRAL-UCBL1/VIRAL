@@ -18,7 +18,7 @@ class Highway(EnvType):
             "gradient_steps": 1,
             "target_update_interval": 50,
             "verbose": 1,
-            "tensorboard_log": "highway_dqn/",
+            "tensorboard_log": "model/highway_dqn/",
         }
         prompt = {
         "",
