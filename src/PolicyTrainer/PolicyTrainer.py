@@ -1,21 +1,20 @@
+import os
+from logging import getLogger
+from multiprocessing import Process, Queue
+from queue import Empty
+from time import sleep
+
+import numpy as np
 from gymnasium import make
 from stable_baselines3 import PPO
 from stable_baselines3.common.env_util import make_vec_env
-from multiprocessing import Process, Queue
-from logging import getLogger
-from time import sleep
-from queue import Empty
-
 from stable_baselines3.common.vec_env.base_vec_env import VecEnv
 
+from Environments.Algo import Algo
+from Environments.EnvType import EnvType
 from PolicyTrainer.CustomRewardWrapper import CustomRewardWrapper
 from PolicyTrainer.TrainingInfoCallback import TrainingInfoCallback
 from State.State import State
-from Environments.Algo import Algo
-from Environments.EnvType import EnvType
-
-import numpy as np
-import os
 
 
 class PolicyTrainer:
@@ -180,6 +179,8 @@ class PolicyTrainer:
             while not done:
                 actions, _ = policy.predict(obs)
                 obs, reward, term, trunc, info = env.step(actions)
+                print(f"info: {info}")
+                
                 episode_rewards += reward
                 done = trunc or term
 

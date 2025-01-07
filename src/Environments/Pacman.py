@@ -17,10 +17,7 @@ class Pacman(EnvType):
 			"verbose": 0,
 			"device": "cpu",
 			}
-        super().__init__(algo, algo_param)
-
-    def __repr__(self):
-        # Chercher automatiquement le chemin d'installation des ROMs
+                # Chercher automatiquement le chemin d'installation des ROMs
         try:
             # Utiliser pkg_resources pour trouver le chemin du package AutoROM
             rom_path = pkg_resources.resource_filename('AutoROM', 'roms/pacman.bin')
@@ -34,14 +31,18 @@ class Pacman(EnvType):
 
             # Charger la ROM spécifique à Pac-Man
             ale.loadROM(rom_path)
-
-            # Retourner le nom de l'environnement
-            return "ALE/Pacman-v5"
-        
         except FileNotFoundError as e:
-            return str(e)  # Renvoie l'erreur si la ROM n'est pas trouvée
+            print(str(e)) # Renvoie l'erreur si la ROM n'est pas trouvée
         except Exception as e:
-            return f"An error occurred: {e}"
+            print(f"An error occurred: {e}")
+            
+        super().__init__(algo, algo_param)
+
+    def __repr__(self):
+        # Retourner le nom de l'environnement
+        return "ALE/Pacman-v5"
+        
+
 
     def success_func(self, env: gym.Env, info: dict) -> tuple[bool, bool]:
         """
@@ -69,21 +70,7 @@ class Pacman(EnvType):
         Returns:
             list : Liste de dictionnaires contenant les noms et valeurs des métriques.
         """
-        # Exemple de calcul de métriques basées sur les états
-        score = 0
-        for state in states:
-            # Supposons que 'state' soit une observation de l'environnement
-            # et que vous ayez une méthode pour extraire le score actuel
-            score += self.extract_score_from_state(state)
-
-        average_score = score / len(states) if states else 0
-
-        result = [
-            {"average_score": average_score},
-            # Ajoutez d'autres métriques si nécessaire
-        ]
-
-        return result
+        pass #TODO
 
 
 
