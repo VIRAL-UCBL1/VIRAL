@@ -20,7 +20,8 @@ class Highway(EnvType):
             "verbose": 1,
             "tensorboard_log": "highway_dqn/",
         }
-        super().__init__(algo, algo_param)
+        prompt = {}
+        super().__init__(algo, algo_param, prompt)
 
     def __repr__(self):
         return "highway-v0"

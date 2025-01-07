@@ -12,7 +12,8 @@ class VIRAL:
     def __init__(
         self,
         env_type: EnvType,
-        model: str,
+        model_actor: str,
+        model_critic: str|None = None,
         hf: bool = False,
         training_time: int = 25000,
         numenvs: int = 2,
@@ -22,7 +23,7 @@ class VIRAL:
         Initialize VIRAL architecture for dynamic reward function generation
             Args:
                 env_type (EnvType): refer to parameter of an gym Env
-                model (str): Language model for reward generation
+                model_actor (str): Language model for reward generation
                 hf (bool, optional): active the human feedback
                 training_time (int, optional): timeout for model.learn()
                 options (dict, optional): options for the llm 
@@ -30,46 +31,50 @@ class VIRAL:
         if options.get("seed") is None:
             options["seed"] = random.randint(0, 1000000)
 
-        self.llm = OllamaChat(
-            model=model,
-            system_prompt=f"""
-        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        self.llm_actor = OllamaChat(
+            model=model_actor,
+            system_prompt="""
+        You're a reinforcement learning expert specializing in the design of python reward functions.
         Strict criteria:
         1. Take care of Generate ALWAYS DIFFERENTS reward function per Iterations
         2. Complete ONLY the reward function code
         3. Give no additional explanations
         4. STOP immediately your completion after the last return
-        5. Focus on the {env_type} environment
         6. Assuming Numpy already imported as np
         7. Take into the observation of the state, the is_success boolean flag, the is_failure boolean flag
         """,
-            options=options,
+            options=options.copy(),
         )
+        if model_critic is not None:
+            self.llm_critic = OllamaChat(
+                model=model_critic,
+                system_prompt=f"""
+        You're a reinforcement learning expert specializing in the design of reward functions for the {env_type} environment.
+        Based on the observation of the state, the is_success boolean flag, the is_failure boolean flag,
+        An actor going to build a function with this input. As a critic, you're going to explains step by step,
+        how to achieve the goal: {env_type.prompt['Goal']}.
+            """,
+                options=options.copy(),
+            )
         self.hf = hf
         self.env_type: EnvType = env_type
-        self.gen_code: GenCode = GenCode(self.env_type, self.llm)
+        self.gen_code: GenCode = GenCode(self.env_type, self.llm_actor)
         self.logger = getLogger("VIRAL")
         self.memory: list[State] = [State(0)]
         self.policy_trainer: PolicyTrainer = PolicyTrainer(
             self.memory, self.env_type, timeout=training_time, numenvs=numenvs
         )
 
-    def generate_context(self, prompt_info: dict):
+    def generate_context(self):
         """Generate more contexte for Step back prompting
-
-        Args:
-            prompt_info (dict): contain a task, and observation space
         """
-        prompt = f"{prompt_info}\nDescribe which observation can achive the Goal:\n{prompt_info['Goal']}."
-        sys_prompt = (
-            f"You're a physics expert, specializing in {self.env_type} motion analysis.\n"
-            + "you can refer to some laws of physics \n"
-            + "Don't explain obvious thinks, you talk to an expert \n"
-            + "be Concise, short and begin your explaination with: CONTEXT:"
-        )
-        self.llm.add_message(prompt)
-        response = self.llm.generate_simple_response(prompt, sys_prompt, stream=True)
-        response = self.llm.print_Generator_and_return(response, -1)
+        prompt = f"{self.env_type.prompt['Observation Space']}\n" 
+        prompt += f"Please, describe which observation can achive the Goal:\n{self.env_type.prompt['Goal']}."
+        if 'Image' in self.env_type.prompt.keys():
+            self.llm_critic.add_message(prompt, images=self.env_type.prompt['Image'])
+        self.llm_critic.add_message(prompt)
+        response = self.llm_critic.generate_response(stream=True)
+        response = self.llm_critic.print_Generator_and_return(response, -1)
 
     def generate_reward_function(
         self, n_init: int = 2, n_refine: int = 1, focus: str = ""
@@ -138,9 +143,9 @@ class VIRAL:
                 float: The reward for the current step
             \"\"\"
         """
-            self.llm.add_message(prompt)
-            response = self.llm.generate_response(stream=True)
-            response = self.llm.print_Generator_and_return(response, len(self.memory)-1) #TODO if  response doesn't work the chat is stuck and regenate the same response over and over (je pensais qu'on avais fix mais apparament pas)
+            self.llm_actor.add_message(prompt)
+            response = self.llm_actor.generate_response(stream=True)
+            response = self.llm_actor.print_Generator_and_return(response, len(self.memory)-1) #TODO if  response doesn't work the chat is stuck and regenate the same response over and over (je pensais qu'on avais fix mais apparament pas)
             state: State = self.gen_code.get(response)
             self.memory.append(state)
 
@@ -213,9 +218,9 @@ class VIRAL:
             self.logger.debug(self.memory[idx].performances)
             if self.hf:
                 refinement_prompt = self.human_feedback(refinement_prompt, idx)
-            self.llm.add_message(refinement_prompt)
-            refined_response = self.llm.generate_response(stream=True)
-            refined_response = self.llm.print_Generator_and_return(refined_response, len(self.memory) - 1)
+            self.llm_actor.add_message(refinement_prompt)
+            refined_response = self.llm_actor.generate_response(stream=True)
+            refined_response = self.llm_actor.print_Generator_and_return(refined_response, len(self.memory) - 1)
             state = self.gen_code.get(refined_response)
             self.memory.append(state)
             news_idx.append(len(self.memory) - 1)
