@@ -175,6 +175,7 @@ class PolicyTrainer:
         """
         all_rewards = []
         nb_success = 0
+        print("jetest")
         env = make(self.env_name)
         for _ in range(nb_episodes):
             obs, _ = env.reset()
@@ -187,8 +188,10 @@ class PolicyTrainer:
                 done = trunc or term
 
                 if done:
+                    print(f"terminated: {term}, truncated: {trunc}")
                     info["TimeLimit.truncated"] = trunc
                     info["terminated"] = term
+                    # print(f"infodsqdqsdqsds: {info}")
                     is_success, _ = self.success_func(env, info)
                     if is_success:
                         nb_success += 1
@@ -218,12 +221,15 @@ class PolicyTrainer:
                 obs, _, term, trunc, info = env.step(actions)
                 if term or trunc:
                     self.logger.info(info)
+                    print(f"terminated: {term}, truncated: {trunc}")
                     info["TimeLimit.truncated"] = trunc
                     info["terminated"] = term
+                    print(f"infodsqdqsdqsds: {info}")
                     is_success, _ = self.success_func(env, info)
                     if is_success:
                         nb_success += 1
                 done = term or trunc
+        print(f"nb_success: {nb_success/nb_episodes}")
         env.close()
 
     def test_policy_video(self, policy_path: str, nb_episodes: int = 3):
