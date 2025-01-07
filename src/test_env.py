@@ -44,7 +44,7 @@ def main():
     human_feedback = True
     LoggerCSV(env_type, model)
     viral = VIRAL(
-        env_type=env_type, model=model, hf=human_feedback, training_time=int(2e4), numenvs=1, options=additional_options)
+        env_type=env_type, model=model, hf=human_feedback, training_time=int(20_000), numenvs=1, options=additional_options)
     are_worsts, are_betters, threshold = viral.policy_trainer.evaluate_policy([])
     viral.policy_trainer.test_policy_hf("model/highway-v0_0.pth", 5)
     for state in viral.memory:

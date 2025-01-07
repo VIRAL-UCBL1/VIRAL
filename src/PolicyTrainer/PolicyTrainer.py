@@ -68,11 +68,12 @@ class PolicyTrainer:
         )
         vec_env, model, numvenv = self._generate_env_model(state.reward_func, self.numenvs)
         training_callback = TrainingInfoCallback()
-        policy = model.learn(total_timesteps=self.timeout, callback=training_callback) # , progress_bar=True
+        policy = model.learn(total_timesteps=self.timeout, callback=training_callback, progress_bar=True) # , progress_bar=True
         policy.save(f"model/{self.env_name}_{state.idx}.pth")
         metrics = training_callback.get_metrics()
         #self.logger.debug(f"{state.idx} TRAINING METRICS: {metrics}")
         sr_test = self.test_policy(policy)
+        print(f"SR: {sr_test}")
         objective_metric = self.objective_metric(metrics.pop('observations'))
         if objective_metric is not None:
             metrics.update(objective_metric)
@@ -196,7 +197,7 @@ class PolicyTrainer:
         success_rate = nb_success / nb_episodes
         return success_rate
 
-    def test_policy_hf(self, policy_path: str, nb_episodes: int = 5):
+    def test_policy_hf(self, policy_path: str, nb_episodes: int = 100):
         """visualise a policy
 
         Args:
@@ -262,11 +263,13 @@ class PolicyTrainer:
         )
 
         env = gym.make("highway-fast-v0", render_mode="rgb_array")
+
+        env_w = CustomRewardWrapper(env, self.success_func, reward_func)
         if self.algo == Algo.PPO:
             model = PPO(env=vec_env, **self.algo_param)
         elif self.algo == Algo.DQN:
             # use gym.make instead of make_vec_env for DQN. gym 10min / vec_env 2h
-            model = DQN(env=env, **self.algo_param)
+            model = DQN(env=env_w, **self.algo_param)
         else:
             raise ValueError("The learning algorithm is not implemented.")
 

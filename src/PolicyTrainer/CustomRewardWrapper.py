@@ -38,5 +38,7 @@ class CustomRewardWrapper(gym.Wrapper):
             reward = self.llm_reward_function(observation, is_success, is_failure)
         else:
             reward = original_reward
-
+            #print(f"Observation: {observation}")
+            # print("####"*50)
+            # print(f"Reward: {reward}")
         return observation, reward, terminated, truncated, info
