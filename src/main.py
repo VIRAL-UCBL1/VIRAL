@@ -38,12 +38,12 @@ def main():
     memory.
     """
     parse_logger()
-    env_type = Hopper(Algo.PPO)
+    env_type = CartPole(Algo.PPO)
     model = 'qwen2.5-coder'
     human_feedback = False
     LoggerCSV(env_type, model)
     viral = VIRAL(
-        env_type=env_type, model=model, hf=human_feedback, training_time=300_000,
+        env_type=env_type, model=model, hf=human_feedback, training_time=30_000,
         numenvs=2, options=additional_options)
     viral.generate_context(env_type.prompt)
     viral.generate_reward_function(n_init=1, n_refine=2)

@@ -45,8 +45,8 @@ def main():
     parse_logger()
     env_type = Hopper(Algo.PPO)
     p = PolicyTrainer([], env_type, 1, 2)
-    #p.test_policy_hf("model/Hopper-v5_1.pth", 5)
-    p.test_policy_video("model/Hopper-v5_1.pth")
+    p.test_policy_hf("model/Hopper-v5_2.pth", 5)
+    #p.test_policy_video("model/Hopper-v5_2.pth")
 
 if __name__ == "__main__":
     main()
