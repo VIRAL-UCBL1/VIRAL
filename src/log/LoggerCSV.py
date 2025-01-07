@@ -6,7 +6,7 @@ from logging import getLogger
 from Environments import EnvType
 
 
-def getLoggerCSV(): #TODO don't work
+def getLoggerCSV():
     """Retrieve the instance of the CSV logger.
 
     Raises:
