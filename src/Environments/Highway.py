@@ -18,9 +18,12 @@ class Highway(EnvType):
             "gradient_steps": 1,
             "target_update_interval": 50,
             "verbose": 1,
-            "tensorboard_log": "highway_dqn/",
+            "tensorboard_log": "model/highway_dqn/",
         }
-        super().__init__(algo, algo_param)
+        prompt = {
+        "",
+    	}
+        super().__init__(algo, algo_param, prompt)
 
     def __repr__(self):
         return "highway-v0"
@@ -44,6 +47,3 @@ class Highway(EnvType):
         """
         # Implémentation spécifique à votre cas d'utilisation
         pass  # TODO
-
-    def get_prompt(self):
-        pass # TODO
