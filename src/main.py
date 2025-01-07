@@ -38,7 +38,7 @@ def main():
     memory.
     """
     parse_logger()
-     env_type = LunarLander(Algo.PPO)
+    # env_type = LunarLander(Algo.PPO)
     # env_type = Pacman(Algo.PPO)
     env_type = CartPole(Algo.PPO)
     model = 'qwen2.5-coder'
