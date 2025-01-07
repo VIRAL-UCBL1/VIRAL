@@ -17,7 +17,13 @@ class LunarLander(EnvType):
 			"n_steps": 1024,
 			"normalize_advantage": False
 		}
-		super().__init__(algo, algo_param)
+		prompt = {
+        "Goal": "Land safely and fast",
+        "Observation Space": """Box([ -2.5 -2.5 -10. -10. -6.2831855 -10. -0. -0. ], [ 2.5 2.5 10. 10. 6.2831855 10. 1. 1. ], (8,), float32)
+        The state is an 8-dimensional vector: the coordinates of the lander in x & y, its linear velocities in x & y, its angle, its angular velocity, and two booleans that represent whether each leg is in contact with the ground or not.
+    """,
+    }
+		super().__init__(algo, algo_param, prompt)
 
 	def __repr__(self):
 		return "LunarLander-v3"

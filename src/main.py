@@ -38,20 +38,20 @@ def main():
     memory.
     """
     parse_logger()
-    # env_type = LunarLander(Algo.PPO)
-    env_type = Pacman(Algo.PPO)
+     env_type = LunarLander(Algo.PPO)
+    # env_type = Pacman(Algo.PPO)
+    env_type = CartPole(Algo.PPO)
     model = 'qwen2.5-coder'
     human_feedback = False
     LoggerCSV(env_type, model)
     viral = VIRAL(
-        env_type=env_type, model=model, hf=human_feedback, training_time=5_000,
+        env_type=env_type, model=model, hf=human_feedback, training_time=30_000,
         numenvs=2, options=additional_options)
-    viral.generate_context(Prompt.PACMAN.value)
-    # viral.generate_context(Prompt.LUNAR_LANDER.value)
+    viral.generate_context(env_type.prompt)
     viral.generate_reward_function(n_init=1, n_refine=2)
     for state in viral.memory:
         viral.logger.info(state)
 
 if __name__ == "__main__":
-    for _ in range(10):
+    for _ in range(3):
         main()

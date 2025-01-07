@@ -4,9 +4,11 @@ from multiprocessing import Process, Queue
 from queue import Empty
 from time import sleep
 
+import gymnasium as gym
 import numpy as np
 from gymnasium import make
-from stable_baselines3 import PPO
+from gymnasium.wrappers import RecordVideo
+from stable_baselines3 import DQN, PPO
 from stable_baselines3.common.env_util import make_vec_env
 from stable_baselines3.common.vec_env.base_vec_env import VecEnv
 
@@ -65,7 +67,7 @@ class PolicyTrainer:
         )
         vec_env, model, numvenv = self._generate_env_model(state.reward_func, self.numenvs)
         training_callback = TrainingInfoCallback()
-        policy = model.learn(total_timesteps=self.timeout, callback=training_callback, progress_bar=True) # , progress_bar=True
+        policy = model.learn(total_timesteps=self.timeout, callback=training_callback) # , progress_bar=True
         policy.save(f"model/{self.env_name}_{state.idx}.pth")
         metrics = training_callback.get_metrics()
         #self.logger.debug(f"{state.idx} TRAINING METRICS: {metrics}")
@@ -205,7 +207,9 @@ class PolicyTrainer:
         env = make(self.env_name, render_mode='human')
         if self.algo == Algo.PPO:
             policy = PPO.load(policy_path)
-        nb_success = 1
+        elif self.algo == Algo.DQN:
+            policy = DQN.load(policy_path)
+        nb_success = 0
         for _ in range(nb_episodes):
             obs, _ = env.reset()
             done = False
@@ -213,12 +217,30 @@ class PolicyTrainer:
                 actions, _ = policy.predict(obs)
                 obs, _, term, trunc, info = env.step(actions)
                 if term or trunc:
+                    self.logger.info(info)
                     info["TimeLimit.truncated"] = trunc
                     info["terminated"] = term
                     is_success, _ = self.success_func(env, info)
                     if is_success:
                         nb_success += 1
                 done = term or trunc
+        env.close()
+
+    def test_policy_video(self, policy_path: str, nb_episodes: int = 3):
+        env = make(self.env_name, render_mode='rgb_array')
+        env = RecordVideo(
+            env, video_folder=f"records/{self.env_name}", episode_trigger=lambda e: True
+        )
+        if self.algo == Algo.PPO:
+            policy = PPO.load(policy_path)
+
+        for videos in range(nb_episodes):
+            done = truncated = False
+            obs, info = env.reset()
+            while not (done or truncated):
+                action, _states = policy.predict(obs, deterministic=True)
+                obs, reward, done, truncated, info = env.step(action)
+                env.render()
         env.close()
 
     def _generate_env_model(self, reward_func, numenvs = 2) -> tuple[VecEnv, PPO, int]:
@@ -239,8 +261,13 @@ class PolicyTrainer:
             wrapper_class=CustomRewardWrapper,
             wrapper_kwargs={"success_func": self.success_func, "llm_reward_function": reward_func},
         )
+
+        env = gym.make("highway-fast-v0", render_mode="rgb_array")
         if self.algo == Algo.PPO:
             model = PPO(env=vec_env, **self.algo_param)
+        elif self.algo == Algo.DQN:
+            # use gym.make instead of make_vec_env for DQN. gym 10min / vec_env 2h
+            model = DQN(env=env, **self.algo_param)
         else:
             raise ValueError("The learning algorithm is not implemented.")
 
