@@ -33,7 +33,8 @@ the x- and y-coordinates are returned in info with the keys "x_position" and "y_
 | 9        | angular velocity of the leg hinge                | -Inf  | Inf  | angular velocity (rad/s) |
 | 10       | angular velocity of the foot hinge               | -Inf  | Inf  | angular velocity (rad/s) |
 | excluded | x-coordinate of the torso                        | -Inf  | Inf  | position (m)        |
-"""
+""",
+		"Image": "./Environments/img/Hopper.png"
 }
 		super().__init__(algo, algo_param, prompt)
 

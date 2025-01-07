@@ -17,7 +17,8 @@ class CartPole(EnvType):
 1 Cart Velocity -Inf Inf
 2 Pole Angle ~ -0.418 rad (-24°) ~ 0.418 rad (24°)
 3 Pole Angular Velocity -Inf Inf""",
-    	}
+    	"Image": './Environments/img/CartPole.png'
+		}
 		super().__init__(algo, algo_param, prompt)
 
 	def __repr__(self):
