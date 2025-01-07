@@ -1,13 +1,14 @@
 import argparse
 from logging import getLogger
 
+from Environments import Algo, CartPole, LunarLander, Pacman, Highway
+from LLM.LLMOptions import additional_options
 from log.log_config import init_logger
 from log.LoggerCSV import LoggerCSV
 from RLAlgo.DirectSearch import DirectSearch
 from RLAlgo.Reinforce import Reinforce
-from Environments import Algo, CartPole, LunarLander, Highway
 from VIRAL import VIRAL
-from LLM.LLMOptions import additional_options
+
 
 def parse_logger():
     """
@@ -39,6 +40,7 @@ def main():
     memory.
     """
     parse_logger()
+    # env_type = LunarLander(Algo.PPO)
     env_type = Highway(Algo.DQN)
     model = 'qwen2.5-coder'
     human_feedback = True
