@@ -183,7 +183,7 @@ class PolicyTrainer:
             while not done:
                 actions, _ = policy.predict(obs)
                 obs, reward, term, trunc, info = env.step(actions)
-                print(f"info: {info}")
+                #print(f"info: {info}")
                 
                 episode_rewards += reward
                 done = trunc or term
