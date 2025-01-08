@@ -4,7 +4,6 @@ from logging import getLogger
 from Environments import Algo, CartPole, LunarLander, Pacman, Hopper, Highway
 from LLM.LLMOptions import additional_options
 from log.log_config import init_logger
-from log.LoggerCSV import LoggerCSV
 from VIRAL import VIRAL
 
 def parse_logger():
@@ -37,9 +36,8 @@ def main():
     memory.
     """
     parse_logger()
-    env_type = Highway(Algo.DQN)
+    env_type = CartPole(Algo.PPO)
     model = 'qwen2.5-coder'
-    LoggerCSV(env_type, model)
     viral = VIRAL(env_type=env_type, model=model, options=additional_options)
     viral.generate_context(env_type.prompt)
     viral.generate_reward_function(n_init=1, n_refine=2)
