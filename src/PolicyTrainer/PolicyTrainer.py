@@ -1,23 +1,22 @@
-from gymnasium import make
-from stable_baselines3 import PPO, DQN
-from gymnasium.wrappers import RecordVideo
-from stable_baselines3 import PPO
-from stable_baselines3.common.env_util import make_vec_env
-from multiprocessing import Process, Queue
+import os
 from logging import getLogger
-from time import sleep
+from multiprocessing import Process, Queue
 from queue import Empty
+from time import sleep
 
+import gymnasium as gym
+import numpy as np
+from gymnasium import make
+from gymnasium.wrappers import RecordVideo
+from stable_baselines3 import DQN, PPO
+from stable_baselines3.common.env_util import make_vec_env
 from stable_baselines3.common.vec_env.base_vec_env import VecEnv
 
+from Environments.Algo import Algo
+from Environments.EnvType import EnvType
 from PolicyTrainer.CustomRewardWrapper import CustomRewardWrapper
 from PolicyTrainer.TrainingInfoCallback import TrainingInfoCallback
 from State.State import State
-from Environments.Algo import Algo
-from Environments.EnvType import EnvType
-import gymnasium as gym
-import numpy as np
-import os
 
 
 class PolicyTrainer:
@@ -68,11 +67,12 @@ class PolicyTrainer:
         )
         vec_env, model, numvenv = self._generate_env_model(state.reward_func, self.numenvs)
         training_callback = TrainingInfoCallback()
-        policy = model.learn(total_timesteps=self.timeout, callback=training_callback) # , progress_bar=True
+        policy = model.learn(total_timesteps=self.timeout, callback=training_callback, progress_bar=True) # , progress_bar=True
         policy.save(f"model/{self.env_name}_{state.idx}.pth")
         metrics = training_callback.get_metrics()
         #self.logger.debug(f"{state.idx} TRAINING METRICS: {metrics}")
         sr_test = self.test_policy(policy)
+        print(f"SR: {sr_test}")
         objective_metric = self.objective_metric(metrics.pop('observations'))
         if objective_metric is not None:
             metrics.update(objective_metric)
@@ -174,6 +174,7 @@ class PolicyTrainer:
         """
         all_rewards = []
         nb_success = 0
+        print("jetest")
         env = make(self.env_name)
         for _ in range(nb_episodes):
             obs, _ = env.reset()
@@ -182,12 +183,16 @@ class PolicyTrainer:
             while not done:
                 actions, _ = policy.predict(obs)
                 obs, reward, term, trunc, info = env.step(actions)
+                #print(f"info: {info}")
+                
                 episode_rewards += reward
                 done = trunc or term
 
                 if done:
+                    print(f"terminated: {term}, truncated: {trunc}")
                     info["TimeLimit.truncated"] = trunc
                     info["terminated"] = term
+                    # print(f"infodsqdqsdqsds: {info}")
                     is_success, _ = self.success_func(env, info)
                     if is_success:
                         nb_success += 1
@@ -196,7 +201,7 @@ class PolicyTrainer:
         success_rate = nb_success / nb_episodes
         return success_rate
 
-    def test_policy_hf(self, policy_path: str, nb_episodes: int = 5):
+    def test_policy_hf(self, policy_path: str, nb_episodes: int = 100):
         """visualise a policy
 
         Args:
@@ -217,12 +222,15 @@ class PolicyTrainer:
                 obs, _, term, trunc, info = env.step(actions)
                 if term or trunc:
                     self.logger.info(info)
+                    print(f"terminated: {term}, truncated: {trunc}")
                     info["TimeLimit.truncated"] = trunc
                     info["terminated"] = term
+                    print(f"infodsqdqsdqsds: {info}")
                     is_success, _ = self.success_func(env, info)
                     if is_success:
                         nb_success += 1
                 done = term or trunc
+        print(f"nb_success: {nb_success/nb_episodes}")
         env.close()
 
     def test_policy_video(self, policy_path: str, nb_episodes: int = 3):
@@ -262,11 +270,13 @@ class PolicyTrainer:
         )
 
         env = gym.make("highway-fast-v0", render_mode="rgb_array")
+
+        env_w = CustomRewardWrapper(env, self.success_func, reward_func)
         if self.algo == Algo.PPO:
             model = PPO(env=vec_env, **self.algo_param)
         elif self.algo == Algo.DQN:
             # use gym.make instead of make_vec_env for DQN. gym 10min / vec_env 2h
-            model = DQN(env=env, **self.algo_param)
+            model = DQN(env=env_w, **self.algo_param)
         else:
             raise ValueError("The learning algorithm is not implemented.")
 
