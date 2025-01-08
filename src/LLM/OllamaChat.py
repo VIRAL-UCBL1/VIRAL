@@ -25,8 +25,6 @@ class OllamaChat:
         self.model = model
         self.messages: list[Dict[str, str]] = []
         self.options = options or {}
-        if 'seed' in self.options.keys():
-            self.seed = self.options.pop('seed')
         self.logger = getLogger("VIRAL")
 
         if system_prompt:
@@ -57,9 +55,6 @@ class OllamaChat:
         Returns:
             Response as string or streaming generator
         """
-        if self.seed is not None:
-            additional_options['seed'] = self.seed
-            self.seed += 1
         generation_options = {**self.options, **(additional_options or {})}
 
         payload = {
@@ -118,8 +113,6 @@ class OllamaChat:
         Returns:
             Response as string or streaming generator
         """
-        if self.seed is not None:
-            additional_options['seed'] = self.seed
         generation_options = {**self.options, **(additional_options or {})}
 
 

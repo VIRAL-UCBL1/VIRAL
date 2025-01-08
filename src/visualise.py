@@ -7,7 +7,7 @@ from log.log_config import init_logger
 from log.LoggerCSV import LoggerCSV
 from RLAlgo.DirectSearch import DirectSearch
 from RLAlgo.Reinforce import Reinforce
-from Environments import Algo, CartPole, LunarLander, Hopper
+from Environments import Algo, CartPole, LunarLander, Hopper, Highway
 from VIRAL import VIRAL
 from PolicyTrainer.PolicyTrainer import PolicyTrainer
 
@@ -43,9 +43,9 @@ def main():
     memory.
     """
     parse_logger()
-    env_type = Hopper(Algo.PPO)
+    env_type = Highway(Algo.DQN)
     p = PolicyTrainer([], env_type, 1, 2)
-    p.test_policy_hf("model/Hopper-v5_2.pth", 5)
+    p.test_policy_hf("model/highway-v0_0.pth", 5) # "model/Hopper-v5_2.pth"
     #p.test_policy_video("model/Hopper-v5_2.pth")
 
 if __name__ == "__main__":
