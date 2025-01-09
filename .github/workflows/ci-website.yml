@@ -23,6 +23,10 @@ jobs:
           python -m pip install --upgrade pip
           pip install mkdocs mkdocs-material mkdocstrings[python]
 
+      - name: Copy LICENSE to docs
+        run: |
+          cp LICENSE docs/LICENSE.md
+
       - name: Build MkDocs Site
         run: mkdocs build --config-file ./mkdocs.yml
 
