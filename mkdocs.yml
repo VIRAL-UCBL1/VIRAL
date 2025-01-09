@@ -54,7 +54,6 @@ nav:
     - Hopper: code_docs/Environments/Hopper.md
     - LunarLander: code_docs/Environments/LunarLander.md
     - Pacman: code_docs/Environments/Pacman.md
-    - Prompt: code_docs/Environments/Prompt.md
   - LLM:
     - GenCode: code_docs/LLM/GenCode.md
     - LLMOptions: code_docs/LLM/LLMOptions.md
