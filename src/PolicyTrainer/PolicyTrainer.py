@@ -72,7 +72,6 @@ class PolicyTrainer:
         metrics = training_callback.get_metrics()
         #self.logger.debug(f"{state.idx} TRAINING METRICS: {metrics}")
         sr_test = self.test_policy(policy)
-        print(f"SR: {sr_test}")
         objective_metric = self.objective_metric(metrics.pop('observations'))
         if objective_metric is not None:
             metrics.update(objective_metric)
@@ -174,7 +173,6 @@ class PolicyTrainer:
         """
         all_rewards = []
         nb_success = 0
-        print("jetest")
         env = make(self.env_name)
         for _ in range(nb_episodes):
             obs, _ = env.reset()
@@ -189,7 +187,6 @@ class PolicyTrainer:
                 done = trunc or term
 
                 if done:
-                    print(f"terminated: {term}, truncated: {trunc}")
                     info["TimeLimit.truncated"] = trunc
                     info["terminated"] = term
                     # print(f"infodsqdqsdqsds: {info}")
@@ -269,7 +266,7 @@ class PolicyTrainer:
             wrapper_kwargs={"success_func": self.success_func, "llm_reward_function": reward_func},
         )
 
-        env = gym.make("highway-fast-v0", render_mode="rgb_array")
+        env = gym.make(self.env_name, render_mode="rgb_array")
 
         env_w = CustomRewardWrapper(env, self.success_func, reward_func)
         if self.algo == Algo.PPO:

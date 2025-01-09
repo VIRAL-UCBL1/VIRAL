@@ -3,6 +3,7 @@ from logging import getLogger
 
 from Environments import EnvType
 from LLM.OllamaChat import OllamaChat
+from log.LoggerCSV import LoggerCSV
 from State.State import State
 from LLM.GenCode import GenCode
 from PolicyTrainer.PolicyTrainer import PolicyTrainer
@@ -29,7 +30,7 @@ class VIRAL:
         """
         if options.get("seed") is None:
             options["seed"] = random.randint(0, 1000000)
-
+        LoggerCSV(env_type, model)
         self.llm = OllamaChat(
             model=model,
             system_prompt=f"""
