@@ -36,12 +36,12 @@ def main():
     memory.
     """
     parse_logger()
-    env_type = LunarLander(Algo.DQN)
-    model = 'qwen2.5-coder'
-    viral = VIRAL(env_type=env_type, model=model, options=additional_options, training_time=30_000)
+    env_type = LunarLander(algo=Algo.DQN)
+    model = 'phi4'
+    viral = VIRAL(env_type=env_type, model=model, options=additional_options, training_time=40_000)
     viral.generate_context(env_type.prompt)
     viral.generate_reward_function(n_init=1, n_refine=0)
 
 if __name__ == "__main__":
-    for i in range(3):
+    for i in range(20):
         main()

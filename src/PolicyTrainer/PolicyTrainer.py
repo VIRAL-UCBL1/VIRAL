@@ -72,6 +72,7 @@ class PolicyTrainer:
         metrics = training_callback.get_metrics()
         #self.logger.debug(f"{state.idx} TRAINING METRICS: {metrics}")
         sr_test = self.test_policy(policy)
+        self.logger.info(f"state {state.idx} has finished learning with performances: {sr_test}")
         objective_metric = self.objective_metric(metrics.pop('observations'))
         if objective_metric is not None:
             metrics.update(objective_metric)
