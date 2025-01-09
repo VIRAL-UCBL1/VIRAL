@@ -30,6 +30,7 @@ class LunarLander(EnvType):
 			'policy_kwargs': {'net_arch': [256, 256]},
 			'target_update_interval': 250,
 			'train_freq': 4,
+			"tensorboard_log": "model/LunarLanderDQN/",
 		}
 
 		prompt = {
