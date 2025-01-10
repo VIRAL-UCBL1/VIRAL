@@ -123,7 +123,7 @@ class VIRAL:
             - Logging at various stages for debugging and tracking
         """
         ### INIT STAGE ###
-        for i in range(1, n_init + 1):  # TODO make it work for 4_init
+        for i in range(1, n_init + 1):
             prompt = f"""Iteration {i}/{n_init},
             {focus}
         Complete this sentence using the CONTEXT section as a guide:
@@ -141,7 +141,7 @@ class VIRAL:
         """
             self.llm.add_message(prompt)
             response = self.llm.generate_response(stream=True)
-            response = self.llm.print_Generator_and_return(response, len(self.memory)-1) #TODO if  response doesn't work the chat is stuck and regenate the same response over and over (je pensais qu'on avais fix mais apparament pas)
+            response = self.llm.print_Generator_and_return(response, len(self.memory)-1) #TODO if  response doesn't work the chat is stuck and regenate the same response over and over
             state: State = self.gen_code.get(response)
             self.memory.append(state)
             self.policy_trainer.start_learning(state.idx)

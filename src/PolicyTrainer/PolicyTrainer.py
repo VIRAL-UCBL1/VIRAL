@@ -1,4 +1,5 @@
 import os
+import uuid
 from logging import getLogger
 from log.log_config import get_log_level
 from multiprocessing import Process, Queue
@@ -31,6 +32,7 @@ class PolicyTrainer:
         self.logger = getLogger("VIRAL")
         self.progress_bar = True if get_log_level() == "DEBUG" else False
         self.memory = memory
+        self.run_id = str(uuid.uuid4())
         self.timeout = timeout
         self.numenvs = numenvs
         self.algo = env_type.algo
@@ -58,7 +60,8 @@ class PolicyTrainer:
         vec_env, model, numvenv = self._generate_env_model(state.reward_func, self.numenvs)
         training_callback = TrainingInfoCallback()
         policy = model.learn(total_timesteps=self.timeout, callback=training_callback, progress_bar=self.progress_bar)
-        policy.save(f"model/{self.env_name}_{state.idx}.pth")
+        path = f"data/model/{self.env_name}_{self.run_id}_{state.idx}.pth"
+        policy.save(path)
         metrics = training_callback.get_metrics()
         #self.logger.debug(f"{state.idx} TRAINING METRICS: {metrics}")
         sr_test = self.test_policy(policy)
@@ -67,7 +70,7 @@ class PolicyTrainer:
             metrics.update(objective_metric)
         metrics["sr"] = sr_test
         if os.name == "posix":
-            queue.put([state.idx, f"model/{self.env_name}_{state.idx}.pth", metrics])
+            queue.put([state.idx, path, metrics])
         else:
             self.memory[state.idx].set_performances(metrics)
             self.memory[state.idx].set_policy(policy)
@@ -117,9 +120,6 @@ class PolicyTrainer:
                     get = self.queue.get(block=False)
                     self.memory[get[0]].set_policy(get[1])
                     self.memory[get[0]].set_performances(get[2])
-                    self.logger.debug(
-                        f"state {get[0]} has finished learning with performances: {get[2]['sr']}"
-                    )
                     self.to_get -= 1
                 except Empty:
                     sleep(0.5)
@@ -205,7 +205,7 @@ class PolicyTrainer:
                     print(f"terminated: {term}, truncated: {trunc}")
                     info["TimeLimit.truncated"] = trunc
                     info["terminated"] = term
-                    print(f"infodsqdqsdqsds: {info}")
+                    print(f"info: {info}")
                     is_success, _ = self.success_func(env, info)
                     if is_success:
                         nb_success += 1
