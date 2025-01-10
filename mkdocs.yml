@@ -50,12 +50,17 @@ nav:
     - Algo: code_docs/Environments/Algo.md
     - CartPole: code_docs/Environments/CartPole.md
     - EnvType: code_docs/Environments/EnvType.md
+    - Highway: code_docs/Environments/Highway.md
+    - Hopper: code_docs/Environments/Hopper.md
     - LunarLander: code_docs/Environments/LunarLander.md
-    - Prompt: code_docs/Environments/Prompt.md
+    - Pacman: code_docs/Environments/Pacman.md
   - LLM:
     - GenCode: code_docs/LLM/GenCode.md
     - LLMOptions: code_docs/LLM/LLMOptions.md
     - OllamaChat: code_docs/LLM/OllamaChat.md
+  - log:
+    - log_config: code_docs/log/log_config.md
+    - LoggerCSV: code_docs/log/LoggerCSV.md
   - PolicyTrainer:
     - CustomRewardWrapper: code_docs/PolicyTrainer/CustomRewardWrapper.md
     - PolicyTrainer: code_docs/PolicyTrainer/PolicyTrainer.md
@@ -65,9 +70,6 @@ nav:
     - Reinforce: code_docs/RLAlgo/Reinforce.md
   - State:
     - State: code_docs/State/State.md
-  - log:
-    - LoggerCSV: code_docs/log/LoggerCSV.md
-    - log_config: code_docs/log/log_config.md
   - utils:
     - utils: code_docs/utils/utils.md
 - License: LICENSE.md

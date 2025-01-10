@@ -7,15 +7,19 @@ class LunarLander(EnvType):
 	def __init__(self, algo: Algo):
         # Appel du constructeur de la classe mère
 		algo_param = {
-			"policy": "MlpPolicy",
-			"verbose": 0,
-			"device": "cpu",
-			"ent_coef": 0.01,
-			"gae_lambda": 0.98,
-			"gamma": 0.999,
-			"n_epochs": 4,
-			"n_steps": 1024,
-			"normalize_advantage": False
+			'batch_size': 128,
+			'buffer_size': 50000,
+			'exploration_final_eps': 0.1,
+			'exploration_fraction': 0.12,
+			'gamma': 0.99,
+			'gradient_steps': -1,
+			'learning_rate': 0.00063,
+			'learning_starts': 0,
+			'policy': 'MlpPolicy',
+			'policy_kwargs': {'net_arch': [256, 256]},
+			'target_update_interval': 250,
+			'train_freq': 4,
+			"tensorboard_log": "model/LunarLanderDQN/",
 		}
 		# algo_param = {
 		# 	'batch_size': 128,
