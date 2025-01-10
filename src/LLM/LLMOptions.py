@@ -51,7 +51,7 @@ Args:
 """
 
 additional_options = {
-        # "temperature": 1,
+        # "temperature": 0.9,
         # "num_predict": 3, # l'impression que ça change rien a creuser
         # "mirostat" : 1,
         # "mirostat_eta" : 0.01, #gère la vitesse de réponses du model (0.1 par défaut) plus c'est petit plus c'est lent

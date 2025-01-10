@@ -11,7 +11,7 @@ class Hopper(EnvType):
 			"device": "cpu",
 			}
 		prompt = {
-        "Goal": "Control the Hopper to move in the forward direction",
+        "Goal": "Control the Hopper to move in the forward direction, take care to don't fall, make the highest jump",
         "Observation Space": """Box(-inf, inf, (11,), float64)
 
 The observation space consists of the following parts (in order):
@@ -33,6 +33,13 @@ the x- and y-coordinates are returned in info with the keys "x_position" and "y_
 | 9        | angular velocity of the leg hinge                | -Inf  | Inf  | angular velocity (rad/s) |
 | 10       | angular velocity of the foot hinge               | -Inf  | Inf  | angular velocity (rad/s) |
 | excluded | x-coordinate of the torso                        | -Inf  | Inf  | position (m)        |
+		"Action Space": The action space is a Box(-1, 1, (3,), float32). An action represents the torques applied at the hinge joints.
+| Num | Action                          | Control Min | Control Max | Name (in corresponding XML file) | Joint  | Type         |
+|-----|---------------------------------|-------------|-------------|-----------------------------------|--------|--------------|
+| 0   | Torque applied on the thigh rotor | -1          | 1           | thigh_joint                       | hinge  | torque (N m) |
+| 1   | Torque applied on the leg rotor   | -1          | 1           | leg_joint                         | hinge  | torque (N m) |
+| 2   | Torque applied on the foot rotor  | -1          | 1           | foot_joint                        | hinge  | torque (N m) |
+
 """
 }
 		super().__init__(algo, algo_param, prompt)

@@ -3,7 +3,7 @@ from logging import getLogger
 
 from stable_baselines3 import PPO
 
-from Environments import Algo, CartPole, Hopper, LunarLander, Pacman, Prompt
+from Environments import Algo, CartPole, Hopper, LunarLander, Pacman
 from LLM.LLMOptions import additional_options
 from log.log_config import init_logger
 from log.LoggerCSV import LoggerCSV
@@ -44,10 +44,10 @@ def main():
     memory.
     """
     parse_logger()
-    env_type = Highway(Algo.DQN)
+    env_type = CartPole(Algo.PPO)
     p = PolicyTrainer([], env_type, 1, 2)
-    p.test_policy_hf("model/highway-v0_0.pth", 5) # "model/Hopper-v5_2.pth"
-    #p.test_policy_video("model/Hopper-v5_2.pth")
+    # p.test_policy_hf("model/Hopper-v5_1.pth", 5) # "model/Hopper-v5_1.pth"
+    p.test_policy_video("model/CartPole-v1_1.pth")
 
 if __name__ == "__main__":
     main()
