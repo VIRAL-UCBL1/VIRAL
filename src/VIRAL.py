@@ -144,6 +144,7 @@ class VIRAL:
             response = self.llm.print_Generator_and_return(response, len(self.memory)-1) #TODO if  response doesn't work the chat is stuck and regenate the same response over and over (je pensais qu'on avais fix mais apparament pas)
             state: State = self.gen_code.get(response)
             self.memory.append(state)
+            self.policy_trainer.start_learning(state.idx)
 
         are_worsts, are_betters, threshold = self.policy_trainer.evaluate_policy(range(1, n_init + 1))
         ### SECOND STAGE ###
@@ -211,7 +212,6 @@ class VIRAL:
             reward function to refine:
             {self.memory[idx].reward_func_str}
             """
-            self.logger.debug(self.memory[idx].performances)
             if self.hf:
                 refinement_prompt = self.human_feedback(refinement_prompt, idx)
             self.llm.add_message(refinement_prompt)
@@ -219,6 +219,7 @@ class VIRAL:
             refined_response = self.llm.print_Generator_and_return(refined_response, len(self.memory) - 1)
             state = self.gen_code.get(refined_response)
             self.memory.append(state)
+            self.policy_trainer.start_learning(state.idx)
             news_idx.append(len(self.memory) - 1)
         return news_idx
 
@@ -244,5 +245,6 @@ class VIRAL:
     def test_reward_func(self, reward_func: str):
         state: State = self.gen_code.get(reward_func)
         self.memory.append(state)
+        self.policy_trainer.start_learning(state.idx)
         are_worsts, are_betters, threshold = self.policy_trainer.evaluate_policy([state.idx])
 

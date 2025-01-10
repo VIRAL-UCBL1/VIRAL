@@ -2148,3 +2148,137 @@ LunarLander-v3;phi4;"def reward_func(observations: np.ndarray, is_success: bool,
     
     # Combine rewards
     return reward_position + reward_velocity + reward_orientation + reward_legs_contact";-0.05080975941709681,-0.038108157881310306,-0.03093146581683275,-0.03116102788492154,-0.03519155005499553,-0.030173820688876717,-0.024374226282007097,-0.03121992328993748,-0.02787126827029123,-0.041735712904759664,-0.02862785005800092,-0.026474594540098737,-0.02640998894972333,-0.03421668549763223,-0.039317313215710574,-0.0361464178138294,-0.031640900124431146,-0.03333757335747675,-0.033587958611931985,-0.02721348166051695,-0.025233875547433508,-0.043785210311504466,-0.03791218523073358,-0.03337175578862325,-0.03635541818141176,-0.030044363778237045,-0.033457619050602225,-0.02694049400087005,-0.05125248067792642,-0.035493946422604485,-0.04265707065854837,-0.044991255116709,-0.05843210859184928,-0.05811813192151811,-0.243599009728046,-0.13855325145580458,-0.11314670859280565,-0.14695334525750692,-0.11646112893157921,-0.1293415427896024,-0.1886059323272957,-0.20740843330427158,-0.17786986187019463,-0.1668370300983869,-0.16316693331033089,-0.09434024108468811,-0.15999686194376406,-0.1906006053695031,-0.16395554632512824,-0.16083253145139892,-0.1615121610661166,-0.1692144931450925,-0.15671087268163084,-0.15665050602079922,-0.16041074992565335,-0.15427472943631076,-0.15263696808582433,-0.14983220203393924,-0.09525047495480603,-0.061853814550676754,-0.08336285641389118,-0.06658999963797442,-0.05552772983074769,-0.0683979330880076,-0.04401351130882814,-0.049142217215261935,-0.03645140632534482,-0.038216661781916586,-0.030184792202224236,-0.023990415747244424,-0.03131535345107785,-0.02295674804724582,-0.033309103345597786,-0.023334340864594592,-0.032279453952008645,-0.033824279714877704,-0.036875280064160604,-0.03357082775931713,-0.03136877402184671,-0.045809656989339524,-0.026753222125730603,-0.022639671048573513,-0.028036080868508954,-0.030063597805887,-0.031155818945043337,-0.02957098651774161,-0.02656917300895657,-0.023689945423551965,-0.031540336126216095,-0.02838516907805716,-0.028016110184958063,-0.028579610829449376,-0.030753162450025583,-0.030799727829044558,-0.02946963339643938,-0.03256114837712955,-0.023520888498826685,-0.030760153989244775,-0.025687304700688036,-0.031021060140226396,-0.028556838765858177,-0.030865329366811026,-0.02234416664323683,-0.025445477983009557,-0.02598966216271201,-0.026779286040684927,-0.032900336637521364,-0.035060296113573294,-0.034931738024745924,-0.027980382462723656,-0.024921150775005962,-0.029745015014784715,-0.023317768745998144,-0.02845646041924299,-0.027673274407359956,-0.025739688836953007,-0.025395340604738876,-0.02444920363083314,-0.022450451778891666,-0.024884716386592374,-0.0232230213897356,-0.025656500847937837,-0.023638577498003566,-0.02541003080404569,-0.026133081532620787,-0.029028550914762384,-0.02602460643559038,-0.02227303335598997,-0.02604619476512806,-0.025312547463919213,-0.022470420653570085,-0.03136784651507312,-0.024285575498125562,-0.024695662663337666,-0.06515501844675009,-0.023629156593631323,-0.025068800633053657,-0.025543850379013897,-0.04918512981849454,-0.023929563073021604,-0.02287572934112965,-0.023499306040711126,-0.02500283736033092,-0.029684197855746556,-0.03575373061796402,-0.05473606557427966,-0.024962217478245594,-0.029123498531988257,-0.07192310914200284,-0.04988502906506396,-0.10250181754538053,-0.026864219838749603,-0.03397370966159094,-0.10692885288417435,-0.03021958858248003,-0.027515596990627913,-0.029605075065441442,-0.03100440465534344,-0.12356596979401394,-0.03912097699165146,-0.05070057941333695,-0.11111213626202168,-0.132018412799985,-0.14418104970206835,-0.11751945698999278,-0.0444105022472253,-0.03000737733776019,-0.12548501892915875,-0.09610384379523948,-0.07831979081354845,-0.154879629695653,-0.14694532319474415,-0.02898225979244077,-0.05612173276028287,-0.02276320278491234,-0.02877434409596156,-0.026782209297214764,-0.06746724350940249,-0.04696544338985506,-0.04931154344452551;-0.05655703587667357;0.0485474741711679;0.0
+LunarLander-v3;qwen2.5-coder;"def reward_func(observations:np.ndarray, is_success:bool, is_failure:bool) -> float:
+    """"""Reward function for LunarLander-v3
+
+    Args:
+        observations (np.ndarray): observation on the current state
+        is_success (bool): True if the goal is achieved, False otherwise
+        is_failure (bool): True if the episode ends unsuccessfully, False otherwise
+
+    Returns:
+        float: The reward for the current step
+    """"""
+    x, y, vx, vy, angle, angular_v, _, _ = observations
+    
+    # Landing conditions
+    near_origin = np.abs(x) < 0.5 and np.abs(y) < 0.5
+    zero_velocity = np.abs(vx) < 0.1 and np.abs(vy) < 0.1
+    stable_angle = np.abs(angle + np.pi / 2) < 0.1
+    
+    # Reward calculation
+    if is_success:
+        return 100  # Successful landing
+    elif is_failure:
+        return -100  # Episode ended unsuccessfully
+    else:
+        reward = 0
+        if near_origin and zero_velocity and stable_angle:
+            reward += 50  # Bonus for being close to origin with low velocity and stable angle
+        if x == 0 and y == 0:
+            reward -= 1  # Penalty for touching ground without control
+        return reward";-0.4472136,-0.4472136,-0.4472136,-0.4472136,-0.4472136;-0.4472136;0.0;0.0
+LunarLander-v3;qwen2.5-coder;"def reward_func(observations:np.ndarray, is_success:bool, is_failure:bool) -> float:
+    """"""Reward function for LunarLander-v3
+
+    Args:
+        observations (np.ndarray): observation on the current state
+        is_success (bool): True if the goal is achieved, False otherwise
+        is_failure (bool): True if the episode ends unsuccessfully, False otherwise
+
+    Returns:
+        float: The reward for the current step
+    """"""
+    x, y, vx, vy, angle, angular_v, _, _ = observations
+    
+    # Landing conditions
+    near_origin = np.abs(x) < 0.5 and np.abs(y) < 0.5
+    zero_velocity = np.abs(vx) < 0.1 and np.abs(vy) < 0.1
+    stable_angle = np.abs(angle + np.pi / 2) < 0.1
+    
+    # Reward calculation
+    if is_success:
+        return 100  # Successful landing
+    elif is_failure:
+        return -100  # Episode ended unsuccessfully
+    else:
+        reward = 0
+        if near_origin and zero_velocity and stable_angle:
+            reward += 50  # Bonus for being close to origin with low velocity and stable angle
+        if x == 0 and y == 0:
+            reward -= 1  # Penalty for touching ground without control
+        return reward";-0.4472136,-0.4472136,-0.4472136,-0.4472136,-0.4472136;-0.4472136;0.0;0.0
+LunarLander-v3;qwen2.5-coder;"def reward_func(observations:np.ndarray, is_success:bool, is_failure:bool) -> float:
+    """"""Reward function for LunarLander-v3
+
+    Args:
+        observations (np.ndarray): observation on the current state
+        is_success (bool): True if the goal is achieved, False otherwise
+        is_failure (bool): True if the episode ends unsuccessfully, False otherwise
+
+    Returns:
+        float: The reward for the current step
+    """"""
+    x, y, vx, vy, angle, angular_v, _, _ = observations
+    
+    # Landing conditions
+    near_origin = np.abs(x) < 0.5 and np.abs(y) < 0.5
+    zero_velocity = np.abs(vx) < 0.1 and np.abs(vy) < 0.1
+    stable_angle = np.abs(angle + np.pi / 2) < 0.1
+    
+    # Reward calculation
+    if is_success:
+        return 100  # Successful landing
+    elif is_failure:
+        return -100  # Episode ended unsuccessfully
+    else:
+        reward = 0
+        if near_origin and zero_velocity and stable_angle:
+            reward += 50  # Bonus for being close to origin with low velocity and stable angle
+        if x == 0 and y == 0:
+            reward -= 1  # Penalty for touching ground without control
+        
+        # Additional penalty for high angular velocity
+        if np.abs(angular_v) > 0.5:
+            reward -= 2
+        
+        return reward";-0.4543261,-0.44541773,-0.44541773,-0.44541773,-0.44541773;-0.4471994;0.0035633445;0.0
+LunarLander-v3;qwen2.5-coder;"def reward_func(observations:np.ndarray, is_success:bool, is_failure:bool) -> float:
+    """"""Reward function for LunarLander-v3
+
+    Args:
+        observations (np.ndarray): observation on the current state
+        is_success (bool): True if the goal is achieved, False otherwise
+        is_failure (bool): True if the episode ends unsuccessfully, False otherwise
+
+    Returns:
+        float: The reward for the current step
+    """"""
+    x, y, vx, vy, angle, angular_v, _, _ = observations
+    
+    # Landing conditions
+    near_origin = np.abs(x) < 0.5 and np.abs(y) < 0.5
+    zero_velocity = np.abs(vx) < 0.1 and np.abs(vy) < 0.1
+    stable_angle = np.abs(angle + np.pi / 2) < 0.1
+    
+    # Reward calculation
+    if is_success:
+        return 100  # Successful landing
+    elif is_failure:
+        return -100  # Episode ended unsuccessfully
+    else:
+        reward = 0
+        if near_origin and zero_velocity and stable_angle:
+            reward += 50  # Bonus for being close to origin with low velocity and stable angle
+        if x == 0 and y == 0:
+            reward -= 1  # Penalty for touching ground without control
+        
+        # Additional penalty for high angular velocity
+        if np.abs(angular_v) > 0.5:
+            reward -= 2
+        
+        # Encourage lower altitude by adding a bonus
+        if near_origin:
+            reward += (0.5 - y) * 10
+        
+        return reward";-0.33045354,0.8676348,-0.37149754;0.055227906;0.57470274;0.0

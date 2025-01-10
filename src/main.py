@@ -37,8 +37,8 @@ def main():
     """
     parse_logger()
     env_type = LunarLander(algo=Algo.DQN)
-    model = 'phi4'
-    viral = VIRAL(env_type=env_type, model=model, options=additional_options, training_time=50_000)
+    model = 'qwen2.5-coder'
+    viral = VIRAL(env_type=env_type, model=model, options=additional_options, training_time=500)
     viral.generate_context(env_type.prompt)
     viral.generate_reward_function(n_init=2, n_refine=1)
 

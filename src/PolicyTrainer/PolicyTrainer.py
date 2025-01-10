@@ -37,23 +37,12 @@ class PolicyTrainer:
         self.objective_metric = env_type.objective_metric
         self.env_name = str(env_type)
         self.success_func = env_type.success_func
+        self.to_join: list = []
+        self.queue = Queue()
+        self.multi_process: list[Process] = []
+        self.to_get = 0
         if len(self.memory) > 0:
-            if os.name == "posix":
-                self.queue = Queue()
-                self.multi_process: list[Process] = []
-                self.multi_process.append(
-                    Process(
-                        target=self._learning,
-                        args=(
-                            self.memory[0],
-                            self.queue,
-                        ),
-                    )
-                )
-                self.multi_process[0].start()
-                self.to_get = 1
-            else:
-                self._learning(self.memory[0])
+            self.start_learning(0)
 
     def _learning(self, state: State, queue: Queue = None) -> None:
         """train a policy on an environment
@@ -72,7 +61,6 @@ class PolicyTrainer:
         metrics = training_callback.get_metrics()
         #self.logger.debug(f"{state.idx} TRAINING METRICS: {metrics}")
         sr_test = self.test_policy(policy)
-        self.logger.info(f"state {state.idx} has finished learning with performances: {sr_test}")
         objective_metric = self.objective_metric(metrics.pop('observations'))
         if objective_metric is not None:
             metrics.update(objective_metric)
@@ -82,9 +70,26 @@ class PolicyTrainer:
         else:
             self.memory[state.idx].set_performances(metrics)
             self.memory[state.idx].set_policy(policy)
-        self.logger.debug(
-                f"state {state.idx} has finished learning"
+        self.logger.info(f"state {state.idx} has finished learning with performances: {sr_test}")
+
+
+    def start_learning(self, idx: int) -> None:
+        if os.name == "posix":
+            self._start_proccess_learning(idx)
+        else:
+            self._learning(self.memory[idx])
+
+    def _start_proccess_learning(self, idx: int) -> None:
+        assert (os.name == "posix"), "multi-proccess features only available on LINUX system..."
+        if self.memory[idx].policy is None:
+            self.multi_process.append(
+                Process(
+                    target=self._learning, args=(self.memory[idx], self.queue)
+                )
             )
+            self.to_join.append(idx)
+            self.multi_process[-1].start()
+            self.to_get += 1
 
     def evaluate_policy(self, list_idx: list[int]) -> tuple[list[int], list[int], float]:
         """
@@ -97,21 +102,15 @@ class PolicyTrainer:
         Returns:
             Dict: Performance metrics for multiple reward functions
         """
-        if os.name == "posix":
-            if len(self.memory) < 2:
-                self.logger.warning("At least two reward functions are required.")
-            to_join: list = []
-            for i in list_idx:
-                if self.memory[i].policy is None:
-                    self.multi_process.append(
-                        Process(
-                            target=self._learning, args=(self.memory[i], self.queue)
-                        )
-                    )
-                    self.multi_process[-1].start()
-                    self.to_get += 1
-                    to_join.append(len(self.multi_process) - 1)
+        if len(self.memory) < 2:
+            self.logger.warning("At least two reward functions are required.")
 
+        for i in list_idx:
+            if self.memory[i].policy is None and i not in self.to_join:
+                self.logger.error("Need to start_learning before evaluate him")
+                raise RuntimeError
+
+        if os.name == "posix": # waiting proccess
             while self.to_get != 0:
                 try:
                     get = self.queue.get(block=False)
@@ -124,37 +123,19 @@ class PolicyTrainer:
                 except Empty:
                     sleep(0.5)
 
-            for p in to_join:
+            for p in self.to_join:
                 self.multi_process[p].join()
 
-            are_worsts: list[int] = []
-            are_betters: list[int] = []
-            threshold: float = self.memory[0].performances["sr"]
-            self.logger.info(f"the threshold is {threshold}")
-            for i in list_idx:
-                if threshold > self.memory[i].performances["sr"]:
-                    are_worsts.append(i)
-                else:
-                    are_betters.append(i)
-            return are_worsts, are_betters, threshold
-
-        else:
-            if len(self.memory) < 2:
-                self.logger.error("At least two reward functions are required.")
-            for i in list_idx:
-                if self.memory[i].performances is None:
-                    self._learning(self.memory[i])
-            
-            are_worsts: list[int] = []
-            are_betters: list[int] = []
-            threshold: float = self.memory[0].performances["sr"]
-            self.logger.info(f"the threshold is {threshold}")
-            for i in list_idx:
-                if threshold > self.memory[i].performances["sr"]:
-                    are_worsts.append(i)
-                else:
-                    are_betters.append(i)
-            return are_worsts, are_betters, threshold
+        are_worsts: list[int] = []
+        are_betters: list[int] = []
+        threshold: float = self.memory[0].performances["sr"]
+        self.logger.info(f"the threshold is {threshold}")
+        for i in list_idx:
+            if threshold > self.memory[i].performances["sr"]:
+                are_worsts.append(i)
+            else:
+                are_betters.append(i)
+        return are_worsts, are_betters, threshold
 
     def test_policy(
         self,
