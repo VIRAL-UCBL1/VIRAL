@@ -170,7 +170,7 @@ class OllamaChat:
             The original response if it is a string, or the concatenated string of all chunks 
             if it was a generator.
         """
-        self.logger.debug(f"Response {number}:")
+        self.logger.info(f"Response {number}:")
         if isinstance(response, Generator):
             response_gen = response
             response = ""

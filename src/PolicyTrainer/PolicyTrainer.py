@@ -1,11 +1,11 @@
 import os
 from logging import getLogger
+from log.log_config import get_log_level
 from multiprocessing import Process, Queue
 from queue import Empty
 from time import sleep
 
 import gymnasium as gym
-import numpy as np
 from gymnasium import make
 from gymnasium.wrappers import RecordVideo
 from stable_baselines3 import DQN, PPO
@@ -29,6 +29,7 @@ class PolicyTrainer:
             timeout (int): for the model.learn()
         """
         self.logger = getLogger("VIRAL")
+        self.progress_bar = True if get_log_level() == "DEBUG" else False
         self.memory = memory
         self.timeout = timeout
         self.numenvs = numenvs
@@ -56,7 +57,7 @@ class PolicyTrainer:
         )
         vec_env, model, numvenv = self._generate_env_model(state.reward_func, self.numenvs)
         training_callback = TrainingInfoCallback()
-        policy = model.learn(total_timesteps=self.timeout, callback=training_callback, progress_bar=True) # , progress_bar=True
+        policy = model.learn(total_timesteps=self.timeout, callback=training_callback, progress_bar=self.progress_bar)
         policy.save(f"model/{self.env_name}_{state.idx}.pth")
         metrics = training_callback.get_metrics()
         #self.logger.debug(f"{state.idx} TRAINING METRICS: {metrics}")

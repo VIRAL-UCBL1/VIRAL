@@ -23,7 +23,7 @@ def parse_logger():
         init_logger("DEBUG")
         print("Verbose mode enabled")
     else:
-        init_logger("DEBUG")
+        init_logger()
 
     return getLogger()
 

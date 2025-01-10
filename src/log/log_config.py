@@ -1,13 +1,15 @@
 from logging.config import dictConfig
 import logging
 
+LOG_LEVEL: str = ""
+
 def init_logger(
         log_level : str ="INFO", 
         log_file : str ='log/log.txt'):
     """Function that init the logger object that's properly setup"""
-    
+    global LOG_LEVEL
+    LOG_LEVEL = log_level
     LOG_FILE: str = log_file
-    LOG_LEVEL: str = log_level
     FORMAT: str = "\n%(asctime)s %(filename)s:%(lineno)d %(levelprefix)s\n\t%(message)s"
 
     class CustomFormatter(logging.Formatter):
@@ -73,3 +75,6 @@ def init_logger(
         },
     }
     dictConfig(logging_config)
+
+def get_log_level():
+    return LOG_LEVEL
