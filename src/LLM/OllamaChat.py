@@ -64,8 +64,16 @@ class OllamaChat:
             "options": generation_options,
         }
 
+        proxies = {
+            "http": "socks5h://localhost:1080",
+            "https": "socks5h://localhost:1080",
+        }
+
         try:
-            response = requests.post(OLLAMA_CHAT_API_URL, json=payload, stream=stream)
+            response = requests.post(
+                OLLAMA_CHAT_API_URL, json=payload, stream=stream, proxies=proxies
+            )
+            print(response.json())
 
             response.raise_for_status()
             if not stream:
@@ -95,11 +103,13 @@ class OllamaChat:
         except requests.exceptions.RequestException as e:
             self.logger.error(f"Connection error: {e}")
             return ""
-    
-    def generate_simple_response(self,
-            prompt: str,
-            sys_prompt: str = None,
-            stream: bool = False, additional_options: Optional[Dict] = {}
+
+    def generate_simple_response(
+        self,
+        prompt: str,
+        sys_prompt: str = None,
+        stream: bool = False,
+        additional_options: Optional[Dict] = {},
     ):
         """
         Generate a simple response without historic.
@@ -115,7 +125,6 @@ class OllamaChat:
         """
         generation_options = {**self.options, **(additional_options or {})}
 
-
         payload = {
             "model": self.model,
             "prompt": prompt,
@@ -124,8 +133,15 @@ class OllamaChat:
             "options": generation_options,
         }
 
+        proxies = {
+            "http": "socks5h://localhost:1080",
+            "https": "socks5h://localhost:1080",
+        }
+
         try:
-            response = requests.post(OLLAMA_API_URL, json=payload, stream=stream)
+            response = requests.post(
+                OLLAMA_API_URL, json=payload, stream=stream, proxies=proxies
+            )
 
             response.raise_for_status()
             if not stream:
@@ -156,18 +172,20 @@ class OllamaChat:
             self.logger.error(f"Connection error: {e}")
             return ""
 
-    def print_Generator_and_return(self, response: Generator | str, number: int = 1) -> str:
+    def print_Generator_and_return(
+        self, response: Generator | str, number: int = 1
+    ) -> str:
         """
         Prints the content of a response if it is a generator, or simply returns the response as is.
 
         Args:
-            response (Generator | str): The response to print or return. If it's a generator, 
-                                        it will be printed chunk by chunk. If it's a string, 
+            response (Generator | str): The response to print or return. If it's a generator,
+                                        it will be printed chunk by chunk. If it's a string,
                                         it will be returned directly.
             number (int, optional): The index of the response (default is 1). Used for logging purposes.
 
         Returns:
-            The original response if it is a string, or the concatenated string of all chunks 
+            The original response if it is a string, or the concatenated string of all chunks
             if it was a generator.
         """
         self.logger.info(f"Response {number}:")
@@ -182,9 +200,9 @@ class OllamaChat:
 
 def main():
     chat = OllamaChat(
-        model="qwen2.5-coder",
+        model="llama2:13b",
         system_prompt="""
-        You are an expert in Reinforcement Learning specialized in designing reward functions. 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
         Strict criteria:
         - Provide ONLY the reward function code
         - Use Python format
@@ -194,8 +212,6 @@ def main():
         - STOP immediately after closing the ``` code block
         """,
         options={
-            "temperature": 0.2,
-            "max_tokens": 300,
         },
     )
 
