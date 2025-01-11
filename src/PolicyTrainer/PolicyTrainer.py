@@ -249,11 +249,11 @@ class PolicyTrainer:
             wrapper_kwargs={"success_func": self.success_func, "llm_reward_function": reward_func},
         )
 
-        env = gym.make(self.env_name, render_mode="rgb_array")
+        env = gym.make(self.env_name)
 
         env_w = CustomRewardWrapper(env, self.success_func, reward_func)
         if self.algo == Algo.PPO:
-            model = PPO(env=vec_env, **self.algo_param)
+            model = PPO(env=env_w, **self.algo_param)
         elif self.algo == Algo.DQN:
             # use gym.make instead of make_vec_env for DQN. gym 10min / vec_env 2h
             model = DQN(env=env_w, **self.algo_param)

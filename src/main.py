@@ -37,7 +37,7 @@ def main():
     """
     parse_logger()
     env_type = CartPole(algo=Algo.PPO)
-    model = 'qwen2.5-coder'
+    model = 'mixtral'
     viral = VIRAL(env_type=env_type, model=model, options=additional_options, training_time=25_000)
     viral.generate_context(env_type.prompt)
     viral.generate_reward_function(n_init=1, n_refine=1)
