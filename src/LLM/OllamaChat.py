@@ -7,6 +7,7 @@ from logging import getLogger
 OLLAMA_CHAT_API_URL = "http://localhost:11434/api/chat"
 OLLAMA_API_URL = "http://localhost:11434/api/generate"
 
+
 class OllamaChat:
     def __init__(
         self,
@@ -64,16 +65,8 @@ class OllamaChat:
             "options": generation_options,
         }
 
-        proxies = {
-            "http": "socks5h://localhost:1080",
-            "https": "socks5h://localhost:1080",
-        }
-
         try:
-            response = requests.post(
-                OLLAMA_CHAT_API_URL, json=payload, stream=stream, proxies=proxies
-            )
-            print(response.json())
+            response = requests.post(OLLAMA_CHAT_API_URL, json=payload, stream=stream)
 
             response.raise_for_status()
             if not stream:
@@ -133,15 +126,8 @@ class OllamaChat:
             "options": generation_options,
         }
 
-        proxies = {
-            "http": "socks5h://localhost:1080",
-            "https": "socks5h://localhost:1080",
-        }
-
         try:
-            response = requests.post(
-                OLLAMA_API_URL, json=payload, stream=stream, proxies=proxies
-            )
+            response = requests.post(OLLAMA_API_URL, json=payload, stream=stream)
 
             response.raise_for_status()
             if not stream:
@@ -200,9 +186,9 @@ class OllamaChat:
 
 def main():
     chat = OllamaChat(
-        model="llama2:13b",
+        model="qwen2.5-coder",
         system_prompt="""
-        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        You are an expert in Reinforcement Learning specialized in designing reward functions. 
         Strict criteria:
         - Provide ONLY the reward function code
         - Use Python format
@@ -212,6 +198,8 @@ def main():
         - STOP immediately after closing the ``` code block
         """,
         options={
+            "temperature": 0.2,
+            "max_tokens": 300,
         },
     )
 
