@@ -4,7 +4,7 @@ from logging import getLogger
 from stable_baselines3 import PPO
 
 from Environments import Algo, CartPole, Hopper, LunarLander, Pacman
-from LLM.LLMOptions import additional_options
+from LLM.LLMOptions import llm_options
 from log.log_config import init_logger
 from log.LoggerCSV import LoggerCSV
 from PolicyTrainer.PolicyTrainer import PolicyTrainer

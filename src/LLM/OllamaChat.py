@@ -44,19 +44,19 @@ class OllamaChat:
         self.messages.append(message)
 
     def generate_response(
-        self, stream: bool = False, additional_options: Optional[Dict] = {}
+        self, stream: bool = False, llm_options: Optional[Dict] = {}
     ) -> Union[str, Generator]:
         """
         Generate a response with advanced configuration options.
 
         Args:
             stream (bool, optional): Stream response in real-time
-            additional_options (dict, optional): Temporary generation options
+            llm_options (dict, optional): Temporary generation options
 
         Returns:
             Response as string or streaming generator
         """
-        generation_options = {**self.options, **(additional_options or {})}
+        generation_options = {**self.options, **(llm_options or {})}
 
         payload = {
             "model": self.model,
@@ -102,7 +102,7 @@ class OllamaChat:
         prompt: str,
         sys_prompt: str = None,
         stream: bool = False,
-        additional_options: Optional[Dict] = {},
+        llm_options: Optional[Dict] = {},
     ):
         """
         Generate a simple response without historic.
@@ -111,12 +111,12 @@ class OllamaChat:
             prompt (str): user prompt
             sys_prompt (str, optional): system prompt
             stream (bool, optional): Stream response in real-time
-            additional_options (dict, optional): Temporary generation options
+            llm_options (dict, optional): Temporary generation options
 
         Returns:
             Response as string or streaming generator
         """
-        generation_options = {**self.options, **(additional_options or {})}
+        generation_options = {**self.options, **(llm_options or {})}
 
         payload = {
             "model": self.model,

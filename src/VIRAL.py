@@ -16,7 +16,7 @@ class VIRAL:
         model: str,
         hf: bool = False,
         training_time: int = 25000,
-        numenvs: int = 2,
+        nb_vec_envs: int = 1,
         legacy_training: bool = True,
         options: dict = {},
     ):
@@ -53,7 +53,7 @@ class VIRAL:
         self.logger = getLogger("VIRAL")
         self.memory: list[State] = [State(0)]
         self.policy_trainer: PolicyTrainer = PolicyTrainer(
-            self.memory, self.env_type, timeout=training_time, numenvs=numenvs, legacy_training=legacy_training
+            self.memory, self.env_type, timeout=training_time, nb_vec_envs=nb_vec_envs, legacy_training=legacy_training
         )
 
     def generate_context(self, prompt_info: dict):

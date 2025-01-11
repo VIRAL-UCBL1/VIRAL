@@ -50,7 +50,7 @@ Args:
         (default: 0.0). 
 """
 
-additional_options = {
+llm_options = {
         # "temperature": 0.9,
         # "num_predict": 3, # l'impression que ça change rien a creuser
         # "mirostat" : 1,

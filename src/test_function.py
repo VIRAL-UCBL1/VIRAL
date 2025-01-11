@@ -7,7 +7,7 @@ from RLAlgo.DirectSearch import DirectSearch
 from RLAlgo.Reinforce import Reinforce
 from Environments import Algo, CartPole, LunarLander, Hopper
 from VIRAL import VIRAL
-from LLM.LLMOptions import additional_options
+from LLM.LLMOptions import llm_options
 
 def parse_logger():
     """
@@ -42,7 +42,7 @@ def main():
     human_feedback = True
     LoggerCSV(env_type, model)
     viral = VIRAL(
-        env_type=env_type, model=model, hf=human_feedback, training_time=30_000, numenvs=2, options=additional_options)
+        env_type=env_type, model=model, hf=human_feedback, training_time=30_000, numenvs=2, options=llm_options)
     viral.test_reward_func("""
 def reward_func(observations:np.ndarray, is_success:bool, is_failure:bool) -> float:    
     x, x_dot, theta, theta_dot = observations

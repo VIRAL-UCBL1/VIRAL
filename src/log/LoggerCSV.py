@@ -4,7 +4,7 @@ import re
 from logging import getLogger
 
 from Environments import EnvType
-from LLM.LLMOptions import additional_options
+from LLM.LLMOptions import llm_options
 
 def getLoggerCSV():
     """Retrieve the instance of the CSV logger.
@@ -82,7 +82,7 @@ class LoggerCSV:
                     state.policy,
                     self.env_type,
                     self.llm,
-                    additional_options,
+                    llm_options,
                     self.env_type.algo.value,
                     self.env_type.algo_param,
                     state.reward_func_str,

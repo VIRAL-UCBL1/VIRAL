@@ -21,7 +21,7 @@ from State.State import State
 
 
 class PolicyTrainer:
-    def __init__(self, memory: list[State], env_type: EnvType, timeout: int, numenvs: int, legacy_training: bool):
+    def __init__(self, memory: list[State], env_type: EnvType, timeout: int, nb_vec_envs: int, legacy_training: bool):
         """initialise the policy trainer
 
         Args:
@@ -34,7 +34,7 @@ class PolicyTrainer:
         self.memory = memory
         self.run_id = str(uuid.uuid4())
         self.timeout = timeout
-        self.numenvs = numenvs
+        self.nb_vec_envs = nb_vec_envs
         self.algo = env_type.algo
         self.algo_param = env_type.algo_param
         self.objective_metric = env_type.objective_metric
@@ -58,7 +58,7 @@ class PolicyTrainer:
         self.logger.info(
             f"state {state.idx} begin is learning"
         )
-        vec_env, model, numvenv = self._generate_env_model(state.reward_func, self.numenvs)
+        model = self._generate_env_model(state.reward_func)
         training_callback = TrainingInfoCallback()
         policy = model.learn(total_timesteps=self.timeout, callback=training_callback, progress_bar=self.progress_bar)
         path = f"data/model/{self.env_name}_{self.run_id}_{state.idx}.pth"
@@ -235,7 +235,7 @@ class PolicyTrainer:
                 env.render()
         env.close()
 
-    def _generate_env_model(self, reward_func, numenvs = 2) -> tuple[VecEnv, PPO, int]:
+    def _generate_env_model(self, reward_func) -> tuple[VecEnv, PPO, int]:
         """Generate the environment model
 
         Args:
@@ -247,22 +247,22 @@ class PolicyTrainer:
         Returns:
             tuple[VecEnv, PPO, int]: the envs, the model, the number of envs
         """
-        vec_env = make_vec_env(
-            self.env_name,
-            n_envs=numenvs,
-            wrapper_class=CustomRewardWrapper,
-            wrapper_kwargs={"success_func": self.success_func, "llm_reward_function": reward_func},
-        )
-
-        env = gym.make(self.env_name)
-
-        env_w = CustomRewardWrapper(env, self.success_func, reward_func)
+        if self.nb_vec_envs == 1:
+            env = gym.make(self.env_name)
+            env = CustomRewardWrapper(env, self.success_func, reward_func)
+        else:
+            env = make_vec_env(
+                self.env_name,
+                n_envs=self.nb_vec_envs,
+                wrapper_class=CustomRewardWrapper,
+                wrapper_kwargs={"success_func": self.success_func, "llm_reward_function": reward_func},
+            )
         if self.algo == Algo.PPO:
-            model = PPO(env=env_w, **self.algo_param)
+            model = PPO(env=env, **self.algo_param)
         elif self.algo == Algo.DQN:
             # use gym.make instead of make_vec_env for DQN. gym 10min / vec_env 2h
-            model = DQN(env=env_w, **self.algo_param)
+            model = DQN(env=env, **self.algo_param)
         else:
             raise ValueError("The learning algorithm is not implemented.")
 
-        return vec_env, model, numenvs
+        return model

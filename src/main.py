@@ -2,7 +2,7 @@ import argparse
 from logging import getLogger
 
 from Environments import Algo, CartPole, LunarLander, Pacman, Hopper, Highway
-from LLM.LLMOptions import additional_options
+from LLM.LLMOptions import llm_options
 from log.log_config import init_logger
 from VIRAL import VIRAL
 
@@ -38,7 +38,7 @@ def main():
     parse_logger()
     env_type = CartPole(algo=Algo.PPO)
     model = 'qwen2.5-coder'
-    viral = VIRAL(env_type=env_type, model=model, options=additional_options, training_time=20_000, legacy_training=False)
+    viral = VIRAL(env_type=env_type, model=model, options=llm_options, training_time=20_000, legacy_training=False)
     viral.generate_context(env_type.prompt)
     viral.generate_reward_function(n_init=1, n_refine=1)
 
