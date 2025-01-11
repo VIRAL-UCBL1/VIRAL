@@ -31,7 +31,7 @@ class VIRAL:
         """
         if options.get("seed") is None:
             options["seed"] = random.randint(0, 1000000)
-        LoggerCSV(env_type, model)
+        LoggerCSV(env_type, model, training_time)
         self.llm = OllamaChat(
             model=model,
             system_prompt=f"""
@@ -53,7 +53,7 @@ class VIRAL:
         self.logger = getLogger("VIRAL")
         self.memory: list[State] = [State(0)]
         self.policy_trainer: PolicyTrainer = PolicyTrainer(
-            self.memory, self.env_type, timeout=training_time, nb_vec_envs=nb_vec_envs, legacy_training=legacy_training
+            self.memory, options['seed'], self.env_type, timeout=training_time, nb_vec_envs=nb_vec_envs, legacy_training=legacy_training
         )
 
     def generate_context(self, prompt_info: dict):

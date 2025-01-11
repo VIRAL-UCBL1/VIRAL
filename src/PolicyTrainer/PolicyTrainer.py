@@ -21,7 +21,7 @@ from State.State import State
 
 
 class PolicyTrainer:
-    def __init__(self, memory: list[State], env_type: EnvType, timeout: int, nb_vec_envs: int, legacy_training: bool):
+    def __init__(self, memory: list[State], seed: int, env_type: EnvType, timeout: int, nb_vec_envs: int, legacy_training: bool):
         """initialise the policy trainer
 
         Args:
@@ -32,10 +32,11 @@ class PolicyTrainer:
         self.logger = getLogger("VIRAL")
         self.progress_bar = True if get_log_level() == "DEBUG" else False
         self.memory = memory
-        self.run_id = str(uuid.uuid4())
         self.timeout = timeout
         self.nb_vec_envs = nb_vec_envs
         self.algo = env_type.algo
+        self.seed = seed
+        env_type.algo_param.update({'seed': seed})
         self.algo_param = env_type.algo_param
         self.objective_metric = env_type.objective_metric
         self.env_name = str(env_type)
@@ -61,7 +62,7 @@ class PolicyTrainer:
         model = self._generate_env_model(state.reward_func)
         training_callback = TrainingInfoCallback()
         policy = model.learn(total_timesteps=self.timeout, callback=training_callback, progress_bar=self.progress_bar)
-        path = f"data/model/{self.env_name}_{self.run_id}_{state.idx}.pth"
+        path = f"data/model/{self.env_name}_{self.seed}_{state.idx}.pth"
         policy.save(path)
         metrics = training_callback.get_metrics()
         #self.logger.debug(f"{state.idx} TRAINING METRICS: {metrics}")
