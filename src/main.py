@@ -37,12 +37,12 @@ def main():
     """
     parse_logger()
     env_type = CartPole(algo=Algo.PPO)
-    model = 'mixtral'
-    viral = VIRAL(env_type=env_type, model=model, options=additional_options, training_time=25_000)
+    model = 'qwen2.5-coder'
+    viral = VIRAL(env_type=env_type, model=model, options=additional_options, training_time=20_000, legacy_training=False)
     viral.generate_context(env_type.prompt)
     viral.generate_reward_function(n_init=1, n_refine=1)
 
 
 if __name__ == "__main__":
-    for i in range(10):
+    for i in range(1):
         main()

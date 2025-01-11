@@ -21,7 +21,7 @@ from State.State import State
 
 
 class PolicyTrainer:
-    def __init__(self, memory: list[State], env_type: EnvType, timeout: int, numenvs):
+    def __init__(self, memory: list[State], env_type: EnvType, timeout: int, numenvs: int, legacy_training: bool):
         """initialise the policy trainer
 
         Args:
@@ -44,7 +44,8 @@ class PolicyTrainer:
         self.queue = Queue()
         self.multi_process: list[Process] = []
         self.to_get = 0
-        if len(self.memory) > 0:
+        self.legacy_training = legacy_training
+        if len(self.memory) > 0 and self.legacy_training:
             self.start_learning(0)
 
     def _learning(self, state: State, queue: Queue = None) -> None:
@@ -125,11 +126,15 @@ class PolicyTrainer:
                     sleep(0.5)
 
             for p in self.to_join:
+                p = p if self.legacy_training else p-1 # Corresponding idx if not inital training
                 self.multi_process[p].join()
 
         are_worsts: list[int] = []
         are_betters: list[int] = []
-        threshold: float = self.memory[0].performances["sr"]
+        if self.legacy_training:
+            threshold: float = self.memory[0].performances["sr"]
+        else:
+            threshold: float = 0.9
         self.logger.info(f"the threshold is {threshold}")
         for i in list_idx:
             if threshold > self.memory[i].performances["sr"]:
