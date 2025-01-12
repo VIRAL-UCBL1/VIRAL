@@ -10,47 +10,39 @@ from .EnvType import EnvType
 
 
 class Pacman(EnvType):
-    def __init__(self, algo: Algo):
-        # Appel du constructeur de la classe mère
-        algo_param = {
-			"policy": "MlpPolicy",
-			"verbose": 0,
-			"device": "cpu",
-			}
-        prompt = {
-        "Goal": "Collect all food items and avoid ghosts unless a Power Pellet is consumed, enabling Pacman to eat ghosts.",
-        "Observation Space": """
+    def __init__(
+        self,
+        algo: Algo = Algo.DQN,
+        algo_param: dict = {
+            "policy": "MlpPolicy",
+            "verbose": 0,
+            "device": "cpu",
+        },
+        prompt: dict | str = {
+            "Goal": "Collect all food items and avoid ghosts unless a Power Pellet is consumed, enabling Pacman to eat ghosts.",
+            "Observation Space": """
     Type              Shape               Description
     rgb               Box(0, 255, (210, 160, 3), uint8)  Full-color 3D representation of the environment
     grayscale         Box(0, 255, (210, 160), uint8)     Grayscale version of the visual environment
     ram               Box(0, 255, (128,), uint8)         RAM representation of the game state
     """,
-    }
+        },
+    ) -> None:
+        try:
+            rom_path = pkg_resources.resource_filename("AutoROM", "roms/pacman.bin")
+
+            if not os.path.exists(rom_path):
+                raise FileNotFoundError(f"ROM file not found at {rom_path}")
+            ale = ALEInterface()
+            ale.loadROM(rom_path)
+        except FileNotFoundError as e:
+            print(str(e))
+        except Exception as e:
+            print(f"An error occurred: {e}")
         super().__init__(algo, algo_param, prompt)
 
     def __repr__(self):
-        # Chercher automatiquement le chemin d'installation des ROMs
-        try:
-            # Utiliser pkg_resources pour trouver le chemin du package AutoROM
-            rom_path = pkg_resources.resource_filename('AutoROM', 'roms/pacman.bin')
-            
-            # Vérifier si le fichier existe
-            if not os.path.exists(rom_path):
-                raise FileNotFoundError(f"ROM file not found at {rom_path}")
-
-            # Initialiser l'interface ALE
-            ale = ALEInterface()
-
-            # Charger la ROM spécifique à Pac-Man
-            ale.loadROM(rom_path)
-
-            # Retourner le nom de l'environnement
-            return "ALE/Pacman-v5"
-        
-        except FileNotFoundError as e:
-            return str(e)  # Renvoie l'erreur si la ROM n'est pas trouvée
-        except Exception as e:
-            return f"An error occurred: {e}"
+        return "ALE/Pacman-v5"
 
     def success_func(self, env: gym.Env, info: dict) -> tuple[bool, bool]:
         """
@@ -78,23 +70,4 @@ class Pacman(EnvType):
         Returns:
             list : Liste de dictionnaires contenant les noms et valeurs des métriques.
         """
-        # Exemple de calcul de métriques basées sur les états
-        score = 0
-        for state in states:
-            # Supposons que 'state' soit une observation de l'environnement
-            # et que vous ayez une méthode pour extraire le score actuel
-            score += self.extract_score_from_state(state)
-
-        average_score = score / len(states) if states else 0
-
-        result = [
-            {"average_score": average_score},
-            # Ajoutez d'autres métriques si nécessaire
-        ]
-
-        return result
-
-
-
-
-
+        pass  # TODO

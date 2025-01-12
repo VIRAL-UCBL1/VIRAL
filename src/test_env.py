@@ -1,13 +1,14 @@
 import argparse
 from logging import getLogger
 
+from Environments import Algo, CartPole, LunarLander, Pacman, Highway
+from LLM.LLMOptions import llm_options
 from log.log_config import init_logger
 from log.LoggerCSV import LoggerCSV
 from RLAlgo.DirectSearch import DirectSearch
 from RLAlgo.Reinforce import Reinforce
-from Environments import Algo, CartPole, LunarLander, Highway
 from VIRAL import VIRAL
-from LLM.LLMOptions import additional_options
+
 
 def parse_logger():
     """
@@ -39,12 +40,13 @@ def main():
     memory.
     """
     parse_logger()
+    # env_type = LunarLander(Algo.PPO)
     env_type = Highway(Algo.DQN)
     model = 'qwen2.5-coder'
     human_feedback = True
     LoggerCSV(env_type, model)
     viral = VIRAL(
-        env_type=env_type, model=model, hf=human_feedback, training_time=int(2e4), numenvs=1, options=additional_options)
+        env_type=env_type, model=model, hf=human_feedback, training_time=int(20_000), numenvs=1, options=llm_options)
     are_worsts, are_betters, threshold = viral.policy_trainer.evaluate_policy([])
     viral.policy_trainer.test_policy_hf("model/highway-v0_0.pth", 5)
     for state in viral.memory:

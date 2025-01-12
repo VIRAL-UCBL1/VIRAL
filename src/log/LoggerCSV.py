@@ -4,7 +4,7 @@ import re
 from logging import getLogger
 
 from Environments import EnvType
-
+from LLM.LLMOptions import llm_options
 
 def getLoggerCSV():
     """Retrieve the instance of the CSV logger.
@@ -29,7 +29,7 @@ class LoggerCSV:
     """
     _instance = None  # singleton
 
-    def __new__(cls, env_type: EnvType, llm: str):
+    def __new__(cls, env_type: EnvType, llm: str, total_timesteps: int):
         """Create a new instance of LoggerCSV.
 
         Args:
@@ -44,7 +44,7 @@ class LoggerCSV:
             cls._instance._initialized = False
         return cls._instance
 
-    def __init__(self, env_type: EnvType, llm: str):
+    def __init__(self, env_type: EnvType, llm: str, total_timesteps: int):
         """Initialize the LoggerCSV instance.
 
         Args:
@@ -53,10 +53,11 @@ class LoggerCSV:
         """
         if self._initialized:
             return
+        self.total_timesteps = total_timesteps
         self.env_type = env_type
         safe_env_type = re.sub(r'[^a-zA-Z0-9_]', '_', str(env_type))
         self.llm = llm
-        self.csv_file = f"log/{safe_env_type}_log.csv"
+        self.csv_file = f"data/{safe_env_type}_log.csv"
         self.logger = getLogger("VIRAL")
         self._initialized = True
 
@@ -74,13 +75,18 @@ class LoggerCSV:
             raise ValueError(f"State {state.idx} is not completed")
         if not os.path.exists(self.csv_file):
             with open(self.csv_file, "w") as file:
-                file.write("env;llm;reward_function;rewards;mean_reward;std_reward;SR\n")
+                file.write("path;env;llm;llm_param;algo;algo_param;total_timesteps;reward_function;rewards;mean_reward;std_reward;sr\n")
         with open(self.csv_file, "a", newline="") as csvfile:
             spamwriter = csv.writer(csvfile, delimiter=";")
             spamwriter.writerow(
                 [
+                    state.policy,
                     self.env_type,
                     self.llm,
+                    llm_options,
+                    self.env_type.algo.value,
+                    self.env_type.algo_param,
+                    self.total_timesteps,
                     state.reward_func_str,
                     ','.join(map(str, state.performances["rewards"])),
                     state.performances["mean_reward"],

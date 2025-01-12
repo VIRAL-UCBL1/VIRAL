@@ -3,6 +3,7 @@ from logging import getLogger
 
 from Environments import EnvType
 from LLM.OllamaChat import OllamaChat
+from log.LoggerCSV import LoggerCSV
 from State.State import State
 from LLM.GenCode import GenCode
 from PolicyTrainer.PolicyTrainer import PolicyTrainer
@@ -16,7 +17,8 @@ class VIRAL:
         model_critic: str | None = None,
         hf: bool = False,
         training_time: int = 25000,
-        numenvs: int = 2,
+        nb_vec_envs: int = 1,
+        legacy_training: bool = True,
         options: dict = {},
     ):
         """
@@ -30,7 +32,7 @@ class VIRAL:
         """
         if options.get("seed") is None:
             options["seed"] = random.randint(0, 1000000)
-
+        LoggerCSV(env_type, model_actor+model_critic, training_time)
         self.llm_actor = OllamaChat(
             model=model_actor,
             system_prompt="""
@@ -65,7 +67,7 @@ class VIRAL:
         self.logger = getLogger("VIRAL")
         self.memory: list[State] = [State(0)]
         self.policy_trainer: PolicyTrainer = PolicyTrainer(
-            self.memory, self.env_type, timeout=training_time, numenvs=numenvs
+            self.memory, options['seed'], self.env_type, timeout=training_time, nb_vec_envs=nb_vec_envs, legacy_training=legacy_training
         )
 
     def generate_context(self):
@@ -150,8 +152,9 @@ class VIRAL:
             response = self.llm_actor.print_Generator_and_return(
                 response, len(self.memory) - 1
             )
-            state: State = self.gen_code.get(response)
+            state: State = self.gen_code.get(response) #TODO if  response doesn't work the chat is stuck and regenate the same response over and over
             self.memory.append(state)
+            self.policy_trainer.start_learning(state.idx)
 
         are_worsts, are_betters, threshold = self.policy_trainer.evaluate_policy(
             range(1, n_init + 1)
@@ -213,6 +216,7 @@ class VIRAL:
         )
         state = self.gen_code.get(refined_response)
         self.memory.append(state)
+        self.policy_trainer.start_learning(state.idx)
         return state.idx
 
     def self_refine_reward(self, idx: int) -> int:
@@ -273,6 +277,7 @@ class VIRAL:
         )
         state = self.gen_code.get(refined_response)
         self.memory.append(state)
+        self.policy_trainer.start_learning(state.idx)
         return state.idx
 
     def human_feedback(self, prompt: str, idx: int) -> str:
@@ -297,6 +302,6 @@ class VIRAL:
     def test_reward_func(self, reward_func: str):
         state: State = self.gen_code.get(reward_func)
         self.memory.append(state)
-        are_worsts, are_betters, threshold = self.policy_trainer.evaluate_policy(
-            [state.idx]
-        )
+        self.policy_trainer.start_learning(state.idx)
+        are_worsts, are_betters, threshold = self.policy_trainer.evaluate_policy([state.idx])
+

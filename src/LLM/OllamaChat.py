@@ -8,6 +8,7 @@ from logging import getLogger
 OLLAMA_CHAT_API_URL = "http://localhost:11434/api/chat"
 OLLAMA_API_URL = "http://localhost:11434/api/generate"
 
+
 class OllamaChat:
     def __init__(
         self,
@@ -26,8 +27,6 @@ class OllamaChat:
         self.model = model
         self.messages: list[Dict[str, str]] = []
         self.options = options or {}
-        if 'seed' in self.options.keys():
-            self.seed = self.options.pop('seed')
         self.logger = getLogger("VIRAL")
 
         if system_prompt:
@@ -52,22 +51,19 @@ class OllamaChat:
         self.messages.append(message)
 
     def generate_response(
-        self, stream: bool = False, additional_options: Optional[Dict] = {}
+        self, stream: bool = False, llm_options: Optional[Dict] = {}
     ) -> Union[str, Generator]:
         """
         Generate a response with advanced configuration options.
 
         Args:
             stream (bool, optional): Stream response in real-time
-            additional_options (dict, optional): Temporary generation options
+            llm_options (dict, optional): Temporary generation options
 
         Returns:
             Response as string or streaming generator
         """
-        if self.seed is not None:
-            additional_options['seed'] = self.seed
-            self.seed += 1
-        generation_options = {**self.options, **(additional_options or {})}
+        generation_options = {**self.options, **(llm_options or {})}
 
         payload = {
             "model": self.model,
@@ -107,11 +103,13 @@ class OllamaChat:
         except requests.exceptions.RequestException as e:
             self.logger.error(f"Connection error: {e}")
             return ""
-    
-    def generate_simple_response(self,
-            prompt: str,
-            sys_prompt: str = None,
-            stream: bool = False, additional_options: Optional[Dict] = {}
+
+    def generate_simple_response(
+        self,
+        prompt: str,
+        sys_prompt: str = None,
+        stream: bool = False,
+        llm_options: Optional[Dict] = {},
     ):
         """
         Generate a simple response without historic.
@@ -120,15 +118,12 @@ class OllamaChat:
             prompt (str): user prompt
             sys_prompt (str, optional): system prompt
             stream (bool, optional): Stream response in real-time
-            additional_options (dict, optional): Temporary generation options
+            llm_options (dict, optional): Temporary generation options
 
         Returns:
             Response as string or streaming generator
         """
-        if self.seed is not None:
-            additional_options['seed'] = self.seed
-        generation_options = {**self.options, **(additional_options or {})}
-
+        generation_options = {**self.options, **(llm_options or {})}
 
         payload = {
             "model": self.model,
@@ -170,21 +165,23 @@ class OllamaChat:
             self.logger.error(f"Connection error: {e}")
             return ""
 
-    def print_Generator_and_return(self, response: Generator | str, number: int = 1) -> str:
+    def print_Generator_and_return(
+        self, response: Generator | str, number: int = 1
+    ) -> str:
         """
         Prints the content of a response if it is a generator, or simply returns the response as is.
 
         Args:
-            response (Generator | str): The response to print or return. If it's a generator, 
-                                        it will be printed chunk by chunk. If it's a string, 
+            response (Generator | str): The response to print or return. If it's a generator,
+                                        it will be printed chunk by chunk. If it's a string,
                                         it will be returned directly.
             number (int, optional): The index of the response (default is 1). Used for logging purposes.
 
         Returns:
-            The original response if it is a string, or the concatenated string of all chunks 
+            The original response if it is a string, or the concatenated string of all chunks
             if it was a generator.
         """
-        self.logger.debug(f"Response {number}:")
+        self.logger.info(f"Response {number}:")
         if isinstance(response, Generator):
             response_gen = response
             response = ""
