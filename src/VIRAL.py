@@ -16,6 +16,7 @@ class VIRAL:
         model_actor: str,
         model_critic: str | None = None,
         hf: bool = False,
+        seed: int = None,
         training_time: int = 25000,
         nb_vec_envs: int = 1,
         legacy_training: bool = True,
@@ -30,9 +31,9 @@ class VIRAL:
                 training_time (int, optional): timeout for model.learn()
                 options (dict, optional): options for the llm
         """
-        if options.get("seed") is None:
+        if seed is None:
             options["seed"] = random.randint(0, 1000000)
-        model_name = model_critic if model_actor == model_critic else model_actor+'_'+model_critic  
+        model_name = model_actor if model_actor == model_critic or model_critic is None else model_actor+'_'+model_critic
         LoggerCSV(env_type, model_name, training_time)
         self.llm_actor = OllamaChat(
             model=model_actor,

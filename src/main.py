@@ -38,22 +38,34 @@ def main():
     memory.
     """
     parse_logger()
-    env_type = CartPole()
-    actor = 'qwen2.5-coder'
-    critic = 'qwen2.5-coder'
+    env_type = CartPole(
+        prompt={
+            "Goal": "Balance a pole on a cart",
+            "Observation Space": """Num Observation Min Max
+            0 Cart Position -4.8 4.8
+            1 Cart Velocity -Inf Inf
+            2 Pole Angle ~ -0.418 rad (-24°) ~ 0.418 rad (24°)
+            3 Pole Angular Velocity -Inf Inf""",
+            "Image": "Environments/img/CartPole.png",
+        }
+    )
+    actor = "qwen2.5-coder"
+    critic = "llama3.2-vision"
     human_feedback = False
     viral = VIRAL(
-            env_type=env_type,
-            model_actor=actor,
-            model_critic=critic,
-            options=llm_options,
-            legacy_training=False,
-        )
+        env_type=env_type,
+        model_actor=actor,
+        model_critic=critic,
+        options=llm_options,
+        legacy_training=False,
+        training_time=30_000,
+    )
     viral.generate_context()
-    viral.generate_reward_function(n_init=1, n_refine=5)
+    viral.generate_reward_function(n_init=2, n_refine=0)
     for state in viral.memory:
         viral.logger.info(state)
 
+
 if __name__ == "__main__":
-    for i in range(1):
+    for i in range(50):
         main()
