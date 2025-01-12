@@ -32,7 +32,8 @@ class VIRAL:
         """
         if options.get("seed") is None:
             options["seed"] = random.randint(0, 1000000)
-        LoggerCSV(env_type, model_actor+model_critic, training_time)
+        model_name = model_critic if model_actor == model_critic else model_actor+'_'+model_critic  
+        LoggerCSV(env_type, model_name, training_time)
         self.llm_actor = OllamaChat(
             model=model_actor,
             system_prompt="""
@@ -76,9 +77,13 @@ class VIRAL:
         prompt += f"Please, describe which observation can achive the Goal:\n{self.env_type.prompt['Goal']}."
         if "Image" in self.env_type.prompt.keys():
             self.llm_critic.add_message(prompt, images=[self.env_type.prompt["Image"]])
-        self.llm_critic.add_message(prompt)
+            self.llm_actor.add_message(prompt, images=[self.env_type.prompt["Image"]])
+        else:
+            self.llm_critic.add_message(prompt)
+            self.llm_actor.add_message(prompt)
         response = self.llm_critic.generate_response(stream=True)
         response = self.llm_critic.print_Generator_and_return(response, -1)
+        self.llm_actor.add_message(response)
 
     def generate_reward_function(
         self, n_init: int = 2, n_refine: int = 1, focus: str = ""
@@ -209,6 +214,7 @@ class VIRAL:
         refined_critic = self.llm_critic.print_Generator_and_return(
             refined_critic, len(self.memory) - 1
         )
+        self.llm_actor.add_message(refined_critic)
         self.llm_actor.add_message(actor_prompt)
         refined_response = self.llm_actor.generate_response(stream=True)
         refined_response = self.llm_actor.print_Generator_and_return(
