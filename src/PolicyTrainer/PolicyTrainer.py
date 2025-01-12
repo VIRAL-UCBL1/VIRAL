@@ -1,5 +1,4 @@
 import os
-import uuid
 from logging import getLogger
 from log.log_config import get_log_level
 from multiprocessing import Process, Queue

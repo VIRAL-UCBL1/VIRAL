@@ -1,5 +1,6 @@
 import requests
 import json
+import base64
 from typing import Dict, Union, Optional, Generator
 from logging import getLogger
 
@@ -40,6 +41,12 @@ class OllamaChat:
             content (str): The message content
             role (str, optional): Message role (user/assistant/system)
         """
+        if 'images' in kwargs.keys():
+            imgs_encoded = []
+            for img_path in kwargs["images"]:
+                with open(img_path, "rb") as image_file:
+                    imgs_encoded.append(base64.b64encode(image_file.read()).decode('utf-8'))
+            kwargs['images'] = imgs_encoded
         message = {"role": role, "content": content, **kwargs}
         self.messages.append(message)
 
