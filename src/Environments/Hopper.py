@@ -2,17 +2,19 @@ import gymnasium as gym
 from .EnvType import EnvType
 from Environments import Algo
 
+
 class Hopper(EnvType):
-	def __init__(self, algo: Algo):
-        # Appel du constructeur de la classe mère
-		algo_param = {
-			"policy": "MlpPolicy",
-			"verbose": 0,
-			"device": "cpu",
-			}
-		prompt = {
-        "Goal": "Control the Hopper to move in the forward direction, take care to don't fall, make the highest jump",
-        "Observation Space": """Box(-inf, inf, (11,), float64)
+    def __init__(
+        self,
+        algo: Algo = Algo.PPO,
+        algo_param: dict = {
+            "policy": "MlpPolicy",
+            "verbose": 0,
+            "device": "cpu",
+        },
+        prompt={
+            "Goal": "Control the Hopper to move in the forward direction, take care to don't fall, make the highest jump",
+            "Observation Space": """Box(-inf, inf, (11,), float64)
 
 The observation space consists of the following parts (in order):
 qpos (5 elements by default): Position values of the robot’s body parts.
@@ -40,37 +42,38 @@ the x- and y-coordinates are returned in info with the keys "x_position" and "y_
 | 1   | Torque applied on the leg rotor   | -1          | 1           | leg_joint                         | hinge  | torque (N m) |
 | 2   | Torque applied on the foot rotor  | -1          | 1           | foot_joint                        | hinge  | torque (N m) |
 
-"""
-}
-		super().__init__(algo, algo_param, prompt)
+""",
+        },
+    ) -> None:
+        super().__init__(algo, algo_param, prompt)
 
-	def __repr__(self):
-		return "Hopper-v5"
+    def __repr__(self):
+        return "Hopper-v5"
 
-	def success_func(self, env: gym.Env, info: dict) -> tuple[bool|bool]:
-		"""Hopper success_fun
+    def success_func(self, env: gym.Env, info: dict) -> tuple[bool | bool]:
+        """Hopper success_fun
 
-		Args:
-			env (gym.Env): 
-			info (dict): 
+        Args:
+                env (gym.Env):
+                info (dict):
 
-		Returns:
-			tuple[bool|bool]: is_success, is_failure tuple
-		"""
-		
-		if info["terminated"]:
-			return False, True
-		elif info["x_position"] > 5.0:
-			return True, False
-		else:
-			return False, False
+        Returns:
+                tuple[bool|bool]: is_success, is_failure tuple
+        """
 
-	def objective_metric(self, states)->  dict[str, float]:
-		"""
-		Objective metric for the CartPole environment.
-		Calculates a score for the given state on a particular observation of the CartPole environment.
+        if info["terminated"]:
+            return False, True
+        elif info["x_position"] > 5.0:
+            return True, False
+        else:
+            return False, False
 
-		:param state: The state of the CartPole environment.
-		:return: a table of tuples containing the string name of the metric and the value of the metric.
-		"""
-		return {}
+    def objective_metric(self, states) -> dict[str, float]:
+        """
+        Objective metric for the CartPole environment.
+        Calculates a score for the given state on a particular observation of the CartPole environment.
+
+        :param state: The state of the CartPole environment.
+        :return: a table of tuples containing the string name of the metric and the value of the metric.
+        """
+        return {}

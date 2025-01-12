@@ -6,6 +6,7 @@ from LLM.LLMOptions import llm_options
 from log.log_config import init_logger
 from VIRAL import VIRAL
 
+
 def parse_logger():
     """
     Parses command-line arguments to configure the logger.
@@ -27,6 +28,7 @@ def parse_logger():
 
     return getLogger()
 
+
 def main():
     """
     Main entry point of the script.
@@ -36,9 +38,15 @@ def main():
     memory.
     """
     parse_logger()
-    env_type = CartPole(algo=Algo.PPO)
-    model = 'qwen2.5-coder'
-    viral = VIRAL(env_type=env_type, model=model, options=llm_options, training_time=20_000, legacy_training=False)
+    env_type = CartPole()
+    model = "qwen2.5-coder"
+    viral = VIRAL(
+        env_type=env_type,
+        model=model,
+        options=llm_options,
+        training_time=20_000,
+        legacy_training=True,
+    )
     viral.generate_context(env_type.prompt)
     viral.generate_reward_function(n_init=1, n_refine=1)
 

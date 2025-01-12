@@ -1,12 +1,13 @@
 import gymnasium as gym
-import highway_env
 from Environments import Algo
 from .EnvType import EnvType
-from utils.utils import unwrap_env
+
 
 class Highway(EnvType):
-    def __init__(self, algo: Algo):
-        algo_param = {
+    def __init__(
+        self,
+        algo: Algo = Algo.DQN,
+        algo_param: dict = {
             "policy": "MlpPolicy",
             "policy_kwargs": dict(net_arch=[256, 256]),
             "learning_rate": 5e-4,
@@ -19,11 +20,10 @@ class Highway(EnvType):
             "target_update_interval": 50,
             "verbose": 0,
             "tensorboard_log": "model/highway_dqn/",
-        }
-        prompt = {
-"Goal": "Control the ego vehicle to reach a high speed without collision.",
-"Observation Space": 
-"""features include:
+        },
+        prompt: dict | str = {
+            "Goal": "Control the ego vehicle to reach a high speed without collision.",
+            "Observation Space": """features include:
     - presence: Indicates whether a vehicle is present (1 if present, 0 otherwise).
     - x: Longitudinal position of the vehicle.
     - y: Lateral position of the vehicle.
@@ -45,7 +45,8 @@ Each action is typically represented as an integer:
 3: Change Lane Left
 4: Change Lane Right
 """,
-    	}
+        },
+    ):
         super().__init__(algo, algo_param, prompt)
 
     def __repr__(self):
@@ -55,13 +56,12 @@ Each action is typically represented as an integer:
         """
         Vérifie si le véhicule a atteint une vitesse élevée sans collision.
         """
-        base_env = unwrap_env(env)
-        speed = info.get('speed', 0)
-        crashed = info.get('crashed', False)
+        speed = info.get("speed", 0)
+        crashed = info.get("crashed", False)
         # print(f"info: {info}")
         print(f"speed: {speed}, crashed: {crashed}")
         # print(f"Truncated {info['TimeLimit.truncated']}")
-        truncated = info['TimeLimit.truncated']
+        truncated = info["TimeLimit.truncated"]
 
         if truncated:
             return True, False
