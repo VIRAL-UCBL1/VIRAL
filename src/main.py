@@ -39,7 +39,7 @@ def main():
     """
     parse_logger()
     env_type = CartPole(Algo.PPO)
-    actor = 'falcon3:10b'
+    actor = 'qwen2.5-coder'
     critic = 'llama3.2-vision'
     human_feedback = False
     LoggerCSV(env_type, actor+critic)
