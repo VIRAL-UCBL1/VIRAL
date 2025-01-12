@@ -65,9 +65,6 @@ nav:
     - CustomRewardWrapper: code_docs/PolicyTrainer/CustomRewardWrapper.md
     - PolicyTrainer: code_docs/PolicyTrainer/PolicyTrainer.md
     - TrainingInfoCallback: code_docs/PolicyTrainer/TrainingInfoCallback.md
-  - RLAlgo:
-    - DirectSearch: code_docs/RLAlgo/DirectSearch.md
-    - Reinforce: code_docs/RLAlgo/Reinforce.md
   - State:
     - State: code_docs/State/State.md
   - utils:
