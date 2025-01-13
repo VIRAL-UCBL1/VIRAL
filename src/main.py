@@ -67,5 +67,5 @@ def main():
 
 
 if __name__ == "__main__":
-    for i in range(50):
+    for i in range(30):
         main()
