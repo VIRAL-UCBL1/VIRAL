@@ -50,8 +50,8 @@ Args:
         (default: 0.0). 
 """
 
-additional_options = {
-        # "temperature": 1,
+llm_options = {
+        # "temperature": 0.9,
         # "num_predict": 3, # l'impression que ça change rien a creuser
         # "mirostat" : 1,
         # "mirostat_eta" : 0.01, #gère la vitesse de réponses du model (0.1 par défaut) plus c'est petit plus c'est lent
@@ -64,5 +64,5 @@ additional_options = {
         # "top_k": 30, #reduit la probabilité de générer des non-sens (40 par défaut, 100 pour générer des réponses plus diverses, 10 pour des réponses plus "conservatrices")
         # "top_p": 0.95, #marche avec le top_k une forte valeur pour des texte plus diverses (0.9 par défaut)
         # "min_p": 0.05, #alternative au top_p, vise a s'aéssurer de la balance entre qualité et diversité (0.0 par défaut)
-        # "seed": 42, # a utiliser pour la reproductibilité des résultats (important si publication)
+        # "seed": 211042, # a utiliser pour la reproductibilité des résultats (important si publication)
 }

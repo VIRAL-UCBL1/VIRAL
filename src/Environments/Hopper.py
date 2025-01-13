@@ -2,17 +2,19 @@ import gymnasium as gym
 from .EnvType import EnvType
 from Environments import Algo
 
+
 class Hopper(EnvType):
-	def __init__(self, algo: Algo):
-        # Appel du constructeur de la classe mère
-		algo_param = {
-			"policy": "MlpPolicy",
-			"verbose": 0,
-			"device": "cpu",
-			}
-		prompt = {
-        "Goal": "Control the Hopper to move in the forward direction",
-        "Observation Space": """Box(-inf, inf, (11,), float64)
+    def __init__(
+        self,
+        algo: Algo = Algo.PPO,
+        algo_param: dict = {
+            "policy": "MlpPolicy",
+            "verbose": 0,
+            "device": "cpu",
+        },
+        prompt={
+            "Goal": "Control the Hopper to move in the forward direction, take care to don't fall, make the highest jump",
+            "Observation Space": """Box(-inf, inf, (11,), float64)
 
 The observation space consists of the following parts (in order):
 qpos (5 elements by default): Position values of the robot’s body parts.
@@ -33,37 +35,45 @@ the x- and y-coordinates are returned in info with the keys "x_position" and "y_
 | 9        | angular velocity of the leg hinge                | -Inf  | Inf  | angular velocity (rad/s) |
 | 10       | angular velocity of the foot hinge               | -Inf  | Inf  | angular velocity (rad/s) |
 | excluded | x-coordinate of the torso                        | -Inf  | Inf  | position (m)        |
-"""
-}
-		super().__init__(algo, algo_param, prompt)
+		"Action Space": The action space is a Box(-1, 1, (3,), float32). An action represents the torques applied at the hinge joints.
+| Num | Action                          | Control Min | Control Max | Name (in corresponding XML file) | Joint  | Type         |
+|-----|---------------------------------|-------------|-------------|-----------------------------------|--------|--------------|
+| 0   | Torque applied on the thigh rotor | -1          | 1           | thigh_joint                       | hinge  | torque (N m) |
+| 1   | Torque applied on the leg rotor   | -1          | 1           | leg_joint                         | hinge  | torque (N m) |
+| 2   | Torque applied on the foot rotor  | -1          | 1           | foot_joint                        | hinge  | torque (N m) |
 
-	def __repr__(self):
-		return "Hopper-v5"
+""",
+        },
+    ) -> None:
+        super().__init__(algo, algo_param, prompt)
 
-	def success_func(self, env: gym.Env, info: dict) -> tuple[bool|bool]:
-		"""Hopper success_fun
+    def __repr__(self):
+        return "Hopper-v5"
 
-		Args:
-			env (gym.Env): 
-			info (dict): 
+    def success_func(self, env: gym.Env, info: dict) -> tuple[bool | bool]:
+        """Hopper success_fun
 
-		Returns:
-			tuple[bool|bool]: is_success, is_failure tuple
-		"""
-		
-		if info["terminated"]:
-			return False, True
-		elif info["x_position"] > 5.0:
-			return True, False
-		else:
-			return False, False
+        Args:
+                env (gym.Env):
+                info (dict):
 
-	def objective_metric(self, states)->  dict[str, float]:
-		"""
-		Objective metric for the CartPole environment.
-		Calculates a score for the given state on a particular observation of the CartPole environment.
+        Returns:
+                tuple[bool|bool]: is_success, is_failure tuple
+        """
 
-		:param state: The state of the CartPole environment.
-		:return: a table of tuples containing the string name of the metric and the value of the metric.
-		"""
-		return {}
+        if info["terminated"]:
+            return False, True
+        elif info["x_position"] > 5.0:
+            return True, False
+        else:
+            return False, False
+
+    def objective_metric(self, states) -> dict[str, float]:
+        """
+        Objective metric for the CartPole environment.
+        Calculates a score for the given state on a particular observation of the CartPole environment.
+
+        :param state: The state of the CartPole environment.
+        :return: a table of tuples containing the string name of the metric and the value of the metric.
+        """
+        return {}
