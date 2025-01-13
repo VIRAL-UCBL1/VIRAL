@@ -67,8 +67,15 @@ class Pacman(EnvType):
         Returns:
             tuple : (bool, bool) indiquant si l'épisode est terminé et si c'est un succès
         """
-        done = info.get("done", False)
-        success = info.get("success", False)
+        nb_lives = info.get('lives')
+        # print(f"info: {info}")
+        # print(f"Number of lives: {nb_lives}")
+        if nb_lives is not None and nb_lives == 0:
+            done = True
+            success = False
+        else:
+            done = False
+            success = True
         return done, success
 
     def objective_metric(self, states) -> list[dict[str, float]]:

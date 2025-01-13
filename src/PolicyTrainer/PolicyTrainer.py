@@ -67,7 +67,7 @@ class PolicyTrainer:
         )
         vec_env, model, numvenv = self._generate_env_model(state.reward_func, self.numenvs)
         training_callback = TrainingInfoCallback()
-        policy = model.learn(total_timesteps=self.timeout, callback=training_callback) # , progress_bar=True
+        policy = model.learn(total_timesteps=self.timeout, callback=training_callback,progress_bar=True) # , progress_bar=True
         policy.save(f"model/{self.env_name}_{state.idx}.pth")
         metrics = training_callback.get_metrics()
         #self.logger.debug(f"{state.idx} TRAINING METRICS: {metrics}")
@@ -180,9 +180,7 @@ class PolicyTrainer:
             done = False
             while not done:
                 actions, _ = policy.predict(obs)
-                obs, reward, term, trunc, info = env.step(actions)
-                print(f"info: {info}")
-                
+                obs, reward, term, trunc, info = env.step(actions)                
                 episode_rewards += reward
                 done = trunc or term
 
@@ -264,7 +262,7 @@ class PolicyTrainer:
 
         env = gym.make("highway-fast-v0", render_mode="rgb_array")
         if self.algo == Algo.PPO:
-            model = PPO(env=vec_env, **self.algo_param)
+            model = PPO(env=vec_env, **self.algo_param) #TODO remmettre vec_env
         elif self.algo == Algo.DQN:
             # use gym.make instead of make_vec_env for DQN. gym 10min / vec_env 2h
             model = DQN(env=env, **self.algo_param)
