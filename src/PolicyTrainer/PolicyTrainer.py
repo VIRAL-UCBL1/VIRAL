@@ -186,7 +186,7 @@ class PolicyTrainer:
         success_rate = nb_success / nb_episodes
         return success_rate
 
-    def test_policy_hf(self, policy_path: str, nb_episodes: int = 100):
+    def test_policy_hf(self, policy_path: str, nb_episodes: int = 10):
         """visualise a policy
 
         Args:

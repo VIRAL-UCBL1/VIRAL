@@ -7,7 +7,7 @@ from utils.utils import unwrap_env
 class LunarLander(EnvType):
     def __init__(
         self,
-        algo: Algo = Algo.PPO,
+        algo: Algo = Algo.DQN,
         algo_param: dict = {
             "batch_size": 128,
             "buffer_size": 50000,

@@ -54,15 +54,15 @@ class VIRAL:
                 model=model_critic,
                 system_prompt=f"""
         You're a reinforcement learning expert and assistant in rewarding for the {env_type} environment.
-        Based on the observation of the state, the is_success boolean flag, the is_failure boolean flag,
-        An actor going to build the reward function. As a critic, you're going to explains step by step,
-        how to achieve the goal: {env_type.prompt['Goal']}.
+        As a critic, you're going to explains step by step, how to achieve the goal: {env_type.prompt['Goal']}.
         If you're reading an image, please use what you see, as a grounding, as a link to the state.
-        Be conscice and focus only on wich values of observation going to be reward.
+        The image contain red trajectory, the agent need to be identify and the trajectory needs to be precisely described.
         Every response you made, begin with the title '# HELP'
             """,
                 options=options.copy(),
             )
+        else:
+            self.llm_critic = self.llm_actor
         self.hf = hf
         self.env_type: EnvType = env_type
         self.gen_code: GenCode = GenCode(self.env_type, self.llm_actor)
@@ -75,7 +75,7 @@ class VIRAL:
     def generate_context(self):
         """Generate more contexte for Step back prompting"""
         prompt = f"{self.env_type.prompt['Observation Space']}\n"
-        prompt += f"Please, describe which observation can achive the Goal:\n{self.env_type.prompt['Goal']}."
+        prompt += f"Please, Describe the red trajectory an the observations for the following goal: \n{self.env_type.prompt['Goal']}."
         if "Image" in self.env_type.prompt.keys():
             self.llm_critic.add_message(prompt, images=[self.env_type.prompt["Image"]])
             self.llm_actor.add_message(prompt, images=[self.env_type.prompt["Image"]])
