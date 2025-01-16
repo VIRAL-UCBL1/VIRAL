@@ -302,7 +302,7 @@ class VIRAL:
         self.logger.info(self.memory[idx])
         visualise = input("do you need to visualise policy ?\ny/n:")
         if visualise.lower() in ["y", "yes"]:
-            self.policy_trainer.test_policy_hf(self.memory[idx].policy)
+            self.policy_trainer.test_policy_hf(self.memory[idx].policy, 2)
         feedback = input("add a comment, (press enter if you don't have one)\n:")
         if feedback:
             prompt = feedback + "\n" + prompt

@@ -193,7 +193,7 @@ class PolicyTrainer:
             policy_path (str): the path of the policy to load
             nb_episodes (int, optional): . Defaults to 100.
         """
-        env = make(self.env_name, render_mode='human')
+        env = make(self.env_name, render_mode='human') # TODO pass env param
         if self.algo == Algo.PPO:
             policy = PPO.load(policy_path)
         elif self.algo == Algo.DQN:
@@ -248,7 +248,7 @@ class PolicyTrainer:
             tuple[VecEnv, PPO, int]: the envs, the model, the number of envs
         """
         if self.nb_vec_envs == 1:
-            env = gym.make(self.env_name)
+            env = gym.make(self.env_name) # , terminate_when_unhealthy=False
             env = CustomRewardWrapper(env, self.success_func, reward_func)
         else:
             env = make_vec_env(
@@ -256,6 +256,7 @@ class PolicyTrainer:
                 n_envs=self.nb_vec_envs,
                 wrapper_class=CustomRewardWrapper,
                 wrapper_kwargs={"success_func": self.success_func, "llm_reward_function": reward_func},
+                # env_kwargs={'terminate_when_unhealthy': False}
             )
         if self.algo == Algo.PPO:
             model = PPO(env=env, **self.algo_param)

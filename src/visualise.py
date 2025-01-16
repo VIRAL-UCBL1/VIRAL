@@ -45,7 +45,7 @@ def main():
     env_type = Swimmer(Algo.PPO)
     p = PolicyTrainer([], 0, env_type, 1, 2, False)
     #p.test_policy_hf("data/model/Hopper-v5_932454_1.pth", 5) # "model/Hopper-v5_1.pth"
-    p.test_policy_video("./data/model/Swimmer-v5_663553_3.pth", 5)
+    p.test_policy_video("data/model/Hopper-v5_932454_1.pth", 1)
 
 if __name__ == "__main__":
     main()
