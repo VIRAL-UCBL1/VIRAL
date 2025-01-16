@@ -21,6 +21,7 @@ class VIRAL:
         nb_vec_envs: int = 1,
         legacy_training: bool = True,
         options: dict = {},
+        proxies: dict = None
     ):
         """
         Initialize VIRAL architecture for dynamic reward function generation
@@ -44,10 +45,11 @@ class VIRAL:
         2. Complete ONLY the reward function code
         3. Give no additional explanations
         4. STOP immediately your completion after the last return
-        6. Assuming Numpy already imported as np
-        7. Take into the observation of the state, the is_success boolean flag, the is_failure boolean flag
+        5. Assuming Numpy already imported as np
+        6. Take into the observation of the state, the is_success boolean flag, the is_failure boolean flag
         """,
             options=options.copy(),
+            proxies=proxies
         )
         if model_critic is not None:
             self.llm_critic = OllamaChat(
@@ -60,6 +62,7 @@ class VIRAL:
         Every response you made, begin with the title '# HELP'
             """,
                 options=options.copy(),
+                proxies=proxies
             )
         else:
             self.llm_critic = self.llm_actor
@@ -172,10 +175,10 @@ class VIRAL:
             self.logger.debug(f"states to refines: {are_worsts}")
             news_idx: list[int] = []
             for worst_idx in are_worsts:
-                if self.memory[worst_idx].performances["sr"] < threshold - 0.2:
-                    news_idx.append(self.critical_refine_reward(worst_idx))
-                else:
-                    news_idx.append(self.self_refine_reward(worst_idx))
+                # if self.memory[worst_idx].performances["sr"] < threshold - 0.2:
+                    # news_idx.append(self.critical_refine_reward(worst_idx))
+                # else:
+                news_idx.append(self.self_refine_reward(worst_idx))
             are_worsts, are_betters, _ = self.policy_trainer.evaluate_policy(news_idx)
         return self.memory
 
@@ -267,10 +270,9 @@ class VIRAL:
             - Leverages LLM for intelligent function refinement
             - Provides a systematic approach to reward function improvement
             - Maintains a history of function iterations
-        """
+        """# based on the provided performance metrics {self.memory[idx].performances}. 
         refinement_prompt = f"""Analyze the shortcomings of the current reward function {self.memory[idx].reward_func_str}
-        based on the provided performance metrics {self.memory[idx].performances}. 
-        Identify specific issues that may have led to suboptimal performance 
+        base on the goal {self.env_type.prompt['Goal']}, identify specific issues that may have led to suboptimal performance.
         and propose a new reward function that addresses these issues.
         Include comments in the code to explain your reasoning and how the new function improves upon the previous one.
         """
@@ -306,9 +308,9 @@ class VIRAL:
             prompt = feedback + "\n" + prompt
         return prompt
 
-    def test_reward_func(self, reward_func: str):
+    def test_reward_func(self, reward_func: str) -> None:
         state: State = self.gen_code.get(reward_func)
         self.memory.append(state)
         self.policy_trainer.start_learning(state.idx)
         are_worsts, are_betters, threshold = self.policy_trainer.evaluate_policy([state.idx])
-
+        

@@ -78,20 +78,25 @@ def main():
             """,
             "Image": "Environments/img/Hopper_BackFlip.png"
         })
-    actor = "qwen2.5-coder:14b"
+    actor = "qwen2.5-coder:32b"
     critic = "llama3.2-vision"
+    proxies = { 
+        "http"  : "socks5h://localhost:1080", 
+        "https" : "socks5h://localhost:1080", 
+    }
     viral = VIRAL(
         env_type=env_type,
         model_actor=actor,
         model_critic=critic,
-        hf=False,
-        nb_vec_envs=2,
+        hf=True,
+        nb_vec_envs=1,
         options=llm_options,
         legacy_training=False,
         training_time=500_000,
+        proxies=proxies
     )
     viral.generate_context()
-    viral.generate_reward_function(n_init=1, n_refine=0, focus="don't use is_success boolean!")
+    viral.generate_reward_function(n_init=1, n_refine=2, focus="don't use is_success boolean!")
     for state in viral.memory:
         viral.logger.info(state)
 
