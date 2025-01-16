@@ -1,7 +1,8 @@
 import argparse
 from logging import getLogger
 
-from Environments import Algo, CartPole, LunarLander, Pacman, Hopper, Highway
+from Environments import (Algo, CartPole, Highway, Hopper, LunarLander, Pacman,
+                          Swimmer)
 from LLM.LLMOptions import llm_options
 from log.log_config import init_logger
 from VIRAL import VIRAL
@@ -51,33 +52,34 @@ def main():
     #         "Image": "Environments/img/LunarLander.png"
     #     }
     # )
-    env_type = Hopper(
-        prompt={
-            "Goal": "make a backflip",
-            "Observation Space": """Box(-inf, inf, (11,), float64)
-
-            The observation space consists of the following parts (in order):
-            qpos (5 elements by default): Position values of the robot’s body parts.
-            qvel (6 elements): The velocities of these individual body parts (their derivatives).
-            the x- and y-coordinates are returned in info with the keys "x_position" and "y_position", respectively.
-
-            | Num      | Observation                                      | Min   | Max  | Type                |
-            |----------|--------------------------------------------------|-------|------|---------------------|
-            | 0        | z-coordinate of the torso (height of hopper)     | -Inf  | Inf  | position (m)        |
-            | 1        | angle of the torso                               | -Inf  | Inf  | angle (rad)         |
-            | 2        | angle of the thigh joint                         | -Inf  | Inf  | angle (rad)         |
-            | 3        | angle of the leg joint                           | -Inf  | Inf  | angle (rad)         |
-            | 4        | angle of the foot joint                          | -Inf  | Inf  | angle (rad)         |
-            | 5        | velocity of the x-coordinate of the torso        | -Inf  | Inf  | velocity (m/s)      |
-            | 6        | velocity of the z-coordinate (height) of torso   | -Inf  | Inf  | velocity (m/s)      |
-            | 7        | angular velocity of the angle of the torso       | -Inf  | Inf  | angular velocity (rad/s) |
-            | 8        | angular velocity of the thigh hinge              | -Inf  | Inf  | angular velocity (rad/s) |
-            | 9        | angular velocity of the leg hinge                | -Inf  | Inf  | angular velocity (rad/s) |
-            | 10       | angular velocity of the foot hinge               | -Inf  | Inf  | angular velocity (rad/s) |
-            | excluded | x-coordinate of the torso                        | -Inf  | Inf  | position (m)        |
-            """,
-            "Image": "Environments/img/Hopper_BackFlip.png"
-        })
+     #env_type = Hopper(
+    #    prompt={
+    #        "Goal": "make a backflip",
+    #        "Observation Space": """Box(-inf, inf, (11,), float64)
+#
+#            The observation space consists of the following parts (in order):
+#            qpos (5 elements by default): Position values of the robot’s body parts.
+ #           qvel (6 elements): The velocities of these individual body parts (their derivatives).
+#            the x- and y-coordinates are returned in info with the keys "x_position" and "y_position", respectively.
+#
+#            | Num      | Observation                                      | Min   | Max  | Type                |
+#            |----------|--------------------------------------------------|-------|------|---------------------|
+#            | 0        | z-coordinate of the torso (height of hopper)     | -Inf  | Inf  | position (m)        |
+#            | 1        | angle of the torso                               | -Inf  | Inf  | angle (rad)         |
+#            | 2        | angle of the thigh joint                         | -Inf  | Inf  | angle (rad)         |
+ #           | 3        | angle of the leg joint                           | -Inf  | Inf  | angle (rad)         |
+#            | 4        | angle of the foot joint                          | -Inf  | Inf  | angle (rad)         |
+#            | 5        | velocity of the x-coordinate of the torso        | -Inf  | Inf  | velocity (m/s)      |
+#            | 6        | velocity of the z-coordinate (height) of torso   | -Inf  | Inf  | velocity (m/s)      |
+#            | 7        | angular velocity of the angle of the torso       | -Inf  | Inf  | angular velocity (rad/s) |
+#            | 8        | angular velocity of the thigh hinge              | -Inf  | Inf  | angular velocity (rad/s) |
+#            | 9        | angular velocity of the leg hinge                | -Inf  | Inf  | angular velocity (rad/s) |
+#            | 10       | angular velocity of the foot hinge               | -Inf  | Inf  | angular velocity (rad/s) |
+#            | excluded | x-coordinate of the torso                        | -Inf  | Inf  | position (m)        |
+#            """,
+#            "Image": "Environments/img/Hopper_BackFlip.png"
+#        })
+    env_type = Swimmer()
     actor = "qwen2.5-coder:32b"
     critic = "llama3.2-vision"
     proxies = { 
