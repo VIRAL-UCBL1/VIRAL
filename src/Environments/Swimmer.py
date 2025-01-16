@@ -15,7 +15,7 @@ class Swimmer(EnvType):
             "device": "cpu",
         },
         prompt={
-            "Goal": "Control the swimmer to move as fast as possible to the right by applying torques to the joints.",
+            "Goal": "Control the swimmer to move as fast as possible in the forward direction.",
             "Observation Space": """Box(-inf, inf, (8,), float64)
 
 The observation space consists of the following elements (in order):

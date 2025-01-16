@@ -90,15 +90,15 @@ def main():
         env_type=env_type,
         model_actor=actor,
         model_critic=critic,
-        hf=True,
-        nb_vec_envs=1,
+        hf=False,
+        nb_vec_envs=2,
         options=llm_options,
         legacy_training=False,
         training_time=500_000,
         proxies=proxies
     )
     viral.generate_context()
-    viral.generate_reward_function(n_init=1, n_refine=2, focus="don't use is_success boolean!")
+    viral.generate_reward_function(n_init=2, n_refine=2)
     for state in viral.memory:
         viral.logger.info(state)
 
