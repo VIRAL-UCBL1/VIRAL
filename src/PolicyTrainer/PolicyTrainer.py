@@ -74,7 +74,7 @@ class PolicyTrainer:
             queue.put([state.idx, path, metrics])
         else:
             self.memory[state.idx].set_performances(metrics)
-            self.memory[state.idx].set_policy(policy)
+            self.memory[state.idx].set_policy(path)
         self.logger.info(f"state {state.idx} has finished learning with performances: {sr_test}")
 
 
