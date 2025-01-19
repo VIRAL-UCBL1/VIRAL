@@ -22,10 +22,52 @@ import warnings
 from decord import VideoReader, cpu
 import numpy as np
 warnings.filterwarnings("ignore")
+import subprocess
+import re
 
 from flask import Flask, request, jsonify
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'video'
+
+
+def _execute_ollama_ps():
+    try:
+        result = subprocess.run(
+            ["ollama", "ps"], capture_output=True, text=True, check=True
+        )
+        output = result.stdout
+        print("stdout 'ollama ps':")
+        print(output)
+
+        # Utilisation d'une expression régulière pour extraire le premier nom
+        match = re.search(
+            r"NAME\s+ID\s+SIZE\s+PROCESSOR\s+UNTIL\s+(.+?)\s+", output, re.DOTALL
+        )
+
+        if match:
+            first_name = match.group(1).strip()
+            print(f"ollama model : {first_name}")
+            return first_name
+        else:
+            print("ollama ps return None")
+            return None
+
+    except subprocess.CalledProcessError as e:
+        print(f"Error : {e}")
+        print(f"Stderr: {e.stderr}")
+        return None
+
+
+def _execute_ollama_stop(model: str):
+    try:
+        result = subprocess.run(
+            ["ollama", "stop", model], capture_output=True, text=True, check=True
+        )
+        output = result.stdout
+
+    except subprocess.CalledProcessError as e:
+        print(f"Error : {e}")
+        print(f"Stderr: {e.stderr}")
 
 # Function to load video and sample frames
 def load_video(video_path, max_frames_num, fps=1, force_sample=False):
@@ -79,10 +121,16 @@ def process_video():
     device = "cuda"
     device_map = "auto"
 
-    tokenizer, model, image_processor, max_length = load_pretrained_model(
-        pretrained, None, model_name, load_8bit=True, torch_dtype="bfloat16", device_map=device_map
-    )
-    model.eval()
+    # TODO remake if not work after the free memory
+    try:
+        tokenizer, model, image_processor, max_length = load_pretrained_model(
+            pretrained, None, model_name, load_8bit=True, torch_dtype="bfloat16", device_map=device_map
+        )
+        model.eval()
+    except torch.OutOfMemoryError:
+        print('error mem cuda, going to free one model of ollama')
+        ollama_model = _execute_ollama_ps()
+        _execute_ollama_stop(ollama_model)
 
     data = request.get_json()
     video_path = './video/tmp.mp4'

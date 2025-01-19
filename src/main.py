@@ -57,8 +57,7 @@ def main():
             "Goal": "Do not crash but do not land, i want to make a stationary flight",
             "Observation Space": """Box([ -2.5 -2.5 -10. -10. -6.2831855 -10. -0. -0. ], [ 2.5 2.5 10. 10. 6.2831855 10. 1. 1. ], (8,), float32)
         The state is an 8-dimensional vector: the coordinates of the lander in x & y, its linear velocities in x & y, its angle, its angular velocity, and two booleans that represent whether each leg is in contact with the ground or not.
-            """,
-            "Image": "Environments/img/LunarLander.png"
+            """
         })
     actor = "qwen2.5-coder:32b"
     critic = "llama3.2-vision"
@@ -69,16 +68,17 @@ def main():
     viral = VIRAL(
         env_type=env_type,
         model_actor=actor,
-        model_critic=critic,
+        model_critic=actor,
         hf=False,
+        vd=True,
         nb_vec_envs=2,
         options=llm_options,
         legacy_training=False,
-        training_time=50_000,
+        training_time=50,
         proxies=proxies
     )
     viral.generate_context()
-    viral.generate_reward_function(n_init=2, n_refine=2)
+    viral.generate_reward_function(n_init=1, n_refine=4)
     for state in viral.memory:
         viral.logger.info(state)
 

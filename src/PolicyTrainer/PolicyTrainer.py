@@ -225,7 +225,8 @@ class PolicyTrainer:
         )
         if self.algo == Algo.PPO:
             policy = PPO.load(policy_path)
-
+        elif self.algo == Algo.DQN:
+            policy = DQN.load(policy_path)
         for videos in range(nb_episodes):
             done = truncated = False
             obs, info = env.reset()

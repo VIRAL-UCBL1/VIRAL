@@ -1,4 +1,5 @@
 import random
+import os
 from logging import getLogger
 
 from Environments import EnvType
@@ -6,6 +7,7 @@ from LLM.OllamaChat import OllamaChat
 from log.LoggerCSV import LoggerCSV
 from State.State import State
 from LLM.GenCode import GenCode
+from LLM.ClientVideoLVLM import ClienVideoLVLM
 from PolicyTrainer.PolicyTrainer import PolicyTrainer
 
 
@@ -14,14 +16,15 @@ class VIRAL:
         self,
         env_type: EnvType,
         model_actor: str,
-        model_critic: str | None = None,
+        model_critic: str,
         hf: bool = False,
+        vd: bool = False,
         seed: int = None,
         training_time: int = 25000,
         nb_vec_envs: int = 1,
         legacy_training: bool = True,
         options: dict = {},
-        proxies: dict = None
+        proxies: dict = None,
     ):
         """
         Initialize VIRAL architecture for dynamic reward function generation
@@ -51,22 +54,22 @@ class VIRAL:
             options=options.copy(),
             proxies=proxies
         )
-        if model_critic is not None:
-            self.llm_critic = OllamaChat(
-                model=model_critic,
-                system_prompt=f"""
+        self.llm_critic = OllamaChat(
+            model=model_critic,
+            system_prompt=f"""
         You're a reinforcement learning expert and assistant in rewarding for the {env_type} environment.
         As a critic, you're going to explains step by step, how to achieve the goal: {env_type.prompt['Goal']}.
         If you're reading an image, please use what you see, as a grounding, as a link to the state.
         The image contain red trajectory, the agent need to be identify and the trajectory needs to be precisely described.
         Every response you made, begin with the title '# HELP'
             """,
-                options=options.copy(),
-                proxies=proxies
-            )
-        else:
-            self.llm_critic = self.llm_actor
+            options=options.copy(),
+            proxies=proxies
+        )
         self.hf = hf
+        self.vd = vd
+        if self.vd:
+            self.client_video = ClienVideoLVLM(proxies)
         self.env_type: EnvType = env_type
         self.gen_code: GenCode = GenCode(self.env_type, self.llm_actor)
         self.logger = getLogger("VIRAL")
@@ -279,6 +282,8 @@ class VIRAL:
         self.logger.debug(self.memory[idx].performances)
         if self.hf:
             refinement_prompt = self.human_feedback(refinement_prompt, idx)
+        if self.vd:
+            refinement_prompt = self.video_description(refinement_prompt, idx)
         self.llm_actor.add_message(refinement_prompt)
         refined_response = self.llm_actor.generate_response(stream=True)
         refined_response = self.llm_actor.print_Generator_and_return(
@@ -306,6 +311,27 @@ class VIRAL:
         feedback = input("add a comment, (press enter if you don't have one)\n:")
         if feedback:
             prompt = feedback + "\n" + prompt
+        return prompt
+
+    def video_description(self, prompt:str,  idx: str):
+        if self.client_video is None:
+            self.logger.error("client video not initialised")
+            raise RuntimeError("client video not initialised")
+        self.policy_trainer.test_policy_video(self.memory[idx].policy, 1)
+        video_path = os.path.join("records", str(self.env_type), "rl-video-episode-0.mp4")
+        self.logger.info(f"video safe at: {video_path}")
+        video_prompt = """In this video, an object is in motion. 
+        Describe only the movement of the object, focusing on the dynamics of its movement. 
+        Specify the precise direction in which it is moving (e.g., forward, backward, diagonally, etc.) 
+        and detail the characteristics of this movement 
+        (speed, acceleration, trajectory, oscillation, rotation, etc.). 
+        Also, mention any changes in direction or rhythm, 
+        as well as any specific actions the object performs during its movement. 
+        Avoid discussing the background or color"""
+        response = self.client_video.generate_simple_response(video_prompt, video_path)
+        self.logger.info(f"description of the video: \n {response}")
+        if response:
+            prompt = response + "\n" + prompt
         return prompt
 
     def test_reward_func(self, reward_func: str) -> None:
