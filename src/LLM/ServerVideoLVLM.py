@@ -80,8 +80,8 @@ def process_video():
     device_map = "auto"
 
     tokenizer, model, image_processor, max_length = load_pretrained_model(
-        pretrained, None, model_name, torch_dtype="bfloat16", device_map=device_map
-    )  # Add any other thing you want to pass in llava_model_args
+        pretrained, None, model_name, torch_dtype="bfloat16", device_map=device_map, load_4bit=True
+    )
     model.eval()
 
     data = request.get_json()
