@@ -80,7 +80,7 @@ def process_video():
     device_map = "auto"
 
     tokenizer, model, image_processor, max_length = load_pretrained_model(
-        pretrained, None, model_name, torch_dtype="bfloat16", device_map=device_map, load_4bit=True
+        pretrained, None, model_name, load_8bit=True, torch_dtype="bfloat16", device_map=device_map
     )
     model.eval()
 

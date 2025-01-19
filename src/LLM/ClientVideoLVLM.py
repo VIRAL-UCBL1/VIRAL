@@ -1,14 +1,10 @@
-from logging import getLogger
 import requests
-
 LVLM_API_URL = 'http://127.0.0.1:5000/'
-
 
 class ClienVideoLVLM:
 	def __init__(self, proxies: dict = None) -> None:
-		#self.logger = getLogger("VIRAL")
 		if proxies is None:
-			self.logger.warning('Running Video LVLM takes a lot of performance')
+			print('Running Video LVLM takes a lot of performance')
 		self.proxies = proxies
 
 	def generate_simple_response(self, prompt: str, video_path: str) -> str:
@@ -21,7 +17,7 @@ class ClienVideoLVLM:
 		if self.proxies is not None:
 			response = requests.post(url, json=payload, proxies=self.proxies)
 		else:
-			self.logger.error('Running Video LVLM takes a lot of performance, not implemented yet')
+			print('Running Video LVLM takes a lot of performance, not implemented yet')
 			response = requests.post(url, json=payload)
 		return response.text
 
@@ -33,13 +29,11 @@ class ClienVideoLVLM:
 			if self.proxies is not None:
 				response = requests.post(url, files=files, proxies=self.proxies)
 			else:
-				self.logger.error('Running Video LVLM takes a lot of performance, not implemented yet')
+				print('Running Video LVLM takes a lot of performance, not implemented yet')
 				response = requests.post(url, files=files)
 		print(response.text)
 
 if __name__ == '__main__':
-	# from log.log_config import init_logger
-	# init_logger("DEBUG")
 	proxies = {
         "http"  : "socks5h://localhost:1080",
         "https" : "socks5h://localhost:1080",
