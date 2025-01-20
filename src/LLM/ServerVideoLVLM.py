@@ -121,20 +121,11 @@ def process_video():
     device = "cuda"
     device_map = "auto"
 
-    try:
-        tokenizer, model, image_processor, max_length = load_pretrained_model(
-            pretrained, None, model_name, load_8bit=True, torch_dtype="bfloat16", device_map=device_map
-        )
-        model.eval()
-    except torch.OutOfMemoryError:
-        print('error mem cuda, going to free one model of ollama')
-        ollama_model = _execute_ollama_ps()
-        _execute_ollama_stop(ollama_model)
-        tokenizer, model, image_processor, max_length = load_pretrained_model(
-            pretrained, None, model_name, load_8bit=True, torch_dtype="bfloat16", device_map=device_map
-        )
-        model.eval()
-
+    tokenizer, model, image_processor, max_length = load_pretrained_model(
+        pretrained, None, model_name, load_8bit=True, torch_dtype="bfloat16", device_map=device_map
+    )
+    model.eval()
+   
     data = request.get_json()
     video_path = './video/tmp.mp4'
     question = data['prompt']
@@ -155,15 +146,30 @@ def process_video():
     
     input_ids = tokenizer_image_token(prompt_question, tokenizer, IMAGE_TOKEN_INDEX, return_tensors="pt").unsqueeze(0).to(device)
     
-    with torch.no_grad():
-        output = model.generate(
-            input_ids,
-            images=video,
-            modalities=["video"],
-            do_sample=False,
-            temperature=0.6,
-            max_new_tokens=4096,
-        )
+    try:
+        with torch.no_grad():
+            output = model.generate(
+                input_ids,
+                images=video,
+                modalities=["video"],
+                do_sample=False,
+                temperature=0.6,
+                max_new_tokens=4096,
+            )
+    except Exception:
+        print('error mem cuda, going to free one model of ollama')
+        ollama_model = _execute_ollama_ps()
+        _execute_ollama_stop(ollama_model)
+        with torch.no_grad():
+            output = model.generate(
+                input_ids,
+                images=video,
+                modalities=["video"],
+                do_sample=False,
+                temperature=0.6,
+                max_new_tokens=4096,
+            )
+
 
     response = tokenizer.batch_decode(output, skip_special_tokens=True)[0].strip()
     response = {'response': response}
