@@ -307,7 +307,7 @@ class VIRAL:
         self.logger.info(self.memory[idx])
         visualise = input("do you need to visualise policy ?\ny/n:")
         if visualise.lower() in ["y", "yes"]:
-            self.policy_trainer.test_policy_hf(self.memory[idx].policy, 2)
+            self.policy_trainer.start_hf(self.memory[idx].policy, 2)
         feedback = input("add a comment, (press enter if you don't have one)\n:")
         if feedback:
             prompt = feedback + "\n" + prompt
@@ -317,7 +317,7 @@ class VIRAL:
         if self.client_video is None:
             self.logger.error("client video not initialised")
             raise RuntimeError("client video not initialised")
-        self.policy_trainer.test_policy_video(self.memory[idx].policy, 1)
+        self.policy_trainer.start_vd(self.memory[idx].policy, 1)
         video_path = os.path.join("records", str(self.env_type), "rl-video-episode-0.mp4")
         self.logger.info(f"video safe at: {video_path}")
         video_prompt = """In this video, an object is in motion. 

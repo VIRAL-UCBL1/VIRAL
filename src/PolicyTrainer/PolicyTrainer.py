@@ -186,6 +186,20 @@ class PolicyTrainer:
         success_rate = nb_success / nb_episodes
         return success_rate
 
+
+    def start_hf(self, policy_path: str, nb_episodes: int = 10):
+        if os.name == "posix":
+            self.multi_process.append(
+                Process(
+                    target=self.test_policy_hf, args=(policy_path, nb_episodes)
+                )
+            )
+            self.multi_process[-1].start()
+            self.multi_process[-1].join()
+        else:
+            self.test_policy_hf(policy_path, nb_episodes)
+
+
     def test_policy_hf(self, policy_path: str, nb_episodes: int = 10):
         """visualise a policy
 
@@ -217,6 +231,18 @@ class PolicyTrainer:
                 done = term or trunc
         print(f"nb_success: {nb_success/nb_episodes}")
         env.close()
+
+    def start_vd(self, policy_path: str, nb_episodes: int = 3):
+        if os.name == "posix":
+            self.multi_process.append(
+                Process(
+                    target=self.test_policy_video, args=(policy_path, nb_episodes)
+                )
+            )
+            self.multi_process[-1].start()
+            self.multi_process[-1].join()
+        else:
+            self.test_policy_video(policy_path, nb_episodes)
 
     def test_policy_video(self, policy_path: str, nb_episodes: int = 3):
         env = make(self.env_name, render_mode='rgb_array')

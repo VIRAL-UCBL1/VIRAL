@@ -71,10 +71,10 @@ def main():
         model_critic=actor,
         hf=False,
         vd=True,
-        nb_vec_envs=2,
+        nb_vec_envs=1,
         options=llm_options,
         legacy_training=False,
-        training_time=50,
+        training_time=500,
         proxies=proxies
     )
     # viral.generate_context()
