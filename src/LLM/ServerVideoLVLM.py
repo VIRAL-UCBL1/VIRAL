@@ -1,3 +1,4 @@
+from time import sleep
 from llava.model.builder import load_pretrained_model
 from llava.mm_utils import tokenizer_image_token
 from llava.constants import (
@@ -56,6 +57,7 @@ def _execute_ollama_stop(model: str):
         output = result.stdout
         print("stdout 'ollama stop':")
         print(output)
+        sleep(1)
 
     except subprocess.CalledProcessError as e:
         print(f"Error : {e}")
