@@ -121,7 +121,6 @@ def process_video():
     device = "cuda"
     device_map = "auto"
 
-    # TODO remake if not work after the free memory
     try:
         tokenizer, model, image_processor, max_length = load_pretrained_model(
             pretrained, None, model_name, load_8bit=True, torch_dtype="bfloat16", device_map=device_map
@@ -131,6 +130,10 @@ def process_video():
         print('error mem cuda, going to free one model of ollama')
         ollama_model = _execute_ollama_ps()
         _execute_ollama_stop(ollama_model)
+        tokenizer, model, image_processor, max_length = load_pretrained_model(
+            pretrained, None, model_name, load_8bit=True, torch_dtype="bfloat16", device_map=device_map
+        )
+        model.eval()
 
     data = request.get_json()
     video_path = './video/tmp.mp4'
