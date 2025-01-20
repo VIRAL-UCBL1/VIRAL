@@ -64,6 +64,8 @@ def _execute_ollama_stop(model: str):
             ["ollama", "stop", model], capture_output=True, text=True, check=True
         )
         output = result.stdout
+        print("stdout 'ollama stop':")
+        print(output)
 
     except subprocess.CalledProcessError as e:
         print(f"Error : {e}")
