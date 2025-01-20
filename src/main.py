@@ -77,7 +77,7 @@ def main():
         training_time=50,
         proxies=proxies
     )
-    viral.generate_context()
+    # viral.generate_context()
     viral.generate_reward_function(n_init=1, n_refine=4)
     for state in viral.memory:
         viral.logger.info(state)

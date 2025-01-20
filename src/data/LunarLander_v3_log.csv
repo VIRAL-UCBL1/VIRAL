@@ -325,3 +325,81 @@ data/model/LunarLander-v3_422849_1.pth;LunarLander-v3;qwen2.5-coder:32b;{'temper
     else:
         reward = -abs(x_vel) - abs(y_vel) - abs(ang_vel)
         return max(reward, -3.0)";;nan;0;0.0
+data/model/LunarLander-v3_141546_1.pth;LunarLander-v3;qwen2.5-coder:32b;{'temperature': 0.9, 'seed': 141546};DQN;{'batch_size': 128, 'buffer_size': 50000, 'exploration_final_eps': 0.1, 'exploration_fraction': 0.12, 'gamma': 0.99, 'gradient_steps': -1, 'learning_rate': 0.00063, 'learning_starts': 0, 'policy': 'MlpPolicy', 'policy_kwargs': {'net_arch': [256, 256]}, 'target_update_interval': 250, 'train_freq': 4, 'tensorboard_log': 'data/model/LunarLanderDQN/', 'seed': 141546};50;"def reward_func(observations:np.ndarray, is_success:bool, is_failure:bool) -> float:
+    x, y, vx, vy, angle, angular_v, c1, c2 = observations
+    hover_bonus = 0.5 * (1 - np.abs(vx)) + 0.5 * (1 - np.abs(vy))
+    angle_penalty = 1 - np.abs(angle) / 6.2831855
+    angular_v_penalty = 1 - np.abs(angular_v) / 10.
+    ground_contact_penalty = -10 * (c1 + c2)
+    reward = hover_bonus + angle_penalty + angular_v_penalty + ground_contact_penalty
+    if is_failure:
+        return -100
+    return reward";;nan;0;0.0
+data/model/LunarLander-v3_508057_1.pth;LunarLander-v3;qwen2.5-coder:32b;{'temperature': 0.9, 'seed': 508057};DQN;{'batch_size': 128, 'buffer_size': 50000, 'exploration_final_eps': 0.1, 'exploration_fraction': 0.12, 'gamma': 0.99, 'gradient_steps': -1, 'learning_rate': 0.00063, 'learning_starts': 0, 'policy': 'MlpPolicy', 'policy_kwargs': {'net_arch': [256, 256]}, 'target_update_interval': 250, 'train_freq': 4, 'tensorboard_log': 'data/model/LunarLanderDQN/', 'seed': 508057};50;"def reward_func(observations:np.ndarray, is_success:bool, is_failure:bool) -> float:
+    x, y, vx, vy, theta, angular_velocity, left_leg_contact, right_leg_contact = observations
+    if is_failure:
+        return -10.0
+    if left_leg_contact or right_leg_contact:
+        return -5.0
+    position_penalty = abs(vx) + abs(vy)
+    angle_penalty = abs(theta) + abs(angular_velocity)
+    height_reward = y / 10.0  # Encourage higher altitude to avoid ground contact
+    reward = height_reward - position_penalty - angle_penalty
+    return reward";;nan;0;0.0
+data/model/LunarLander-v3_270043_1.pth;LunarLander-v3;qwen2.5-coder:32b;{'temperature': 0.9, 'seed': 270043};DQN;{'batch_size': 128, 'buffer_size': 50000, 'exploration_final_eps': 0.1, 'exploration_fraction': 0.12, 'gamma': 0.99, 'gradient_steps': -1, 'learning_rate': 0.00063, 'learning_starts': 0, 'policy': 'MlpPolicy', 'policy_kwargs': {'net_arch': [256, 256]}, 'target_update_interval': 250, 'train_freq': 4, 'tensorboard_log': 'data/model/LunarLanderDQN/', 'seed': 270043};50;"def reward_func(observations: np.ndarray, is_success: bool, is_failure: bool) -> float:
+    x_velocity = observations[2]
+    y_velocity = observations[3]
+    angle = observations[4]
+    angular_velocity = observations[5]
+    leg_contact = observations[6] + observations[7]
+
+    if is_failure:
+        return -10.0
+    elif leg_contact > 0:
+        return -5.0
+    else:
+        reward = 1.0
+        reward -= abs(x_velocity) * 0.1
+        reward -= abs(y_velocity) * 0.2
+        reward -= abs(angle) * 0.1
+        reward -= abs(angular_velocity) * 0.1
+        return reward";;nan;0;0.0
+data/model/LunarLander-v3_584414_1.pth;LunarLander-v3;qwen2.5-coder:32b;{'temperature': 0.9, 'seed': 584414};DQN;{'batch_size': 128, 'buffer_size': 50000, 'exploration_final_eps': 0.1, 'exploration_fraction': 0.12, 'gamma': 0.99, 'gradient_steps': -1, 'learning_rate': 0.00063, 'learning_starts': 0, 'policy': 'MlpPolicy', 'policy_kwargs': {'net_arch': [256, 256]}, 'target_update_interval': 250, 'train_freq': 4, 'tensorboard_log': 'data/model/LunarLanderDQN/', 'seed': 584414};50;"def reward_func(observations:np.ndarray, is_success:bool, is_failure:bool) -> float:
+    if is_success:
+        return 10.0
+    elif is_failure:
+        return -5.0
+    else:
+        return np.cos(observations[3]) * 2.0";;nan;0;0.0
+data/model/LunarLander-v3_74143_1.pth;LunarLander-v3;qwen2.5-coder:32b;{'temperature': 0.9, 'seed': 74143};DQN;{'batch_size': 128, 'buffer_size': 50000, 'exploration_final_eps': 0.1, 'exploration_fraction': 0.12, 'gamma': 0.99, 'gradient_steps': -1, 'learning_rate': 0.00063, 'learning_starts': 0, 'policy': 'MlpPolicy', 'policy_kwargs': {'net_arch': [256, 256]}, 'target_update_interval': 250, 'train_freq': 4, 'tensorboard_log': 'data/model/LunarLanderDQN/', 'seed': 74143};50;"def reward_func(observations:np.ndarray, is_success:bool, is_failure:bool) -> float:
+    """"""Reward function for LunarLander-v3
+
+    Args:
+        observations (np.ndarray): observation on the current state
+        is_success (bool): True if the goal is achieved, False otherwise
+        is_failure (bool): True if the episode ends unsuccessfully, False otherwise
+
+    Returns:
+        float: The reward for the current step
+    """"""
+    if is_success:
+        return 100.0
+    elif is_failure:
+        return -50.0
+    else:
+        return -0.1 * np.sum(np.abs(observations[:2]))";;nan;0;0.0
+data/model/LunarLander-v3_119847_1.pth;LunarLander-v3;qwen2.5-coder:32b;{'temperature': 0.9, 'seed': 119847};DQN;{'batch_size': 128, 'buffer_size': 50000, 'exploration_final_eps': 0.1, 'exploration_fraction': 0.12, 'gamma': 0.99, 'gradient_steps': -1, 'learning_rate': 0.00063, 'learning_starts': 0, 'policy': 'MlpPolicy', 'policy_kwargs': {'net_arch': [256, 256]}, 'target_update_interval': 250, 'train_freq': 4, 'tensorboard_log': 'data/model/LunarLanderDQN/', 'seed': 119847};50;"def reward_func(observations:np.ndarray, is_success:bool, is_failure:bool) -> float:
+    if is_success:
+        return 100.0
+    elif is_failure:
+        return -50.0
+    else:
+        return 0.1 * np.exp(-np.linalg.norm(observations[:2]))";;nan;0;0.0
+data/model/LunarLander-v3_30767_1.pth;LunarLander-v3;qwen2.5-coder:32b;{'temperature': 0.9, 'seed': 30767};DQN;{'batch_size': 128, 'buffer_size': 50000, 'exploration_final_eps': 0.1, 'exploration_fraction': 0.12, 'gamma': 0.99, 'gradient_steps': -1, 'learning_rate': 0.00063, 'learning_starts': 0, 'policy': 'MlpPolicy', 'policy_kwargs': {'net_arch': [256, 256]}, 'target_update_interval': 250, 'train_freq': 4, 'tensorboard_log': 'data/model/LunarLanderDQN/', 'seed': 30767};50;"def reward_func(observations:np.ndarray, is_success:bool, is_failure:bool) -> float:
+    if is_success:
+        return 100.0
+    elif is_failure:
+        return -50.0
+    else:
+        reward = np.clip(-observations[3] * 20 + observations[6] * 10, -10, 10)
+        return reward";;nan;0;0.0
