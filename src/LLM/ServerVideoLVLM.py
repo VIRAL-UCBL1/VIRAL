@@ -1,22 +1,12 @@
 from llava.model.builder import load_pretrained_model
-from llava.mm_utils import (
-    get_model_name_from_path,
-    process_images,
-    tokenizer_image_token,
-)
+from llava.mm_utils import tokenizer_image_token
 from llava.constants import (
     IMAGE_TOKEN_INDEX,
-    DEFAULT_IMAGE_TOKEN,
-    DEFAULT_IM_START_TOKEN,
-    DEFAULT_IM_END_TOKEN,
-    IGNORE_INDEX,
+    DEFAULT_IMAGE_TOKEN
 )
-from llava.conversation import conv_templates, SeparatorStyle
-from PIL import Image
-import requests
+from llava.conversation import conv_templates
 import copy
 import torch
-import sys
 import os
 import warnings
 from decord import VideoReader, cpu
@@ -124,7 +114,7 @@ def process_video():
     device_map = "auto"
 
     tokenizer, model, image_processor, max_length = load_pretrained_model(
-        pretrained, None, model_name, load_8bit=True, torch_dtype="bfloat16", device_map=device_map
+        pretrained, None, model_name, torch_dtype="bfloat16", device_map=device_map
     )
     model.eval()
    
