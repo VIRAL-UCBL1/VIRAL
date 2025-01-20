@@ -152,6 +152,9 @@ def process_video():
         print('error mem cuda, going to free one model of ollama')
         ollama_model = _execute_ollama_ps()
         _execute_ollama_stop(ollama_model)
+        ollama_model = _execute_ollama_ps()
+
+        torch.cuda.empty_cache()
         with torch.no_grad():
             output = model.generate(
                 input_ids,
