@@ -7,7 +7,7 @@ from utils.utils import unwrap_env
 class LunarLander(EnvType):
     def __init__(
         self,
-        algo: Algo = Algo.PPO,
+        algo: Algo = Algo.DQN,
         algo_param: dict = {
             "batch_size": 128,
             "buffer_size": 50000,
@@ -21,7 +21,7 @@ class LunarLander(EnvType):
             "policy_kwargs": {"net_arch": [256, 256]},
             "target_update_interval": 250,
             "train_freq": 4,
-            "tensorboard_log": "model/LunarLanderDQN/",
+            "tensorboard_log": "data/model/LunarLanderDQN/",
         },
         prompt: dict | str = {
             "Goal": "Land safely on the ground, but don't move if you touch the ground",

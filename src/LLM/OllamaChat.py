@@ -15,7 +15,8 @@ class OllamaChat:
         model: str = "qwen2.5-coder",
         system_prompt: Optional[str] = None,
         options: Optional[Dict] = None,
-    ):
+        proxies: dict = None
+    ) -> None:
         """
         Initialize an advanced Ollama chat session with extended configuration.
 
@@ -24,6 +25,7 @@ class OllamaChat:
             system_prompt (str, optional): Initial system message to set chat context.
             options (dict, optional): Advanced model generation parameters.
         """
+        self.proxies = proxies
         self.model = model
         self.messages: list[Dict[str, str]] = []
         self.options = options or {}
@@ -72,9 +74,14 @@ class OllamaChat:
             "options": generation_options,
         }
 
-        try:
-            response = requests.post(OLLAMA_CHAT_API_URL, json=payload, stream=stream)
+      
 
+
+        try:
+            if self.proxies:
+                response = requests.post(OLLAMA_CHAT_API_URL, json=payload, stream=stream, proxies=self.proxies)
+            else:
+                response = requests.post(OLLAMA_CHAT_API_URL, json=payload, stream=stream)
             response.raise_for_status()
             if not stream:
                 full_response = response.json()
@@ -134,8 +141,10 @@ class OllamaChat:
         }
 
         try:
-            response = requests.post(OLLAMA_API_URL, json=payload, stream=stream)
-
+            if self.proxies:
+                response = requests.post(OLLAMA_CHAT_API_URL, json=payload, stream=stream, proxies=self.proxies)
+            else:
+                response = requests.post(OLLAMA_CHAT_API_URL, json=payload, stream=stream)
             response.raise_for_status()
             if not stream:
                 full_response = response.json()

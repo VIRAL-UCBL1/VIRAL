@@ -3,4 +3,4 @@ __pycache__
 site/
 .vscode/
 src/log/log.txt
-**/records/*.mp4
+*.mp4
