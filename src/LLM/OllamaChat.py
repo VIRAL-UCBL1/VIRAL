@@ -1,15 +1,18 @@
-import requests
-import json
 import base64
-from typing import Dict, Union, Optional, Generator
+import json
 from logging import getLogger
+from typing import Dict, Generator, Optional, Union
 
+import requests
 
 OLLAMA_CHAT_API_URL = "http://localhost:11434/api/chat"
 OLLAMA_API_URL = "http://localhost:11434/api/generate"
 
 
 class OllamaChat:
+    """
+    Class for an advanced Ollama chat session with extended configuration.
+    """
     def __init__(
         self,
         model: str = "qwen2.5-coder",
@@ -24,6 +27,7 @@ class OllamaChat:
             model (str, optional): The name of the Ollama model.
             system_prompt (str, optional): Initial system message to set chat context.
             options (dict, optional): Advanced model generation parameters.
+            proxies (dict, optional): Proxy configuration for the HTTP requests.
         """
         self.proxies = proxies
         self.model = model
@@ -42,6 +46,7 @@ class OllamaChat:
         Args:
             content (str): The message content
             role (str, optional): Message role (user/assistant/system)
+            kwargs (dict): Additional message metadata
         """
         if 'images' in kwargs.keys():
             imgs_encoded = []
@@ -73,9 +78,6 @@ class OllamaChat:
             "stream": stream,
             "options": generation_options,
         }
-
-      
-
 
         try:
             if self.proxies:

@@ -2,6 +2,12 @@
 Config file for the LLM model parameters.
 
 Args:
+    temperature (float): Adjusts creativity in the model's responses
+        (default: 0.8).
+    
+    num_predict (int): Maximum tokens to predict in generation
+        (default: -1).
+        
     mirostat (int): Enables Mirostat sampling for controlling perplexity 
         (default: 0). 
         - 0: Disabled

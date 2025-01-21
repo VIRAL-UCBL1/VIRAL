@@ -1,9 +1,14 @@
 import gymnasium as gym
+
 from Environments import Algo
+
 from .EnvType import EnvType
 
 
 class CartPole(EnvType):
+    """
+    This class represents the CartPole environment.
+    """
     def __init__(
         self,
         algo: Algo = Algo.PPO,
@@ -21,9 +26,23 @@ class CartPole(EnvType):
         3 Pole Angular Velocity -Inf Inf""",
         },
     ) -> None:
+        """
+        Initializes the CartPole environment.
+        
+        Args:
+            algo (Algo): The algorithm to use for training.
+            algo_param (dict): The parameters for the algorithm.
+            prompt (dict | str): The prompt for the environment.
+        """
         super().__init__(algo, algo_param, prompt)
 
     def __repr__(self):
+        """
+        String representation of the CartPole environment.
+        
+        Returns:
+            str: String representation of the CartPole environment.
+        """
         return "CartPole-v1"
 
     def success_func(self, env: gym.Env, info: dict) -> tuple[bool | bool]:

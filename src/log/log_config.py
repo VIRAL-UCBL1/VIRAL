@@ -1,19 +1,27 @@
-from logging.config import dictConfig
 import logging
+from logging.config import dictConfig
 
 LOG_LEVEL: str = ""
 
 def init_logger(
         log_level : str ="INFO", 
         log_file : str ='log/log.txt'):
-    """Function that init the logger object that's properly setup"""
+    """
+    Initialize the logger with the specified log level and log file.
+    
+    Args:
+        log_level (str): The log level (DEBUG, INFO, WARNING, ERROR).
+        log_file (str): The path to the log file.
+    """
     global LOG_LEVEL
     LOG_LEVEL = log_level
     LOG_FILE: str = log_file
     FORMAT: str = "\n%(asctime)s %(filename)s:%(lineno)d %(levelprefix)s\n\t%(message)s"
 
     class CustomFormatter(logging.Formatter):
-        """Custom formatter"""
+        """
+        Custom formatter
+        """
         def format(self, record):
             level_prefix = {
                 logging.DEBUG: "DEBUG",
@@ -25,7 +33,9 @@ def init_logger(
             return super().format(record)
 
     class CustomFormatterColor(logging.Formatter):
-        """Custom formatter"""
+        """
+        Custom formatter with color
+        """
         def format(self, record):
             level_prefix = {
                 logging.DEBUG: "\033[94mDEBUG\033[0m",

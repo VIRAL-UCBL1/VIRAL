@@ -6,8 +6,10 @@ from logging import getLogger
 from Environments import EnvType
 from LLM.LLMOptions import llm_options
 
+
 def getLoggerCSV():
-    """Retrieve the instance of the CSV logger.
+    """
+    Retrieve the instance of the CSV logger.
 
     Raises:
         NotImplementedError: If the logger instance has not been created.
@@ -18,7 +20,8 @@ def getLoggerCSV():
 
 
 class LoggerCSV:
-    """Logger for recording performance metrics in a CSV file.
+    """
+    Logger for recording performance metrics in a CSV file.
 
     Attributes:
         env_type (EnvType): The type of environment.
@@ -30,7 +33,8 @@ class LoggerCSV:
     _instance = None  # singleton
 
     def __new__(cls, env_type: EnvType, llm: str, total_timesteps: int):
-        """Create a new instance of LoggerCSV.
+        """
+        Create a new instance of LoggerCSV.
 
         Args:
             env_type (EnvType): The type of environment.
@@ -45,7 +49,8 @@ class LoggerCSV:
         return cls._instance
 
     def __init__(self, env_type: EnvType, llm: str, total_timesteps: int):
-        """Initialize the LoggerCSV instance.
+        """
+        Initialize the LoggerCSV instance.
 
         Args:
             env_type (EnvType): The type of environment.
@@ -62,7 +67,8 @@ class LoggerCSV:
         self._initialized = True
 
     def to_csv(self, state):
-        """Write performance metrics to the CSV file.
+        """
+        Write performance metrics to the CSV file.
 
         Args:
             state: The state object containing performance metrics.

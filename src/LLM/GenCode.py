@@ -1,19 +1,25 @@
 from logging import getLogger
 from typing import Callable
+
 import numpy as np
-from State.State import State
-from LLM.OllamaChat import OllamaChat
-from Environments import EnvType
 from stable_baselines3.common.env_util import make_vec_env
+
+from Environments import EnvType
+from LLM.OllamaChat import OllamaChat
+from State.State import State
 
 
 class GenCode:
+    """
+    Generate the code from a response, it can be handle error, and refine from the llm new responses
+    """
     def __init__(self, env: EnvType, llm: OllamaChat):
-        """Generate the code from a response, it can be handle error, and refine from the llm new responses
+        """
+        Generate the code from a response, it can be handle error, and refine from the llm new responses
 
         Args:
-            env (Environments): description of the Environment
-            llm (OllamaChat): the chat
+            env (Environments): the environment to test the code
+            llm (OllamaChat): the llm to handle the response
         """
         self.current_index = 0
         self.llm = llm
@@ -24,7 +30,8 @@ class GenCode:
         self.reward_func = None
 
     def get(self, response: str) -> State:
-        """retrive a new State with reward_func
+        """
+        Get the next state from the response code
 
         Args:
             response (str): response code from the llm
