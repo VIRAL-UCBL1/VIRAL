@@ -1,5 +1,5 @@
 import gymnasium as gym
-
+import highway_env
 from Environments import Algo
 
 from .EnvType import EnvType
@@ -116,5 +116,4 @@ Each action is typically represented as an integer:
         Returns:
             list: The objective metric.
         """
-        # Implémentation spécifique à votre cas d'utilisation
-        pass  # TODO
+        print(f"S: {states}")
