@@ -1,5 +1,7 @@
 import gymnasium as gym
 from Environments import Algo
+import highway_env
+
 from .EnvType import EnvType
 
 
