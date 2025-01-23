@@ -52,7 +52,7 @@ def main():
     #         "Image": "Environments/img/LunarLander.png"
     #     }
     # )
-    env_type = LunarLander(
+    env_type = Highway(
         prompt={
             "Goal": "Do not crash but do not land, i want to make a stationary flight",
             "Observation Space": """Box([ -2.5 -2.5 -10. -10. -6.2831855 -10. -0. -0. ], [ 2.5 2.5 10. 10. 6.2831855 10. 1. 1. ], (8,), float32)
