@@ -15,7 +15,7 @@ class Pacman(EnvType):
     """
     def __init__(
         self,
-        algo: Algo = Algo.DQN,
+        algo: Algo = Algo.PPO,
         algo_param: dict = {
             "policy": "MlpPolicy",
             "verbose": 0,
@@ -87,12 +87,14 @@ class Pacman(EnvType):
 
     def objective_metric(self, states) -> list[dict[str, float]]:
         """
-        Method to calculate the objective metric for the Pacman environment
-        
+        Method to calculate the objective metric for the Pacman environment.
+
         Args:
-            states: The states of the environment
-        
+            states: The states of the environment.
+
         Returns:
             list[dict[str, float]]: A list of dictionaries containing the objective metric for the environment.
         """
-        pass  # TODO
+        pass
+
+

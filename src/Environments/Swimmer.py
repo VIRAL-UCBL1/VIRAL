@@ -87,6 +87,7 @@ The action space is a `Box(-1, 1, (2,), float32)`. An action represents the torq
             return True, False
         else:
             return False, False
+        
 
     def objective_metric(self, states) -> dict[str, float]:
         """
@@ -94,9 +95,42 @@ The action space is a `Box(-1, 1, (2,), float32)`. An action represents the torq
         Calculates a score for the given state during a particular observation of the Swimmer environment.
 
         Args:
-            states (np.ndarray): The state of the environment.
-        
+            states (np.ndarray): The states of the environment.
+
         Returns:
             dict[str, float]: The objective metric for the state.
         """
-        return {}
+        # Calculate the average forward velocity (x-axis velocity)
+        forward_velocity = 0.0
+        for state in states:
+            forward_velocity += state[3]  # x-axis velocity is at index 3
+        forward_velocity /= len(states)
+
+        # Calculate the average lateral velocity (y-axis velocity)
+        lateral_velocity = 0.0
+        for state in states:
+            lateral_velocity += abs(state[4])  # y-axis velocity is at index 4
+        lateral_velocity /= len(states)
+
+        # Calculate the angular velocity of the front end
+        angular_velocity = 0.0
+        for state in states:
+            angular_velocity += abs(state[5])  # angular velocity of front end is at index 5
+        angular_velocity /= len(states)
+
+        # Calculate the total distance traveled along the x-axis
+        initial_position = states[0][0]  # Assume x-position is at index 0
+        final_position = states[-1][0]  # Assume x-position is at index 0
+        distance_traveled = final_position - initial_position
+
+        # Compile the results into a dictionary
+        result = {
+            "forward_velocity": forward_velocity,
+            "lateral_velocity": lateral_velocity,
+            "angular_velocity": angular_velocity,
+            "distance_traveled": distance_traveled,
+        }
+        
+
+        return result
+

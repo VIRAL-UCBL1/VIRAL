@@ -52,14 +52,15 @@ def main():
     #         "Image": "Environments/img/LunarLander.png"
     #     }
     # )
-    env_type = LunarLander(
-        prompt={
-            "Goal": "Do not crash but do not land, i want to make a stationary flight",
-            "Observation Space": """Box([ -2.5 -2.5 -10. -10. -6.2831855 -10. -0. -0. ], [ 2.5 2.5 10. 10. 6.2831855 10. 1. 1. ], (8,), float32)
-        The state is an 8-dimensional vector: the coordinates of the lander in x & y, its linear velocities in x & y, its angle, its angular velocity, and two booleans that represent whether each leg is in contact with the ground or not.
-            """
-        })
-    actor = "qwen2.5-coder:32b"
+    #env_type = LunarLander(
+    #    prompt={
+    #        "Goal": "Do not crash but do not land, i want to make a stationary flight",
+    #        "Observation Space": """Box([ -2.5 -2.5 -10. -10. -6.2831855 -10. -0. -0. ], [ 2.5 2.5 10. 10. 6.2831855 10. 1. 1. ], (8,), float32)
+    #    The state is an 8-dimensional vector: the coordinates of the lander in x & y, its linear velocities in x & y, its angle, its angular velocity, and two booleans that represent whether each leg is in contact with the ground or not.
+    #        """
+    #    })
+    env_type = Pacman()
+    actor = "qwen2.5-coder"
     critic = "llama3.2-vision"
     proxies = { 
         "http"  : "socks5h://localhost:1080", 
@@ -68,14 +69,13 @@ def main():
     viral = VIRAL(
         env_type=env_type,
         model_actor=actor,
-        model_critic=actor,
+        model_critic=critic,
         hf=False,
-        vd=True,
+        vd=False,
         nb_vec_envs=1,
         options=llm_options,
         legacy_training=False,
-        training_time=500,
-        proxies=proxies
+        training_time=500
     )
     # viral.generate_context()
     viral.generate_reward_function(n_init=1, n_refine=4)
