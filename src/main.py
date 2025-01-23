@@ -52,6 +52,7 @@ def main():
     #         "Image": "Environments/img/LunarLander.png"
     #     }
     # )
+<<<<<<< HEAD
     #env_type = LunarLander(
     #    prompt={
     #        "Goal": "Do not crash but do not land, i want to make a stationary flight",
@@ -61,6 +62,16 @@ def main():
     #    })
     env_type = Pacman()
     actor = "qwen2.5-coder"
+=======
+    env_type = Highway(
+        prompt={
+            "Goal": "Do not crash but do not land, i want to make a stationary flight",
+            "Observation Space": """Box([ -2.5 -2.5 -10. -10. -6.2831855 -10. -0. -0. ], [ 2.5 2.5 10. 10. 6.2831855 10. 1. 1. ], (8,), float32)
+        The state is an 8-dimensional vector: the coordinates of the lander in x & y, its linear velocities in x & y, its angle, its angular velocity, and two booleans that represent whether each leg is in contact with the ground or not.
+            """
+        })
+    actor = "qwen2.5-coder:32b"
+>>>>>>> cb61b2e2c2353bd2b4ff0ec0411c8e8af03b86af
     critic = "llama3.2-vision"
     proxies = { 
         "http"  : "socks5h://localhost:1080", 
