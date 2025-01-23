@@ -4,6 +4,10 @@ from stable_baselines3.common.callbacks import BaseCallback
 
 class TrainingInfoCallback(BaseCallback):
     def __init__(self):
+        """
+        Callback for harvest training information
+        
+        """
         super().__init__()
         self.training_metrics = {
             "episode_rewards": [], 
@@ -16,12 +20,16 @@ class TrainingInfoCallback(BaseCallback):
         self.num_envs = None
 
     def _on_training_start(self):
-        """Init at the begin of the training"""
+        """
+        Call at the start of the training
+        """
         self.current_episode_rewards = 0
         self.current_episode_lengths = 0
 
     def _on_step(self) -> bool:
-        """call every steps"""
+        """
+        Call after each step of the training
+        """
         obs = self.locals["new_obs"]
         rewards = self.locals["rewards"]
         dones = self.locals["dones"]
@@ -43,7 +51,9 @@ class TrainingInfoCallback(BaseCallback):
         return True
 
     def _on_training_end(self) -> None:
-        """call at the end of the training"""
+        """
+        Call at the end of the training
+        """
         rewards = self.training_metrics["episode_rewards"]
         rewards /= np.linalg.norm(rewards)
         lengths = self.training_metrics["episode_lengths"]
@@ -56,7 +66,8 @@ class TrainingInfoCallback(BaseCallback):
         }
 
     def get_metrics(self):
-        """for get metrics
+        """
+        Get metrics harvested
 
         Returns:
             dict: contain metrics harvested

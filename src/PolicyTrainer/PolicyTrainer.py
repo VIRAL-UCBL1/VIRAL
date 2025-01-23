@@ -1,6 +1,5 @@
 import os
 from logging import getLogger
-from log.log_config import get_log_level
 from multiprocessing import Process, Queue
 from queue import Empty
 from time import sleep
@@ -14,6 +13,7 @@ from stable_baselines3.common.vec_env.base_vec_env import VecEnv
 
 from Environments.Algo import Algo
 from Environments.EnvType import EnvType
+from log.log_config import get_log_level
 from PolicyTrainer.CustomRewardWrapper import CustomRewardWrapper
 from PolicyTrainer.TrainingInfoCallback import TrainingInfoCallback
 from State.State import State
@@ -21,12 +21,13 @@ from State.State import State
 
 class PolicyTrainer:
     def __init__(self, memory: list[State], seed: int, env_type: EnvType, timeout: int, nb_vec_envs: int, legacy_training: bool):
-        """initialise the policy trainer
+        """
+        Initialize the PolicyTrainer instance.
 
         Args:
-            memory (list[State]): 
-            env_type (EnvType): parameter of the env
-            timeout (int): for the model.learn()
+            memory (list[State]): list of states
+            env_type (EnvType): the type of environment
+            timeout (int): the maximum number of timesteps
         """
         self.logger = getLogger("VIRAL")
         self.progress_bar = True if get_log_level() == "DEBUG" else False
@@ -49,10 +50,11 @@ class PolicyTrainer:
             self.start_learning(0)
 
     def _learning(self, state: State, queue: Queue = None) -> None:
-        """train a policy on an environment
+        """
+        Train a policy for a given state
 
         Args:
-            state (State): 
+            state (State): the state to train
             queue (Queue, optional): handle modification to return. Defaults to None.
         """
         self.logger.info(
@@ -79,12 +81,24 @@ class PolicyTrainer:
 
 
     def start_learning(self, idx: int) -> None:
+        """
+        Start the learning process for a given state
+        
+        Args:
+            idx (int): the index of the state to train
+        """
         if os.name == "posix":
             self._start_proccess_learning(idx)
         else:
             self._learning(self.memory[idx])
 
     def _start_proccess_learning(self, idx: int) -> None:
+        """
+        Start the learning process for a given state in a new process
+        
+        Args:
+            idx (int): the index of the state to train
+        """
         assert (os.name == "posix"), "multi-proccess features only available on LINUX system..."
         if self.memory[idx].policy is None:
             self.multi_process.append(
@@ -148,16 +162,17 @@ class PolicyTrainer:
         policy,
         nb_episodes: int = 100,
     ) -> float:
-        """test a policy already train
+        """
+        Test a policy on the environment
 
         Args:
-            env (VecEnv): envs
-            policy (): can be PPO or other RLAlgo
-            numvenv (int): number of env in the vec
-            nb_episodes (int, optional): . Defaults to 100.
+            env (VecEnv): the environment
+            policy (BasePolicy): the policy to test
+            numvenv (int): the number of environments
+            nb_episodes (int, optional): the number of episodes to test. Defaults to 100.
 
         Returns:
-            float: _description_
+            float: the success rate of the policy
         """
         all_rewards = []
         nb_success = 0
@@ -188,6 +203,14 @@ class PolicyTrainer:
 
 
     def start_hf(self, policy_path: str, nb_episodes: int = 10):
+        """
+        Start the test of a policy to evaluate its performances
+        
+        Args:
+            policy_path (str): the path of the policy to test
+            nb_episodes (int, optional): the number of episodes to test. Defaults to 100.
+            
+        """
         if os.name == "posix":
             self.multi_process.append(
                 Process(
@@ -201,11 +224,12 @@ class PolicyTrainer:
 
 
     def test_policy_hf(self, policy_path: str, nb_episodes: int = 10):
-        """visualise a policy
+        """
+        Visualize the test of a policy to evaluate its performances
 
         Args:
-            policy_path (str): the path of the policy to load
-            nb_episodes (int, optional): . Defaults to 100.
+            policy_path (str): the path of the policy to test
+            nb_episodes (int, optional): the number of episodes to test. Defaults to 10.
         """
         env = make(self.env_name, render_mode='human') # TODO pass env param
         if self.algo == Algo.PPO:
@@ -233,6 +257,14 @@ class PolicyTrainer:
         env.close()
 
     def start_vd(self, policy_path: str, nb_episodes: int = 3):
+        """
+        Start the test of a policy to evaluate its performances
+        
+        Args:
+            policy_path (str): the path of the policy to test
+            nb_episodes (int, optional): the number of episodes to test. Defaults to 3.
+            
+        """
         if os.name == "posix":
             self.multi_process.append(
                 Process(
@@ -245,6 +277,14 @@ class PolicyTrainer:
             self.test_policy_video(policy_path, nb_episodes)
 
     def test_policy_video(self, policy_path: str, nb_episodes: int = 3):
+        """
+        Visualize the test of a policy to evaluate its performances
+        
+        Args:
+            policy_path (str): the path of the policy to test
+            nb_episodes (int, optional): the number of episodes to test. Defaults to 3.
+            
+        """
         env = make(self.env_name, render_mode='rgb_array')
         env = RecordVideo(
             env, video_folder=f"records/{self.env_name}", episode_trigger=lambda e: True
@@ -263,7 +303,8 @@ class PolicyTrainer:
         env.close()
 
     def _generate_env_model(self, reward_func) -> tuple[VecEnv, PPO, int]:
-        """Generate the environment model
+        """
+        Generate the environment model
 
         Args:
             reward_func (Callable): the generated reward function

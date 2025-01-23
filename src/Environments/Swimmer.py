@@ -6,6 +6,9 @@ from .EnvType import EnvType
 
 
 class Swimmer(EnvType):
+    """
+    This class represents the Swimmer environment.
+    """
     def __init__(
         self,
         algo: Algo = Algo.PPO,
@@ -48,17 +51,32 @@ The action space is a `Box(-1, 1, (2,), float32)`. An action represents the torq
 """,
         },
     ) -> None:
+        """
+        Initializes the Swimmer environment.
+        
+        Args:
+            algo (Algo, optional): The algorithm to be used for training. Defaults to Algo.PPO.
+            algo_param (dict, optional): The parameters for the algorithm. Defaults to {"policy": "MlpPolicy", "verbose": 0, "device": "cpu"}.
+            prompt (dict, optional): The prompt for the environment. Defaults to {"Goal": "Control the swimmer to move as fast as possible in the forward direction.", "Observation Space": [...], "Action Space": [...]}.
+             
+        """
         super().__init__(algo, algo_param, prompt)
 
     def __repr__(self):
+        """
+        Returns the name of the environment.
+        
+        Returns:
+            str: The name of the environment.
+        """
         return "Swimmer-v5"
 
     def success_func(self, env: gym.Env, info: dict) -> tuple[bool, bool]:
         """Success function for the Swimmer
 
         Args:
-            env (gym.Env):
-            info (dict):
+            env (gym.Env): The environment
+            info (dict): The info dictionary
 
         Returns:
             tuple[bool, bool]: is_success, is_failure tuple
@@ -75,7 +93,10 @@ The action space is a `Box(-1, 1, (2,), float32)`. An action represents the torq
         Objective metric for the Swimmer environment.
         Calculates a score for the given state during a particular observation of the Swimmer environment.
 
-        :param states: The state of the Swimmer environment.
-        :return: A dictionary containing the name of the metric and its value.
+        Args:
+            states (np.ndarray): The state of the environment.
+        
+        Returns:
+            dict[str, float]: The objective metric for the state.
         """
         return {}

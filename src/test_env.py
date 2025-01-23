@@ -1,12 +1,13 @@
 import argparse
 from logging import getLogger
 
-from Environments import Algo, CartPole, LunarLander, Pacman, Highway
+from RLAlgo.DirectSearch import DirectSearch
+from RLAlgo.Reinforce import Reinforce
+
+from Environments import Algo, CartPole, Highway, LunarLander, Pacman
 from LLM.LLMOptions import llm_options
 from log.log_config import init_logger
 from log.LoggerCSV import LoggerCSV
-from RLAlgo.DirectSearch import DirectSearch
-from RLAlgo.Reinforce import Reinforce
 from VIRAL import VIRAL
 
 

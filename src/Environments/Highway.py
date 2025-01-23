@@ -1,4 +1,5 @@
 import gymnasium as gym
+import highway_env
 from Environments import Algo
 import highway_env
 
@@ -6,6 +7,9 @@ from .EnvType import EnvType
 
 
 class Highway(EnvType):
+    """
+    This class represents the Highway environment.
+    """
     def __init__(
         self,
         algo: Algo = Algo.DQN,
@@ -49,14 +53,47 @@ Each action is typically represented as an integer:
 """,
         },
     ):
+        """
+        Initializes the Highway environment.
+        
+        Args:
+            algo (Algo, optional): The algorithm to use. Defaults to Algo.DQN.
+            algo_param (dict, optional): The algorithm parameters. Defaults to {
+                "policy": "MlpPolicy",
+                "policy_kwargs": dict(net_arch=[256, 256]),
+                "learning_rate": 5e-4,
+                "buffer_size": 15000,
+                "learning_starts": 200,
+                "batch_size": 32,
+                "gamma": 0.8,
+                "train_freq": 1,
+                "gradient_steps": 1,
+                "target_update_interval": 50,
+                "verbose": 0,
+                "tensorboard_log": "model/highway_dqn/",
+            }.
+            prompt (dict | str, optional): The prompt to display. Defaults to {
+                "Goal": "Control the ego vehicle to reach a high speed without collision.",
+                [..]
+        """
         super().__init__(algo, algo_param, prompt)
 
     def __repr__(self):
+        """
+        Représentation of the Highway environment.
+        
+        Returns:
+            str: The representation of the Highway environment.
+        """
         return "highway-v0"
 
     def success_func(self, env: gym.Env, info: dict) -> tuple[bool, bool]:
         """
-        Vérifie si le véhicule a atteint une vitesse élevée sans collision.
+        function to check if the simulation is successful or not
+        
+        Args:
+            env (gym.Env): The environment.
+            info (dict): The info dictionary.
         """
         speed = info.get("speed", 0)
         crashed = info.get("crashed", False)
@@ -72,7 +109,12 @@ Each action is typically represented as an integer:
 
     def objective_metric(self, states) -> list[dict[str, float]]:
         """
-        Calcule une métrique objective basée sur les états.
+        function to calculate the objective metric
+        
+        Args:
+            states (list): The states.
+        
+        Returns:
+            list: The objective metric.
         """
-        # Implémentation spécifique à votre cas d'utilisation
-        pass  # TODO
+        print(f"S: {states}")

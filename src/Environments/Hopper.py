@@ -1,9 +1,14 @@
 import gymnasium as gym
-from .EnvType import EnvType
+
 from Environments import Algo
+
+from .EnvType import EnvType
 
 
 class Hopper(EnvType):
+    """
+    This class represents the Hopper environment.
+    """
     def __init__(
         self,
         algo: Algo = Algo.PPO,
@@ -45,9 +50,23 @@ the x- and y-coordinates are returned in info with the keys "x_position" and "y_
 """,
         },
     ) -> None:
+        """
+        Constructor for the Hopper environment.
+        
+        Args:
+            algo (Algo, optional): The algorithm to be used for training. Defaults to Algo.PPO.
+            algo_param (dict, optional): The parameters for the algorithm. Defaults to {"policy": "MlpPolicy", "verbose": 0, "device": "cpu"}.
+            prompt (dict, optional): The prompt for the environment. Defaults to {"Goal": "Control the Hopper to move in the forward direction, take care to don't fall, make the highest jump", "Observation Space": [...]
+        """
         super().__init__(algo, algo_param, prompt)
 
     def __repr__(self):
+        """
+        Returns the string representation of the Hopper environment.
+        
+        Returns:
+            str: The string representation of the Hopper environment.
+        """
         return "Hopper-v5"
 
     def success_func(self, env: gym.Env, info: dict) -> tuple[bool | bool]:

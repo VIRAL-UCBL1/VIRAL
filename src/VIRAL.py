@@ -1,14 +1,14 @@
-import random
 import os
+import random
 from logging import getLogger
 
 from Environments import EnvType
+from LLM.ClientVideoLVLM import ClienVideoLVLM
+from LLM.GenCode import GenCode
 from LLM.OllamaChat import OllamaChat
 from log.LoggerCSV import LoggerCSV
-from State.State import State
-from LLM.GenCode import GenCode
-from LLM.ClientVideoLVLM import ClienVideoLVLM
 from PolicyTrainer.PolicyTrainer import PolicyTrainer
+from State.State import State
 
 
 class VIRAL:
@@ -28,12 +28,20 @@ class VIRAL:
     ):
         """
         Initialize VIRAL architecture for dynamic reward function generation
-            Args:
-                env_type (EnvType): refer to parameter of an gym Env
-                model_actor (str): Language model for reward generation
-                hf (bool, optional): active the human feedback
-                training_time (int, optional): timeout for model.learn()
-                options (dict, optional): options for the llm
+        
+        Args:
+            env_type (EnvType): Environment type for which the reward function is generated
+            model_actor (str): LLM model for reward function generation
+            model_critic (str): LLM model for reward function evaluation
+            hf (bool, optional): Enable human feedback. Defaults to False.
+            vd (bool, optional): Enable video description. Defaults to False.
+            seed (int, optional): Random seed for training. Defaults to None.
+            training_time (int, optional): Training time in seconds. Defaults to 25000.
+            nb_vec_envs (int, optional): Number of vectorized environments. Defaults to 1.
+            legacy_training (bool, optional): Use legacy training. Defaults to True.
+            options (dict, optional): LLM generation options. Defaults to {}.
+            proxies (dict, optional): Proxy configuration. Defaults to None.
+            
         """
         if seed is None:
             options["seed"] = random.randint(0, 1000000)
@@ -79,7 +87,11 @@ class VIRAL:
         )
 
     def generate_context(self):
-        """Generate more contexte for Step back prompting"""
+        """
+        Generate a context for the reward function generation process.
+        This method uses a Language Model (LLM) to generate a context for the reward function generation process.
+        The context includes information about the environment, task, and goal to be achieved.
+        """
         prompt = f"{self.env_type.prompt['Observation Space']}\n"
         prompt += f"Please, Describe the red trajectory an the observations for the following goal: \n{self.env_type.prompt['Goal']}."
         if "Image" in self.env_type.prompt.keys():
@@ -186,6 +198,19 @@ class VIRAL:
         return self.memory
 
     def critical_refine_reward(self, idx: int) -> int:
+        """
+        Refine a reward function that has critical performance issues.
+        This method refines a reward function that has critical performance issues based on the evaluation results.
+        It uses a Language Model (LLM) to generate a new reward function that addresses the identified issues.
+        
+        Args:
+            idx (int): Index of the reward function in the memory to be refined.
+                    Typically the worst-performing function from previous evaluation.
+        
+        Returns:
+            int: Index of the newly created refined reward function in the memory.
+        
+        """
         self.logger.warning("critical refine reward")
         critic_prompt = f"""Given that the previous function \n({self.memory[idx].reward_func_str})\n
         written was subpar: Success Rate = {self.memory[idx].performances['sr']},
@@ -295,14 +320,15 @@ class VIRAL:
         return state.idx
 
     def human_feedback(self, prompt: str, idx: int) -> str:
-        """implement human feedback
+        """
+        Request human feedback on a reward function to refine it further.
 
         Args:
-            prompt (str): user prompt
-            idx (int): state.idx to refine
+            prompt (str): The prompt to present to the human for feedback
+            idx (int): The index of the reward function in the memory
 
         Returns:
-            str: return the modified prompt
+            str : The updated prompt with human feedback included
         """
         self.logger.info(self.memory[idx])
         visualise = input("do you need to visualise policy ?\ny/n:")
@@ -314,6 +340,16 @@ class VIRAL:
         return prompt
 
     def video_description(self, prompt:str,  idx: str):
+        """
+        Request a video description from the user to refine a reward function.
+        
+        Args:
+            prompt (str): The prompt to present to the user for video description
+            idx (int): The index of the reward function in the memory
+            
+        Returns:
+            str: The updated prompt with the video description included
+        """
         if self.client_video is None:
             self.logger.error("client video not initialised")
             raise RuntimeError("client video not initialised")
@@ -335,6 +371,12 @@ class VIRAL:
         return prompt
 
     def test_reward_func(self, reward_func: str) -> None:
+        """
+        Test a reward function using the policy trainer.
+        
+        Args:
+            reward_func (str): The reward function to test
+        """
         state: State = self.gen_code.get(reward_func)
         self.memory.append(state)
         self.policy_trainer.start_learning(state.idx)

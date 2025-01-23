@@ -1,5 +1,6 @@
-from typing import Callable
 from logging import getLogger
+from typing import Callable
+
 from log.LoggerCSV import getLoggerCSV
 
 logger = getLogger("VIRAL")
@@ -61,7 +62,8 @@ class State:
         policy=None,
         perfomances: dict = None,
     ):
-        """init a new state
+        """
+        Initialize a new state in the reward function generation process.
 
         Args:
             idx (int): the index of the memory
@@ -82,24 +84,33 @@ class State:
         self.performances = perfomances
 
     def set_policy(self, policy):
-        """set the current policy
+        """
+        Set the policy of the state
 
         Args:
-            policy (): 
+            policy (_type_): the policy to set
         """
         self.policy = policy
 
     def set_performances(self, performances: dict):
-        """set performance after the test
+        """
+        Set the performances of the state
 
         Args:
-            performances (dict):
+            performances (dict): the performances to set
+            
         """
         self.performances = performances
         if self.idx != 0:
             self.logger_csv.to_csv(self)
 
     def __repr__(self):
+        """
+        Provide a human-readable string representation of the state
+        
+        Returns:
+            str: the string representation of the state
+        """
         if self.performances is None:
             repr = f"state {self.idx}: \nreward function: \n\n{self.reward_func_str}\n\n isn't trained yet"
         else:
