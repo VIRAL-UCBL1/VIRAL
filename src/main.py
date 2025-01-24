@@ -67,21 +67,12 @@ def main():
         vd=True,
         nb_vec_envs=4,
         options=llm_options,
-<<<<<<< HEAD
-        training_time=500_000,
-        proxies=proxies
-    )
-    viral.generate_context()
-    viral.generate_reward_function(n_init=1, n_refine=2)
-    count = 0
-=======
         legacy_training=False,
         training_time=500_000,
         proxies=proxies,
     )
     viral.generate_context()
     viral.generate_reward_function(n_init=1, n_refine=2)
->>>>>>> e047f7711f45984ca0a4af1d2f3cbf089b9a0770
     for state in viral.memory:
 
         if state.idx != 0 and viral.memory[0].performances['sr'] > state.performances['sr']:
