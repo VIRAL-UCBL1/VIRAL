@@ -83,7 +83,7 @@ The action space is a `Box(-1, 1, (2,), float32)`. An action represents the torq
         """
         if info.get("terminated", False):
             return False, True
-        elif info.get("x_position", 0) > 5.0:
+        elif info.get("x_position", 0) > 2.0:
             return True, False
         else:
             return False, False
