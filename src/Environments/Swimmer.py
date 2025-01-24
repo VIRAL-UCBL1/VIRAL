@@ -16,6 +16,7 @@ class Swimmer(EnvType):
             "policy": "MlpPolicy",
             "verbose": 0,
             "device": "cpu",
+            "gamma": 0.9999,
         },
         prompt={
             "Goal": "Control the swimmer to move as fast as possible in the forward direction.",
@@ -39,17 +40,8 @@ By default, the observation space is `Box(-Inf, Inf, (8,), float64)` with the fo
 | 5   | Angular velocity of the front end         | -Inf | Inf  | angular velocity (rad/s) |
 | 6   | Angular velocity of the first joint       | -Inf | Inf  | angular velocity (rad/s) |
 | 7   | Angular velocity of the second joint      | -Inf | Inf  | angular velocity (rad/s) |
-""",
-            "Action Space": """Box(-1, 1, (2,), float32)
-
-The action space is a `Box(-1, 1, (2,), float32)`. An action represents the torques applied between the segments.
-
-| Num | Action                              | Min | Max | Name (in corresponding XML file) | Joint   | Type (Unit) |
-|-----|-------------------------------------|-----|-----|----------------------------------|---------|-------------|
-| 0   | Torque applied on the first joint  | -1  | 1   | motor1_rot                      | hinge   | torque (N m) |
-| 1   | Torque applied on the second joint | -1  | 1   | motor2_rot                      | hinge   | torque (N m) |
-""",
-        },
+            "Image": "Environments/img/swimmer_forward.png" 
+    """},
     ) -> None:
         """
         Initializes the Swimmer environment.

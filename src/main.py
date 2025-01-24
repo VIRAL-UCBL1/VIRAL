@@ -52,13 +52,7 @@ def main():
     #         "Image": "Environments/img/LunarLander.png"
     #     }
     # )
-    env_type = Highway(
-        prompt={
-            "Goal": "Do not crash but do not land, i want to make a stationary flight",
-            "Observation Space": """Box([ -2.5 -2.5 -10. -10. -6.2831855 -10. -0. -0. ], [ 2.5 2.5 10. 10. 6.2831855 10. 1. 1. ], (8,), float32)
-        The state is an 8-dimensional vector: the coordinates of the lander in x & y, its linear velocities in x & y, its angle, its angular velocity, and two booleans that represent whether each leg is in contact with the ground or not.
-            """
-        })
+    env_type = Swimmer()
     actor = "qwen2.5-coder:32b"
     critic = "llama3.2-vision"
     proxies = { 
@@ -68,21 +62,27 @@ def main():
     viral = VIRAL(
         env_type=env_type,
         model_actor=actor,
-        model_critic=actor,
+        model_critic=critic,
         hf=False,
         vd=True,
-        nb_vec_envs=1,
+        nb_vec_envs=4,
         options=llm_options,
-        legacy_training=False,
-        training_time=500,
+        training_time=500_000,
         proxies=proxies
     )
-    # viral.generate_context()
-    viral.generate_reward_function(n_init=1, n_refine=4)
+    viral.generate_context()
+    viral.generate_reward_function(n_init=1, n_refine=2)
+    count = 0
     for state in viral.memory:
+
+        if state.idx != 0 and viral.memory[0].performances['sr'] > state.performances['sr']:
+            count += 1
         viral.logger.info(state)
 
+    return count
 
 if __name__ == "__main__":
-    for i in range(20):
-        main()
+    fcount = 0
+    for i in range(5):
+        fcount += main()
+    print("final count", fcount)

@@ -1,0 +1,8 @@
+path;env;llm;llm_param;algo;algo_param;total_timesteps;reward_function;rewards;mean_reward;std_reward;sr
+data/model/highway-v0_808013_1.pth;highway-v0;qwen2.5-coder:32b;{'temperature': 0.9, 'seed': 808013};DQN;{'policy': 'MlpPolicy', 'policy_kwargs': {'net_arch': [256, 256]}, 'learning_rate': 0.0005, 'buffer_size': 15000, 'learning_starts': 200, 'batch_size': 32, 'gamma': 0.8, 'train_freq': 1, 'gradient_steps': 1, 'target_update_interval': 50, 'verbose': 0, 'tensorboard_log': 'model/highway_dqn/', 'seed': 808013};500;"def reward_func(observations:np.ndarray, is_success:bool, is_failure:bool) -> float:
+    if is_success:
+        return 10.0
+    elif is_failure:
+        return -5.0
+    else:
+        return np.clip(-0.1 * np.linalg.norm(observations), -2.0, 0.0)";-0.016194315054247236,-0.14689284969974728,-0.24003657254681587,-0.14663398193200844,-0.33634171425032694,-0.19991221232740064,-0.30700390647552417,-0.17892224919306993,-0.14681688467412526,-0.17869616039891317,-0.20556427756351958,-0.1339485697316604,-0.29539522951336866,-0.33583717902888877,-0.21523977178589748,-0.010804876098928622,-0.1667837671143733,-0.009197973765139944,-0.2598779371241082,-0.025989086794076754,-0.3185907592074729,-0.16594397931947266,-0.1853612691773558;-0.1837385009902801;0.09858206796071008;0.89
