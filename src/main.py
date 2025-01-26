@@ -53,7 +53,7 @@ def main():
     #     }
     # )
     env_type = Hopper(prompt={
-            "Goal": "Control the Hopper to perform a backflip",
+            "Goal": "Control the Hopper to move in the backward direction, take care to don't fall, make the highest jump",
             "Observation Space": """Box(-inf, inf, (11,), float64)
 
 The observation space consists of the following parts (in order):
@@ -75,7 +75,6 @@ the x- and y-coordinates are returned in info with the keys "x_position" and "y_
 | 9        | angular velocity of the leg hinge                | -Inf  | Inf  | angular velocity (rad/s) |
 | 10       | angular velocity of the foot hinge               | -Inf  | Inf  | angular velocity (rad/s) |
 | excluded | x-coordinate of the torso                        | -Inf  | Inf  | position (m)        |
-    "Image": "Environments/img/backflip_v2.png"
     """})
     actor = "qwen2.5-coder:32b"
     critic = "llama3.2-vision"
@@ -89,10 +88,10 @@ the x- and y-coordinates are returned in info with the keys "x_position" and "y_
         model_critic=critic,
         hf=False,
         vd=True,
-        nb_vec_envs=4,
+        nb_vec_envs=2,
         options=llm_options,
         legacy_training=False,
-        training_time=1_000_000,
+        training_time=500_000,
         proxies=proxies,
     )
     viral.generate_context()
