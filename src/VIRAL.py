@@ -367,7 +367,7 @@ class VIRAL:
         response = self.client_video.generate_simple_response(video_prompt, video_path)
         self.logger.info(f"description of the video: \n {response}")
         if response:
-            prompt = response + "\n" + prompt
+            prompt = "here is what just happened: \n" + response + "\n" + prompt
         return prompt
 
     def test_reward_func(self, reward_func: str) -> None:

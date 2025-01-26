@@ -52,7 +52,31 @@ def main():
     #         "Image": "Environments/img/LunarLander.png"
     #     }
     # )
-    env_type = Swimmer()
+    env_type = Hopper(prompt={
+            "Goal": "Control the Hopper to perform a backflip",
+            "Observation Space": """Box(-inf, inf, (11,), float64)
+
+The observation space consists of the following parts (in order):
+qpos (5 elements by default): Position values of the robot’s body parts.
+qvel (6 elements): The velocities of these individual body parts (their derivatives).
+the x- and y-coordinates are returned in info with the keys "x_position" and "y_position", respectively.
+
+| Num      | Observation                                      | Min   | Max  | Type                |
+|----------|--------------------------------------------------|-------|------|---------------------|
+| 0        | z-coordinate of the torso (height of hopper)     | -Inf  | Inf  | position (m)        |
+| 1        | angle of the torso                               | -Inf  | Inf  | angle (rad)         |
+| 2        | angle of the thigh joint                         | -Inf  | Inf  | angle (rad)         |
+| 3        | angle of the leg joint                           | -Inf  | Inf  | angle (rad)         |
+| 4        | angle of the foot joint                          | -Inf  | Inf  | angle (rad)         |
+| 5        | velocity of the x-coordinate of the torso        | -Inf  | Inf  | velocity (m/s)      |
+| 6        | velocity of the z-coordinate (height) of torso   | -Inf  | Inf  | velocity (m/s)      |
+| 7        | angular velocity of the angle of the torso       | -Inf  | Inf  | angular velocity (rad/s) |
+| 8        | angular velocity of the thigh hinge              | -Inf  | Inf  | angular velocity (rad/s) |
+| 9        | angular velocity of the leg hinge                | -Inf  | Inf  | angular velocity (rad/s) |
+| 10       | angular velocity of the foot hinge               | -Inf  | Inf  | angular velocity (rad/s) |
+| excluded | x-coordinate of the torso                        | -Inf  | Inf  | position (m)        |
+    "Image": "Environments/img/backflip_v2.png"
+    """})
     actor = "qwen2.5-coder:32b"
     critic = "llama3.2-vision"
     proxies = { 
@@ -68,11 +92,11 @@ def main():
         nb_vec_envs=4,
         options=llm_options,
         legacy_training=False,
-        training_time=500_000,
+        training_time=1_000_000,
         proxies=proxies,
     )
     viral.generate_context()
-    viral.generate_reward_function(n_init=1, n_refine=2)
+    viral.generate_reward_function(n_init=1, n_refine=5)
     for state in viral.memory:
 
         if state.idx != 0 and viral.memory[0].performances['sr'] > state.performances['sr']:
