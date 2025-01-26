@@ -4,7 +4,7 @@ from logging import getLogger
 from RLAlgo.DirectSearch import DirectSearch
 from RLAlgo.Reinforce import Reinforce
 
-from Environments import Algo, CartPole, Highway, LunarLander, Pacman
+from Environments import Algo, CartPole, Highway, LunarLander
 from LLM.LLMOptions import llm_options
 from log.log_config import init_logger
 from log.LoggerCSV import LoggerCSV
