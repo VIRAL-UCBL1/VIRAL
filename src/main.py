@@ -1,7 +1,7 @@
 import argparse
 from logging import getLogger
 
-from Environments import (Algo, CartPole, Highway, Hopper, LunarLander, Pacman,
+from Environments import (Algo, CartPole, Highway, Hopper, LunarLander,
                           Swimmer)
 from LLM.LLMOptions import llm_options
 from log.log_config import init_logger
