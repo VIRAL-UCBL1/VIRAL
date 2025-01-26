@@ -191,7 +191,7 @@ def process_video():
     except Exception:
         print('error mem cuda, going to free one model of ollama')
         ollama_model = _execute_ollama_ps()
-        while ollama_model != "":
+        while ollama_model is not None:
             _execute_ollama_stop(ollama_model)
             ollama_model = _execute_ollama_ps()
 
