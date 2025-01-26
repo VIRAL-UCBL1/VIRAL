@@ -1,0 +1,7 @@
+gymnasium[all]
+highway_env
+requests
+stable-baselines3[extra]
+gymnasium[mujoco] 
+requests[socks]
+swig
