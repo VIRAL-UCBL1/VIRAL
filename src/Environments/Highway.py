@@ -85,7 +85,7 @@ Each action is typically represented as an integer:
         Returns:
             str: The representation of the Highway environment.
         """
-        return "highway-v0"
+        return "highway-fast-v0" # "highway-v0"
 
     def success_func(self, env: gym.Env, info: dict) -> tuple[bool, bool]:
         """
@@ -98,7 +98,7 @@ Each action is typically represented as an integer:
         speed = info.get("speed", 0)
         crashed = info.get("crashed", False)
         # print(f"info: {info}")
-        print(f"speed: {speed}, crashed: {crashed}")
+        # print(f"speed: {speed}, crashed: {crashed}")
         # print(f"Truncated {info['TimeLimit.truncated']}")
         truncated = info["TimeLimit.truncated"]
 

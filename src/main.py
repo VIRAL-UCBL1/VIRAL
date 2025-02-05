@@ -52,9 +52,9 @@ def main():
     #         "Image": "Environments/img/LunarLander.png"
     #     }
     # )
-    env_type = Swimmer()
-    actor = "qwen2.5-coder:32b"
-    critic = "llama3.2-vision"
+    env_type = Highway()
+    actor = "qwen2.5-coder"
+    critic = "qwen2.5-coder"
     proxies = { 
         "http"  : "socks5h://localhost:1080", 
         "https" : "socks5h://localhost:1080", 
@@ -64,27 +64,18 @@ def main():
         model_actor=actor,
         model_critic=critic,
         hf=False,
-        vd=True,
-        nb_vec_envs=4,
+        vd=False,
+        nb_vec_envs=1,
         options=llm_options,
-<<<<<<< HEAD
-        training_time=500_000,
-        proxies=proxies
+        training_time=30_000,
+        # proxies=proxies
     )
     viral.generate_context()
-    viral.generate_reward_function(n_init=1, n_refine=2)
+    viral.generate_reward_function(n_init=1, n_refine=0)
     count = 0
-=======
-        legacy_training=False,
-        training_time=500_000,
-        proxies=proxies,
-    )
-    viral.generate_context()
-    viral.generate_reward_function(n_init=1, n_refine=2)
->>>>>>> e047f7711f45984ca0a4af1d2f3cbf089b9a0770
     for state in viral.memory:
 
-        if state.idx != 0 and viral.memory[0].performances['sr'] > state.performances['sr']:
+        if state.idx != 0 and viral.memory[0].performances['sr'] < state.performances['sr']:
             count += 1
         viral.logger.info(state)
 
@@ -92,6 +83,6 @@ def main():
 
 if __name__ == "__main__":
     fcount = 0
-    for i in range(5):
+    for i in range(10):
         fcount += main()
     print("final count", fcount)
