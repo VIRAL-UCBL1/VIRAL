@@ -81,9 +81,9 @@ the x- and y-coordinates are returned in info with the keys "x_position" and "y_
         """
 
         if info["terminated"]:
-            return False, True
+            return False, False
         elif info["x_position"] > 5.0:
-            return True, False
+            return False, False
         else:
             return False, False
 

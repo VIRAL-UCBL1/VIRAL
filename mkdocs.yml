@@ -53,7 +53,6 @@ nav:
     - Highway: code_docs/Environments/Highway.md
     - Hopper: code_docs/Environments/Hopper.md
     - LunarLander: code_docs/Environments/LunarLander.md
-    - Pacman: code_docs/Environments/Pacman.md
   - LLM:
     - GenCode: code_docs/LLM/GenCode.md
     - LLMOptions: code_docs/LLM/LLMOptions.md

@@ -1,7 +1,7 @@
 import argparse
 from logging import getLogger
 
-from Environments import (Algo, CartPole, Highway, Hopper, LunarLander, Pacman,
+from Environments import (Algo, CartPole, Highway, Hopper, LunarLander,
                           Swimmer)
 from LLM.LLMOptions import llm_options
 from log.log_config import init_logger
@@ -52,9 +52,32 @@ def main():
     #         "Image": "Environments/img/LunarLander.png"
     #     }
     # )
-    env_type = Highway()
-    actor = "qwen2.5-coder"
-    critic = "qwen2.5-coder"
+    env_type = Hopper(prompt={
+            "Goal": "Control the Hopper to move in the backward direction, take care to don't fall, make the highest jump",
+            "Observation Space": """Box(-inf, inf, (11,), float64)
+
+The observation space consists of the following parts (in order):
+qpos (5 elements by default): Position values of the robot’s body parts.
+qvel (6 elements): The velocities of these individual body parts (their derivatives).
+the x- and y-coordinates are returned in info with the keys "x_position" and "y_position", respectively.
+
+| Num      | Observation                                      | Min   | Max  | Type                |
+|----------|--------------------------------------------------|-------|------|---------------------|
+| 0        | z-coordinate of the torso (height of hopper)     | -Inf  | Inf  | position (m)        |
+| 1        | angle of the torso                               | -Inf  | Inf  | angle (rad)         |
+| 2        | angle of the thigh joint                         | -Inf  | Inf  | angle (rad)         |
+| 3        | angle of the leg joint                           | -Inf  | Inf  | angle (rad)         |
+| 4        | angle of the foot joint                          | -Inf  | Inf  | angle (rad)         |
+| 5        | velocity of the x-coordinate of the torso        | -Inf  | Inf  | velocity (m/s)      |
+| 6        | velocity of the z-coordinate (height) of torso   | -Inf  | Inf  | velocity (m/s)      |
+| 7        | angular velocity of the angle of the torso       | -Inf  | Inf  | angular velocity (rad/s) |
+| 8        | angular velocity of the thigh hinge              | -Inf  | Inf  | angular velocity (rad/s) |
+| 9        | angular velocity of the leg hinge                | -Inf  | Inf  | angular velocity (rad/s) |
+| 10       | angular velocity of the foot hinge               | -Inf  | Inf  | angular velocity (rad/s) |
+| excluded | x-coordinate of the torso                        | -Inf  | Inf  | position (m)        |
+    """})
+    actor = "qwen2.5-coder:32b"
+    critic = "llama3.2-vision"
     proxies = { 
         "http"  : "socks5h://localhost:1080", 
         "https" : "socks5h://localhost:1080", 
@@ -64,15 +87,15 @@ def main():
         model_actor=actor,
         model_critic=critic,
         hf=False,
-        vd=False,
-        nb_vec_envs=1,
+        vd=True,
+        nb_vec_envs=2,
         options=llm_options,
-        training_time=30_000,
-        # proxies=proxies
+        legacy_training=False,
+        training_time=500_000,
+        proxies=proxies,
     )
     viral.generate_context()
-    viral.generate_reward_function(n_init=1, n_refine=0)
-    count = 0
+    viral.generate_reward_function(n_init=1, n_refine=5)
     for state in viral.memory:
 
         if state.idx != 0 and viral.memory[0].performances['sr'] < state.performances['sr']:

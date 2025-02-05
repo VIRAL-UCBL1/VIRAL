@@ -178,33 +178,51 @@ def process_video():
     
     input_ids = tokenizer_image_token(prompt_question, tokenizer, IMAGE_TOKEN_INDEX, return_tensors="pt").unsqueeze(0).to(device)
     
-    try:
-        with torch.no_grad():
-            output = model.generate(
-                input_ids,
-                images=video,
-                modalities=["video"],
-                do_sample=False,
-                temperature=0.6,
-                max_new_tokens=4096,
-            )
-    except Exception:
-        print('error mem cuda, going to free one model of ollama')
-        ollama_model = _execute_ollama_ps()
-        while ollama_model != "":
-            _execute_ollama_stop(ollama_model)
-            ollama_model = _execute_ollama_ps()
 
-        torch.cuda.empty_cache()
-        with torch.no_grad():
-            output = model.generate(
-                input_ids,
-                images=video,
-                modalities=["video"],
-                do_sample=False,
-                temperature=0.6,
-                max_new_tokens=4096,
-            )
+    ollama_model = _execute_ollama_ps()
+    while ollama_model is not None:
+        _execute_ollama_stop(ollama_model)
+        ollama_model = _execute_ollama_ps()
+    with torch.no_grad():
+        output = model.generate(
+            input_ids,
+            images=video,
+            modalities=["video"],
+            do_sample=False,
+            temperature=0.6,
+            max_new_tokens=4096,
+        )
+    # try:
+    #     ollama_model = _execute_ollama_ps()
+    #     while ollama_model is not None:
+    #         _execute_ollama_stop(ollama_model)
+    #         ollama_model = _execute_ollama_ps()
+    #     with torch.no_grad():
+    #         output = model.generate(
+    #             input_ids,
+    #             images=video,
+    #             modalities=["video"],
+    #             do_sample=False,
+    #             temperature=0.6,
+    #             max_new_tokens=4096,
+    #         )
+    # except Exception:
+    #     print('error mem cuda, going to free one model of ollama')
+    #     ollama_model = _execute_ollama_ps()
+    #     while ollama_model is not None:
+    #         _execute_ollama_stop(ollama_model)
+    #         ollama_model = _execute_ollama_ps()
+
+    #     torch.cuda.empty_cache()
+    #     with torch.no_grad():
+    #         output = model.generate(
+    #             input_ids,
+    #             images=video,
+    #             modalities=["video"],
+    #             do_sample=False,
+    #             temperature=0.6,
+    #             max_new_tokens=4096,
+    #         )
 
 
     response = tokenizer.batch_decode(output, skip_special_tokens=True)[0].strip()

@@ -45,6 +45,8 @@ class VIRAL:
         """
         if seed is None:
             options["seed"] = random.randint(0, 1000000)
+        else:
+            options["seed"] = seed
         model_name = model_actor if model_actor == model_critic or model_critic is None else model_actor+'_'+model_critic
         LoggerCSV(env_type, model_name, training_time)
         self.llm_actor = OllamaChat(
@@ -363,12 +365,22 @@ class VIRAL:
         (speed, acceleration, trajectory, oscillation, rotation, etc.). 
         Also, mention any changes in direction or rhythm, 
         as well as any specific actions the object performs during its movement. 
-        Avoid discussing the background or color"""
+        """
         response = self.client_video.generate_simple_response(video_prompt, video_path)
         self.logger.info(f"description of the video: \n {response}")
         if response:
-            prompt = response + "\n" + prompt
+            self.llm_critic.add_message(f"""base on this description of an episode {response} 
+            can you describe if the agent reach is goal :{self.env_type.prompt['Goal']}?
+            if he doesn't reach the goal, see his reward function {self.memory[idx].reward_func_str}
+            and tell why it's doesn't work. Don't rewrite code, just explain""")
+            feedback_response = self.llm_critic.generate_response(stream=True)
+            feedback_response = self.llm_actor.print_Generator_and_return(
+            feedback_response, len(self.memory) - 1)
+            prompt = feedback_response + "\n" + prompt
         return prompt
+        # if response:
+        #     prompt = "here is what just happened: \n" + response + "\n" + prompt
+        # return prompt
 
     def test_reward_func(self, reward_func: str) -> None:
         """
