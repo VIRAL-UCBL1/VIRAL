@@ -316,6 +316,7 @@ class PolicyTrainer:
             tuple[VecEnv, PPO, int]: the envs, the model, the number of envs
         """
         if self.nb_vec_envs == 1:
+            self.logger.debug("simple env")
             env = gym.make(self.env_name) # , terminate_when_unhealthy=False
             env = CustomRewardWrapper(env, self.success_func, reward_func)
         else:
