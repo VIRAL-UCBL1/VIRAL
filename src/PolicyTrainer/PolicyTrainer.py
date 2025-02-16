@@ -287,7 +287,7 @@ class PolicyTrainer:
         """
         env = make(self.env_name, render_mode='rgb_array')
         env = RecordVideo(
-            env, video_folder=f"records/{self.env_name}", episode_trigger=lambda e: True
+            env, video_folder=f"records/{self.env_name}", name_prefix=f"{self.env_name}_{self.seed}", episode_trigger=lambda e: True
         )
         if self.algo == Algo.PPO:
             policy = PPO.load(policy_path)

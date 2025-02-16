@@ -39,9 +39,9 @@ By default, the observation space is `Box(-Inf, Inf, (8,), float64)` with the fo
 | 4   | Velocity of the front end along the y-axis| -Inf | Inf  | velocity (m/s)         |
 | 5   | Angular velocity of the front end         | -Inf | Inf  | angular velocity (rad/s) |
 | 6   | Angular velocity of the first joint       | -Inf | Inf  | angular velocity (rad/s) |
-| 7   | Angular velocity of the second joint      | -Inf | Inf  | angular velocity (rad/s) |
+| 7   | Angular velocity of the second joint      | -Inf | Inf  | angular velocity (rad/s) |""",
             "Image": "Environments/img/swimmer_forward.png" 
-    """},
+},
     ) -> None:
         """
         Initializes the Swimmer environment.
