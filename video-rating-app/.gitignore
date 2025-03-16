@@ -1,0 +1,35 @@
+# Ignorer les fichiers générés par le système d'exploitation
+.DS_Store
+Thumbs.db
+
+# Ignorer les répertoires de l'environnement virtuel Python
+/backend/venv/
+
+# Ignorer les fichiers de configuration spécifiques à l'IDE
+.idea/
+.vscode/
+
+# Ignorer les fichiers générés par les outils de build de frontend
+/frontend/node_modules/
+
+# Ignorer les fichiers générés par npm (par exemple, package-lock.json et node_modules)
+frontend/package-lock.json
+frontend/node_modules/
+
+# Ignorer les fichiers de configuration du backend qui ne sont pas nécessaires au repo
+/backend/*.csv  # Si ce fichier ratings.csv est généré et non essentiel pour le repo
+
+# Ignorer les logs, les fichiers temporaires et les caches
+*.log
+*.tmp
+*.swp
+
+# Ignorer les répertoires vidéos ou autres répertoires temporaires
+/videos/
+
+# Ignorer les fichiers générés par Flask
+*.pyc
+__pycache__/
+
+# Ignorer le fichier d'environnement Conda (optionnel si tu ne veux pas le versionner)
+backend/venv/
