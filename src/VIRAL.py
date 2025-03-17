@@ -65,14 +65,11 @@ class VIRAL:
             proxies=proxies
         )
         self.llm_critic = OllamaChat(
-            model=model_critic,
-            system_prompt=f"""
-        You're a reinforcement learning expert and assistant in rewarding for the {env_type} environment.
-        As a critic, you're going to explains step by step, how to achieve the goal: {env_type.prompt['Goal']}.
-        If you're reading an image, please use what you see, as a grounding, as a link to the state.
-        The image contain red trajectory, the agent need to be identify and the trajectory needs to be precisely described.
-        Every response you made, begin with the title '# HELP'
-            """,
+            model=model_critic, #         You're an assistant in rewarding for the {env_type} environment
+            system_prompt="""
+        You're a reinforcement learning expert, great mathematician and physician.
+        As a critic, you're going to explains step by step, the environment.
+        Every answer you make will be contained in an xml <HELP> tag.""",
             options=options.copy(),
             proxies=proxies
         )
@@ -94,14 +91,32 @@ class VIRAL:
         This method uses a Language Model (LLM) to generate a context for the reward function generation process.
         The context includes information about the environment, task, and goal to be achieved.
         """
-        prompt = f"{self.env_type.prompt['Observation Space']}\n"
-        prompt += f"Please, Describe the red trajectory an the observations for the following goal: \n{self.env_type.prompt['Goal']}."
-        if "Image" in self.env_type.prompt.keys():
+        if "Image" in self.env_type.prompt.keys() and "Goal" in self.env_type.prompt.keys():
+            prompt = f"<Observation Space>\n{self.env_type.prompt['Observation Space']}\n</Observation Space>\n"
+            prompt += "Please, Describe precisely the red annotation in the Image, an the Observation Space. "
+            prompt += "Remember to use what you see, as a grounding, as a link to the Observation Space. "
+            prompt += f"Finally, Using your scientific knowledge, How the agent can achieve the following goal: \n{self.env_type.prompt['Goal']} ?"
             self.llm_critic.add_message(prompt, images=[self.env_type.prompt["Image"]])
             self.llm_actor.add_message(prompt, images=[self.env_type.prompt["Image"]])
-        else:
+        elif "Image" not in self.env_type.prompt.keys() and "Goal" in self.env_type.prompt.keys():
+            prompt = f"<Observation Space>\n{self.env_type.prompt['Observation Space']}\n</Observation Space>\n"
+            prompt += "Please, Describe precisely the Observation Space and "
+            prompt += f"using your scientific knowledge, How the agent can achieve the following goal: \n{self.env_type.prompt['Goal']} ?"
             self.llm_critic.add_message(prompt)
             self.llm_actor.add_message(prompt)
+        elif "Image" in self.env_type.prompt.keys() and "Goal" not in self.env_type.prompt.keys():
+            prompt = "First, Describe precisely the red annotation, which explain the goal, in the Image by answering these question: "
+            prompt += "Which are the annotation ? \n What is the meaning ? \n"
+            prompt += "Then ONLY based on your own answer, which goal the agent need to achieve ?"
+            prompt += f"<Observation Space>\n{self.env_type.prompt['Observation Space']}\n</Observation Space>\n"
+            prompt += "Please, Describe The Observation Space. "
+            prompt += "Remember to use what you see, as a grounding, as a link to the Observation Space. "
+            # prompt = "First, Describe precisely the red annotation in the Image, Then only based on the Image red annotation input, without using your knowledge of the environment, describe which goal the agent need to achieve."
+            # prompt += f"<Observation Space>\n{self.env_type.prompt['Observation Space']}\n</Observation Space>\n"
+            # prompt += "Please, Describe precisely the red annotation in the Image, an the Observation Space. "
+            # prompt += "Remember to use what you see, as a grounding, as a link to the Observation Space. "
+            self.llm_critic.add_message(prompt, images=[self.env_type.prompt["Image"]])
+            self.llm_actor.add_message(prompt, images=[self.env_type.prompt["Image"]])
         response = self.llm_critic.generate_response(stream=True)
         response = self.llm_critic.print_Generator_and_return(response, -1)
         self.llm_actor.add_message(response)
@@ -160,7 +175,7 @@ class VIRAL:
         for i in range(1, n_init + 1):
             prompt = f"""Iteration {i}/{n_init},
             {focus}
-        Complete this sentence using the HELP section as a guide:
+        Complete this sentence using the <HELP> section as a guide:
         def reward_func(observations:np.ndarray, is_success:bool, is_failure:bool) -> float:
             \"\"\"Reward function for {self.env_type}
 
