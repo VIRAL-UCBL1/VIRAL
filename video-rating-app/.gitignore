@@ -3,21 +3,21 @@
 Thumbs.db
 
 # Ignorer les répertoires de l'environnement virtuel Python
-/backend/venv/
+venv/
 
 # Ignorer les fichiers de configuration spécifiques à l'IDE
 .idea/
 .vscode/
 
 # Ignorer les fichiers générés par les outils de build de frontend
-/frontend/node_modules/
+node_modules/
 
 # Ignorer les fichiers générés par npm (par exemple, package-lock.json et node_modules)
-frontend/package-lock.json
-frontend/node_modules/
+package-lock.json
+node_modules/
 
 # Ignorer les fichiers de configuration du backend qui ne sont pas nécessaires au repo
-/backend/*.csv  # Si ce fichier ratings.csv est généré et non essentiel pour le repo
+/backend/rate/*.csv  # Si ce fichier ratings.csv est généré et non essentiel pour le repo
 
 # Ignorer les logs, les fichiers temporaires et les caches
 *.log
