@@ -1,79 +1,98 @@
 #!/bin/bash
 
-echo "🚀 Démarrage de l'application Video Rating sous WSL..."
+echo "🚀 Starting the Video Rating application in WSL..."
 
-# Vérifier si Python est installé
+# Check if Python is installed
 if ! command -v python3 &> /dev/null; then
-    echo "❌ Python3 n'est pas installé. Installez-le d'abord."
+    echo "❌ Python3 is not installed. Please install it first."
     exit 1
 fi
 
-# Vérifier si Node.js est installé
+# Check if Node.js is installed
 if ! command -v node &> /dev/null; then
-    echo "❌ Node.js n'est pas installé. Installez-le d'abord."
+    echo "❌ Node.js is not installed. Please install it first."
     exit 1
 fi
 
-# 1️⃣ Démarrage du backend Flask
-echo "📡 Démarrage du serveur Flask..."
+# 1️⃣ Start the Flask backend
+echo "📡 Starting the Flask server..."
 cd backend
 
-# Charger Conda pour WSL
-source ~/miniconda3/etc/profile.d/conda.sh  # Adapter ce chemin selon ton installation Conda
+# Check if Conda is available
+if command -v conda &> /dev/null; then
+    echo "🐍 Conda found. Attempting to use Conda environment..."
 
-# Vérifier si l'environnement conda "video" existe, sinon le créer
-if ! conda info --envs | grep -q "video"; then
-    echo "🐍 Création de l'environnement conda 'video'..."
-    conda create --name video python=3.8 -y
+    # Load Conda for WSL (Adjust the path based on your installation)
+    source ~/miniconda3/etc/profile.d/conda.sh
+
+    # Check if the "video" Conda environment exists, if not, create it
+    if ! conda info --envs | grep -q "video"; then
+        echo "🐍 Creating the Conda environment 'video'..."
+        conda create --name video python=3.8 -y
+    fi
+
+    # Activate the Conda environment
+    conda activate video
+
+    # Install dependencies if necessary
+    pip install -r requirements.txt
+else
+    echo "❌ Conda is not available. Using venv instead."
+
+    # Check if virtual environment exists, if not, create it
+    if [ ! -d "venv" ]; then
+        echo "🔧 Creating a virtual environment..."
+        python3 -m venv venv
+    fi
+
+    # Activate the virtual environment
+    source venv/bin/activate
+
+    # Install dependencies if necessary
+    pip install -r requirements.txt
 fi
 
-# Activer l'environnement conda
-conda activate video
-
-# Installer les dépendances si nécessaire
-pip install -r requirements.txt
-
-# Lancer Flask en arrière-plan et enregistrer son PID
+# Run Flask in the background and store its PID
 python app.py &  
 FLASK_PID=$!
 
-# Revenir à la racine du projet
+# Return to the project root
 cd ..
 
-# 2️⃣ Démarrage du frontend Vue.js
-echo "🌐 Démarrage du frontend Vue.js..."
+# 2️⃣ Start the Vue.js frontend
+echo "🌐 Starting the Vue.js frontend..."
 cd frontend
 
-# Vérifier si `node_modules` existe, sinon installer les dépendances
+# Check if `node_modules` exists, if not, install dependencies
 if [ ! -d "node_modules" ]; then
-    echo "📦 Installation des dépendances Vue.js..."
+    echo "📦 Installing Vue.js dependencies..."
     npm install
 fi
 
-# Lancer Vue.js en arrière-plan et enregistrer son PID
+# Run Vue.js in the background and store its PID
 npm run dev &  
 VUE_PID=$!
 
-# Revenir à la racine du projet
+# Return to the project root
 cd ..
 
-# Fonction pour arrêter les processus proprement
+# Function to properly stop processes
 cleanup() {
-    echo "🛑 Arrêt des applications..."
+    echo "🛑 Stopping the applications..."
 
-    # Arrêter Flask et Vue.js proprement
+    # Stop Flask and Vue.js
     kill $FLASK_PID
     kill $VUE_PID
 
-    echo "✅ Applications arrêtées."
+    echo "✅ Applications stopped."
 }
 
-# Intercepter Ctrl+C et appeler cleanup
+# Catch Ctrl+C and call cleanup
 trap cleanup SIGINT
 
-echo "✅ Tout est lancé !"
-echo "🔹 Flask : http://127.0.0.1:5000"
-echo "🔹 Vue.js : http://localhost:5173"
+echo "✅ Everything is running!"
+echo "🔹 Flask: http://127.0.0.1:5000"
+echo "🔹 Vue.js: http://localhost:5173"
 
-# Garder les processus en cours d'exécution jusqu'à interruption
+# Keep the processes running until interrupted
 wait

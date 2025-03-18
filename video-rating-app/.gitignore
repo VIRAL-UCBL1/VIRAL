@@ -11,8 +11,9 @@ backend/venv/       # Virtual environment in the backend folder (if exists)
 .vscode/            # Visual Studio Code settings folder
 
 # Ignore frontend build dependencies
-node_modules/       # Node.js dependencies folder
-package-lock.json   # npm package lock file (optional to ignore depending on your setup)
+lock.json et node_modules)
+package-lock.json
+node_modules/
 
 # Ignore backend rate-related CSV files (user-specific ratings)
 backend/rate/*.csv  # Ignore all CSV files inside backend/rate/
