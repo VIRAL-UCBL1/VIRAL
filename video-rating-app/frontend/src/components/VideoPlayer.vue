@@ -1,22 +1,22 @@
 <template>
   <div class="container">
-    <!-- Zone des instructions -->
+    <!-- Instructions Section -->
     <div class="instructions" v-if="!noMoreVideos">
-      <h3>Instructions :</h3>
+      <h3>Instructions:</h3>
       <p>{{ instruction }}</p>
     </div>
 
     <div class="video-container">
       <div v-if="noMoreVideos">
-        <h2>Merci d'avoir voté !</h2>
-        <p>Il n'y a plus de vidéos disponibles pour l'instant.</p>
+        <h2>Thank you for voting!</h2>
+        <p>There are no more videos available at the moment.</p>
       </div>
       <div v-else>
-        <h3>Environnement : {{ environment }}</h3> <!-- Affichage de l'environnement -->
+        <h3>Environment: {{ environment }}</h3> <!-- Displaying environment -->
         <video v-if="videoSrc" :src="videoSrc" controls autoplay></video>
 
         <div class="rating-container">
-          <label for="rating">Note : {{ selectedRating }}</label>
+          <label for="rating">Rating: {{ selectedRating }}</label>
           <input
             id="rating"
             type="range"
@@ -25,7 +25,7 @@
             step="1"
             v-model="selectedRating"
           />
-          <button @click="rateVideo">Valider</button>
+          <button @click="rateVideo">Submit</button>
         </div>
       </div>
     </div>
@@ -40,9 +40,9 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 const videoSrc = ref("");
 const currentVideo = ref("");
-const environment = ref(""); // Stocke l’environnement de la vidéo
+const environment = ref(""); // Stores the video environment
 const noMoreVideos = ref(false);
-const instruction = ref(""); // Stocke les instructions de l’environnement
+const instruction = ref(""); // Stores environment instructions
 const username = ref(localStorage.getItem("username") || "");
 const selectedRating = ref(3);
 
@@ -55,9 +55,9 @@ const fetchVideo = async () => {
     const response = await axios.get(`http://127.0.0.1:5000/video?user=${username.value}`);
     if (response.data.video) {
       currentVideo.value = response.data.video;
-      environment.value = response.data.environment; // Stocke l’environnement
+      environment.value = response.data.environment; // Store environment
       videoSrc.value = `http://127.0.0.1:5000/videos/${environment.value}/${response.data.video}`;
-      instruction.value = response.data.instruction; // Récupère l'instruction
+      instruction.value = response.data.instruction; // Retrieve instruction
       noMoreVideos.value = false;
     } else {
       noMoreVideos.value = true;
@@ -72,11 +72,11 @@ const rateVideo = async () => {
   try {
     await axios.post("http://127.0.0.1:5000/rate", {
       video: currentVideo.value,
-      environment: environment.value, // Inclure l’environnement dans la requête
+      environment: environment.value, // Include environment in request
       rating: selectedRating.value,
       user: username.value,
     });
-    fetchVideo(); // Charger une nouvelle vidéo après notation
+    fetchVideo(); // Load a new video after rating
   } catch (error) {
     console.error("Error submitting rating", error);
     noMoreVideos.value = true;
