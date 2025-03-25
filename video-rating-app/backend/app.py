@@ -5,104 +5,104 @@ import random
 from flask import Flask, jsonify, request, send_from_directory
 from flask_cors import CORS
 
-# Initialize Flask app and enable CORS for all origins
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
-# Define folder paths for videos and ratings
+# Dossiers des vidéos et des notations
 VIDEO_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), "videos")
 RATE_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), "rate")
 
-# Check if the directories for videos and ratings exist, if not, create them
-if not os.path.exists(VIDEO_FOLDER):
-    os.makedirs(VIDEO_FOLDER)
+# Vérification de l'existence des dossiers
+os.makedirs(VIDEO_FOLDER, exist_ok=True)
+os.makedirs(RATE_FOLDER, exist_ok=True)
 
-if not os.path.exists(RATE_FOLDER):
-    os.makedirs(RATE_FOLDER)
-
-# Function to retrieve a list of videos that the user has not rated
+# Fonction pour récupérer les vidéos non notées par l'utilisateur
 def get_videos(user):
-    # Set to store videos that the user has already rated
     rated_videos = set()
     user_file = os.path.join(RATE_FOLDER, f"{user}.csv")
-    
-    # If the user has rated videos, load them into the rated_videos set
+
+    # Charger les vidéos déjà notées
     if os.path.exists(user_file):
         with open(user_file, "r", newline="") as file:
             reader = csv.reader(file)
+            next(reader, None)  # Ignorer l'en-tête
             for row in reader:
-                rated_videos.add(row[0])  # Add video name to the set of rated videos
-    
-    # Get all videos in the VIDEO_FOLDER that are not rated by the user
-    available_videos = [
-        f for f in os.listdir(VIDEO_FOLDER)
-        if f.endswith(('.mp4', '.avi', '.mov', '.webm')) and f not in rated_videos
-    ]
-    
+                rated_videos.add(row[0])  # Stocker le nom des vidéos déjà notées
+
+    # Récupérer les vidéos disponibles par environnement
+    available_videos = []
+    for env in os.listdir(VIDEO_FOLDER):
+        env_path = os.path.join(VIDEO_FOLDER, env)
+        print("Environnement:", env_path)  # Debug: Afficher le chemin de l'environnement
+        if os.path.isdir(env_path):  # Vérifier si c'est un dossier (environnement)
+            for video in os.listdir(env_path):
+                if video.endswith(('.mp4', '.avi', '.mov', '.webm')) and video not in rated_videos:
+                    available_videos.append((video, env))  # Ajouter (vidéo, environnement)
+    print("Vidéos disponibles:", available_videos)  # Debug: Afficher les vidéos disponibles
     return available_videos
 
-# Route to serve a random video that the user has not rated
+# Route pour récupérer une vidéo non notée
 @app.route("/video", methods=["GET"])
 def serve_video():
-    user = request.args.get("user")  # Get the user from the query parameters
-    
-    # If no user is provided, return an error
+    user = request.args.get("user")
     if not user:
         return jsonify({"error": "User is required"}), 400
-    
-    videos = get_videos(user)  # Get list of un-rated videos
-    
-    instruction_file = os.path.join(VIDEO_FOLDER, "indication.txt")
 
+    videos = get_videos(user)
+    if not videos:
+        return jsonify({"error": "No videos available to rate"}), 404
+
+    # Sélectionner une vidéo aléatoirement
+    video_name, environment = random.choice(videos)
+
+    # Charger les instructions spécifiques à l'environnement
+    instruction_file = os.path.join(VIDEO_FOLDER, environment, "indication.txt")
     instruction = "Aucune indication disponible"
     if os.path.exists(instruction_file):
         with open(instruction_file, "r", encoding="utf-8") as f:
             instruction = f.read().strip()
-    
-    # If there are available videos, return one at random
-    if videos:
-        return jsonify({"video": random.choice(videos), "instruction": instruction})
 
-            
-        
-    return jsonify({"error": "No videos available to rate"}), 404  # If no videos are available, return an error
+    return jsonify({
+        "video": video_name,
+        "environment": environment,
+        "instruction": instruction
+    })
 
-# Route to handle the rating of a video by the user
+# Route pour noter une vidéo
 @app.route("/rate", methods=["POST"])
 def rate_video():
     data = request.json
-    video_name = data.get("video")  # Get video name from the request data
-    rating = data.get("rating")  # Get rating from the request data
-    user = data.get("user")  # Get user from the request data
+    video_name = data.get("video")
+    rating = data.get("rating")
+    user = data.get("user")
+    environment = data.get("environment")
 
-    # Validate that all required data is present
-    if not video_name or not rating or not user:
+    if not video_name or not rating or not user or not environment:
         return jsonify({"error": "Invalid data"}), 400
 
-    # File name for storing user ratings, based on the user's name
     user_file = os.path.join(RATE_FOLDER, f"{user}.csv")
-
-    # If the file does not exist, create it and write headers
+    
+    # Écrire l'en-tête si le fichier n'existe pas
     if not os.path.exists(user_file):
         with open(user_file, "w", newline="") as file:
             writer = csv.writer(file)
-            writer.writerow(["video_name", "rating"])  # Write headers if the file is new
+            writer.writerow(["video_name", "environment", "rating"])  # Ajouter l'environnement
 
-    # Append the new rating to the user's file
+    # Ajouter la notation
     with open(user_file, "a", newline="") as file:
         writer = csv.writer(file)
-        writer.writerow([video_name, rating])  # Write the video name and rating
+        writer.writerow([video_name, environment, rating])  # Stocker l'environnement
 
-    return jsonify({"success": True})  # Return success response
+    return jsonify({"success": True})
 
-# Route to serve the video file itself based on the filename
-@app.route("/videos/<path:filename>")
-def get_video_file(filename):
-    video_path = os.path.join(VIDEO_FOLDER, filename)  # Get the full path to the video
-    if os.path.exists(video_path):  # If the video exists, return it
-        return send_from_directory(VIDEO_FOLDER, filename, as_attachment=False)
-    return jsonify({"error": "Video not found"}), 404  # If the video doesn't exist, return an error
+# Route pour servir une vidéo depuis un environnement
+@app.route("/videos/<environment>/<filename>")
+def get_video_file(environment, filename):
+    video_path = os.path.join(VIDEO_FOLDER, environment, filename)
+    if os.path.exists(video_path):
+        return send_from_directory(os.path.join(VIDEO_FOLDER, environment), filename, as_attachment=False)
+    return jsonify({"error": "Video not found"}), 404
 
-# Start the Flask app when the script is run
+# Lancement du serveur Flask
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)

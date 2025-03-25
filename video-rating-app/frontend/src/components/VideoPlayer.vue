@@ -2,8 +2,8 @@
   <div class="container">
     <!-- Zone des instructions -->
     <div class="instructions" v-if="!noMoreVideos">
-        <h3>Instructions :</h3>
-        <p>{{ instruction }}</p>
+      <h3>Instructions :</h3>
+      <p>{{ instruction }}</p>
     </div>
 
     <div class="video-container">
@@ -12,6 +12,7 @@
         <p>Il n'y a plus de vidéos disponibles pour l'instant.</p>
       </div>
       <div v-else>
+        <h3>Environnement : {{ environment }}</h3> <!-- Affichage de l'environnement -->
         <video v-if="videoSrc" :src="videoSrc" controls autoplay></video>
 
         <div class="rating-container">
@@ -39,8 +40,9 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 const videoSrc = ref("");
 const currentVideo = ref("");
+const environment = ref(""); // Stocke l’environnement de la vidéo
 const noMoreVideos = ref(false);
-const instruction = ref(""); // Ajout pour stocker l'instruction
+const instruction = ref(""); // Stocke les instructions de l’environnement
 const username = ref(localStorage.getItem("username") || "");
 const selectedRating = ref(3);
 
@@ -53,7 +55,8 @@ const fetchVideo = async () => {
     const response = await axios.get(`http://127.0.0.1:5000/video?user=${username.value}`);
     if (response.data.video) {
       currentVideo.value = response.data.video;
-      videoSrc.value = `http://127.0.0.1:5000/videos/${response.data.video}`;
+      environment.value = response.data.environment; // Stocke l’environnement
+      videoSrc.value = `http://127.0.0.1:5000/videos/${environment.value}/${response.data.video}`;
       instruction.value = response.data.instruction; // Récupère l'instruction
       noMoreVideos.value = false;
     } else {
@@ -69,10 +72,11 @@ const rateVideo = async () => {
   try {
     await axios.post("http://127.0.0.1:5000/rate", {
       video: currentVideo.value,
+      environment: environment.value, // Inclure l’environnement dans la requête
       rating: selectedRating.value,
       user: username.value,
     });
-    fetchVideo();
+    fetchVideo(); // Charger une nouvelle vidéo après notation
   } catch (error) {
     console.error("Error submitting rating", error);
     noMoreVideos.value = true;
