@@ -36,6 +36,15 @@ if command -v conda &> /dev/null; then
 
     # Install dependencies if necessary
     pip install -r requirements.txt
+
+    # Check if the Flask server is already running
+    if ! lsof -i :5000 &> /dev/null; then
+        echo "🔧 Starting the Flask server..."
+        python app.py flask run &
+        FLASK_PID=$!
+    else
+        echo "⚠️ Flask server is already running."
+    fi
 else
     echo "❌ Conda is not available. Using venv instead."
 
@@ -50,11 +59,18 @@ else
 
     # Install dependencies if necessary
     pip install -r requirements.txt
+
+    # Check if the Flask server is already running
+    if ! lsof -i :5000 &> /dev/null; then
+        echo "🔧 Starting the Flask server..."
+        python3 app.py flask run &
+        FLASK_PID=$!
+    else
+        echo "⚠️ Flask server is already running."
+    fi
 fi
 
-# Run Flask in the background and store its PID
-python app.py &  
-FLASK_PID=$!
+
 
 # Return to the project root
 cd ..

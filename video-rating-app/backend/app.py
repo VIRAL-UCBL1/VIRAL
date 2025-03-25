@@ -52,9 +52,19 @@ def serve_video():
     
     videos = get_videos(user)  # Get list of un-rated videos
     
+    instruction_file = os.path.join(VIDEO_FOLDER, "indication.txt")
+
+    instruction = "Aucune indication disponible"
+    if os.path.exists(instruction_file):
+        with open(instruction_file, "r", encoding="utf-8") as f:
+            instruction = f.read().strip()
+    
     # If there are available videos, return one at random
     if videos:
-        return jsonify({"video": random.choice(videos)})  # Return a random un-rated video
+        return jsonify({"video": random.choice(videos), "instruction": instruction})
+
+            
+        
     return jsonify({"error": "No videos available to rate"}), 404  # If no videos are available, return an error
 
 # Route to handle the rating of a video by the user

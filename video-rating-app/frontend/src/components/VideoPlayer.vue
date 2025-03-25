@@ -1,100 +1,135 @@
 <template>
-  <div>
-    <!-- If no more videos are available, show a thank you message -->
-    <div v-if="noMoreVideos">
-      <h2>Merci d'avoir voté !</h2>
-      <p>Il n'y a plus de vidéos disponibles pour l'instant.</p>
+  <div class="container">
+    <!-- Zone des instructions -->
+    <div class="instructions" v-if="!noMoreVideos">
+        <h3>Instructions :</h3>
+        <p>{{ instruction }}</p>
     </div>
-    <!-- If there are more videos, show the video and the rating buttons -->
-    <div v-else>
-      <!-- Display the video player if a video source is available -->
-      <video v-if="videoSrc" :src="videoSrc" controls autoplay></video>
-      <div class="buttons">
-        <!-- Rating buttons that trigger the rateVideo method with different rating values -->
-        <button @click="rateVideo(1)">⭐</button>
-        <button @click="rateVideo(2)">⭐⭐</button>
-        <button @click="rateVideo(3)">⭐⭐⭐</button>
-        <button @click="rateVideo(4)">⭐⭐⭐⭐</button>
-        <button @click="rateVideo(5)">⭐⭐⭐⭐⭐</button>
+
+    <div class="video-container">
+      <div v-if="noMoreVideos">
+        <h2>Merci d'avoir voté !</h2>
+        <p>Il n'y a plus de vidéos disponibles pour l'instant.</p>
+      </div>
+      <div v-else>
+        <video v-if="videoSrc" :src="videoSrc" controls autoplay></video>
+
+        <div class="rating-container">
+          <label for="rating">Note : {{ selectedRating }}</label>
+          <input
+            id="rating"
+            type="range"
+            min="0"
+            max="5"
+            step="1"
+            v-model="selectedRating"
+          />
+          <button @click="rateVideo">Valider</button>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import axios from "axios"; // Import Axios for making HTTP requests
-import { onMounted, ref } from "vue"; // Import Vue composition API hooks
-import { useRouter } from "vue-router"; // Import the router for navigation
+import axios from "axios";
+import { onMounted, ref } from "vue";
+import { useRouter } from "vue-router";
 
-const router = useRouter();  // Initialize Vue Router
-const videoSrc = ref("");  // Reference to store the video source URL
-const currentVideo = ref("");  // Reference to store the current video name
-const noMoreVideos = ref(false);  // Flag to track if there are no more videos
-const username = ref(localStorage.getItem("username") || "");  // Retrieve the username from local storage or default to an empty string
+const router = useRouter();
+const videoSrc = ref("");
+const currentVideo = ref("");
+const noMoreVideos = ref(false);
+const instruction = ref(""); // Ajout pour stocker l'instruction
+const username = ref(localStorage.getItem("username") || "");
+const selectedRating = ref(3);
 
-// If the username is not set, redirect the user to the homepage
 if (!username.value) {
-  router.push("/");  // Navigate to the homepage
+  router.push("/");
 }
 
-// Fetch the next video that the user has not rated
 const fetchVideo = async () => {
   try {
-    // Make a GET request to the backend to retrieve a video for the user
     const response = await axios.get(`http://127.0.0.1:5000/video?user=${username.value}`);
     if (response.data.video) {
-      // If a video is returned, set the current video and video source
       currentVideo.value = response.data.video;
       videoSrc.value = `http://127.0.0.1:5000/videos/${response.data.video}`;
-      noMoreVideos.value = false;  // There are videos available
+      instruction.value = response.data.instruction; // Récupère l'instruction
+      noMoreVideos.value = false;
     } else {
-      noMoreVideos.value = true;  // No more videos to rate
+      noMoreVideos.value = true;
     }
   } catch (error) {
-    // Handle any errors during the request
     console.error("Error loading video", error);
-    noMoreVideos.value = true;  // Set noMoreVideos to true in case of an error
+    noMoreVideos.value = true;
   }
 };
 
-// Rate the current video and submit the rating
-const rateVideo = async (rating: number) => {
+const rateVideo = async () => {
   try {
-    // Send the rating data to the backend via a POST request
     await axios.post("http://127.0.0.1:5000/rate", {
-      video: currentVideo.value,  // The current video being rated
-      rating: rating,  // The rating given by the user
-      user: username.value,  // The username of the user
+      video: currentVideo.value,
+      rating: selectedRating.value,
+      user: username.value,
     });
-    fetchVideo();  // Fetch the next video after rating
+    fetchVideo();
   } catch (error) {
-    // Handle any errors during the request
     console.error("Error submitting rating", error);
-    noMoreVideos.value = true;  // Set noMoreVideos to true in case of an error
+    noMoreVideos.value = true;
   }
 };
 
-// Fetch the initial video when the component is mounted
 onMounted(fetchVideo);
 </script>
 
 <style scoped>
-/* Style the video player */
+.container {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.instructions {
+  width: 30%;
+  background: #333;
+  color: white;
+  padding: 15px;
+  border-radius: 5px;
+}
+
+.video-container {
+  width: 70%;
+}
+
 video {
-  width: 100%;  /* Make the video player full width */
-  max-height: 500px;  /* Set a maximum height for the video */
+  width: 100%;
+  max-height: 500px;
 }
 
-/* Style for the buttons container */
-.buttons {
-  margin-top: 10px;  /* Add top margin for spacing */
+.rating-container {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-/* Style for the individual rating buttons */
+input[type="range"] {
+  width: 80%;
+  margin-top: 10px;
+}
+
 button {
-  margin: 5px;  /* Add margin around buttons */
-  padding: 10px;  /* Add padding inside buttons */
-  font-size: 20px;  /* Set the font size of the buttons */
-  cursor: pointer;  /* Change cursor to pointer on hover */
+  margin-top: 10px;
+  padding: 10px 15px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+}
+
+button:hover {
+  background-color: #0056b3;
 }
 </style>

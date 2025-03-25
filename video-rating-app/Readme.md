@@ -18,7 +18,7 @@ video-rating-app/
 │── backend/              # Flask API (Backend server to handle requests)
 │   ├── app.py            # Main file for running the Flask server
 │   ├── requirements.txt  # Python dependencies for the backend
-│   ├── ratings/          # Folder to store ratings data (e.g., CSV file)
+│   ├── rate/             # Folder to store ratings data (e.g., CSV file)
 │   ├── videos/           # Folder containing the video files to be rated
 │
 │── start.sh              # Shell script to start the application on UNIX systems
@@ -90,7 +90,7 @@ video-rating-app/
 │── backend/              # API Flask (Serveur backend pour gérer les requêtes)
 │   ├── app.py            # Fichier principal pour lancer le serveur Flask
 │   ├── requirements.txt  # Dépendances Python pour le backend
-│   ├── ratings/          # Dossier pour stocker les données de notes (par exemple, fichier CSV)
+│   ├── rate/             # Dossier pour stocker les données de notes (par exemple, fichier CSV)
 │   ├── videos/           # Dossier contenant les fichiers vidéo à évaluer
 │
 │── start.sh              # Script shell pour démarrer l'application sur des systèmes UNIX
