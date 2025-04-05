@@ -1,6 +1,5 @@
 import os
 import warnings
-import cv2
 from time import sleep
 
 import torch
@@ -70,19 +69,6 @@ def _execute_ollama_stop(model: str):
         print(f"Error : {e}")
         print(f"Stderr: {e.stderr}")
 
-def _get_fps(video_path: str, fps_goal: int):
-    cap = cv2.VideoCapture(video_path)
-    if not cap.isOpened():
-        raise ValueError("Impossible d'ouvrir la vidéo")
-
-    fps = cap.get(cv2.CAP_PROP_FPS)
-    frame_count = cap.get(cv2.CAP_PROP_FRAME_COUNT)
-    duration = frame_count / fps if fps else 0
-    cap.release()
-    if duration < 1:
-        return fps_goal
-    return fps_goal
-
 @app.route('/upload', methods=['POST'])
 def upload_video():
     """
@@ -131,7 +117,7 @@ def process_video():
     # Inputs
     data = request.get_json()
     video_path = './video/tmp.mp4'
-    fps = _get_fps(video_path, 1)
+    fps = 30
     question = data['prompt']
     messages = [
         {
