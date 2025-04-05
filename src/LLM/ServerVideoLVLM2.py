@@ -113,6 +113,7 @@ def process_video():
     # min_pixels = 256*28*28
     # max_pixels = 1280*28*28
     # processor = AutoProcessor.from_pretrained("Qwen/Qwen2.5-VL-7B-Instruct", min_pixels=min_pixels, max_pixels=max_pixels)
+    print("load processor")
 
     # Inputs
     data = request.get_json()
@@ -145,13 +146,15 @@ def process_video():
         return_tensors="pt",
     )
     inputs = inputs.to("cuda")
+    print("inputs load")
 
     ollama_model = _execute_ollama_ps()
     while ollama_model is not None:
         _execute_ollama_stop(ollama_model)
         ollama_model = _execute_ollama_ps()
-    with torch.no_grad():
 
+    print("begin generate")
+    with torch.no_grad():
         # Inference: Generation of the output
         generated_ids = model.generate(**inputs, max_new_tokens=128)
         generated_ids_trimmed = [
