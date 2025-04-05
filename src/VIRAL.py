@@ -212,6 +212,9 @@ class VIRAL:
                 # else:
                 news_idx.append(self.self_refine_reward(worst_idx))
             are_worsts, are_betters, _ = self.policy_trainer.evaluate_policy(news_idx)
+        self.policy_trainer.start_vd(self.memory[-1].policy, 1)
+        video_path = os.path.join("records", str(self.env_type), f"{self.env_type}_{self.policy_trainer.seed}-last.mp4")
+        self.logger.info(f"video safe at: {video_path}")
         return self.memory
 
     def critical_refine_reward(self, idx: int) -> int:
@@ -370,8 +373,8 @@ class VIRAL:
         if self.client_video is None:
             self.logger.error("client video not initialised")
             raise RuntimeError("client video not initialised")
-        self.policy_trainer.start_vd(self.memory[idx].policy, 1)
-        video_path = os.path.join("records", str(self.env_type), f"{self.env_type}_{self.policy_trainer.seed}-episode-0.mp4")
+        self.policy_trainer.start_vd(self.memory[idx].policy, 1, idx-1)
+        video_path = os.path.join("records", str(self.env_type), f"{idx-1}_{self.env_type}_{self.policy_trainer.seed}-episode-0.mp4")
         self.logger.info(f"video safe at: {video_path}")
         video_prompt = """In this video, an object is in motion. 
         Describe only the movement of the object, focusing on the dynamics of its movement. 
