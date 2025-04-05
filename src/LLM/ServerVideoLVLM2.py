@@ -117,7 +117,7 @@ def process_video():
     # Inputs
     data = request.get_json()
     video_path = './video/tmp.mp4'
-    fps = 30
+    fps = 15
     question = data['prompt']
     messages = [
         {
