@@ -371,7 +371,7 @@ class VIRAL:
             self.logger.error("client video not initialised")
             raise RuntimeError("client video not initialised")
         self.policy_trainer.start_vd(self.memory[idx].policy, 1)
-        video_path = os.path.join("records", str(self.env_type), "rl-video-episode-0.mp4")
+        video_path = os.path.join("records", str(self.env_type), f"{self.env_type}_{self.policy_trainer.seed}-episode-0.mp4")
         self.logger.info(f"video safe at: {video_path}")
         video_prompt = """In this video, an object is in motion. 
         Describe only the movement of the object, focusing on the dynamics of its movement. 

@@ -126,7 +126,7 @@ def process_video():
                 {
                     "type": "video",
                     "video": video_path,
-                    "fps": 1.0,
+                    "fps": 10.0,
                 },
                 {"type": "text", "text": question},
             ],
@@ -140,7 +140,7 @@ def process_video():
         text=[text],
         images=image_inputs,
         videos=video_inputs,
-        fps=1,
+        fps=10,
         padding=True,
         return_tensors="pt",
     )
@@ -151,6 +151,7 @@ def process_video():
         _execute_ollama_stop(ollama_model)
         ollama_model = _execute_ollama_ps()
     with torch.no_grad():
+
         # Inference: Generation of the output
         generated_ids = model.generate(**inputs, max_new_tokens=128)
         generated_ids_trimmed = [
@@ -161,7 +162,6 @@ def process_video():
         )
         print(output)
 
-    # response = tokenizer.batch_decode(output, skip_special_tokens=True)[0].strip()
     response = {'response': output}
     del model
     del inputs
