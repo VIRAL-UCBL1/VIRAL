@@ -16,16 +16,20 @@
         <video v-if="videoSrc" :src="videoSrc" controls autoplay></video>
 
         <div class="rating-container">
-          <label for="rating">Rating: {{ selectedRating }}</label>
-          <input
-            id="rating"
-            type="range"
-            min="0"
-            max="5"
-            step="1"
-            v-model="selectedRating"
-          />
-          <button @click="rateVideo">Submit</button>
+          <p class="rating-instruction">
+            Veuillez donner une note à cette vidéo pour indiquer si celle-ci respecte les consignes affichées à gauche de la vidéo :
+          </p>
+          <div class="rating-buttons">
+            <button
+              v-for="n in 5"
+              :key="n"
+              :class="{ selected: selectedRating === n }"
+              @click="selectedRating = n"
+            >
+              {{ n }}
+            </button>
+          </div>
+          <button class="submit-button" @click="rateVideo">Soumettre</button>
         </div>
       </div>
     </div>
@@ -110,12 +114,47 @@ video {
   max-height: 500px;
 }
 
-.rating-container {
-  margin-top: 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.rating-instruction {
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 10px;
 }
+
+.rating-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.rating-buttons button {
+  padding: 10px 15px;
+  font-size: 16px;
+  background-color: #ddd;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.rating-buttons button.selected {
+  background-color: #007bff;
+  color: white;
+}
+
+.submit-button {
+  margin-top: 15px;
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.submit-button:hover {
+  background-color: #218838;
+}
+
 
 input[type="range"] {
   width: 80%;

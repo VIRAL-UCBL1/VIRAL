@@ -4,14 +4,13 @@ Thumbs.db           # Windows system file
 
 # Ignore virtual environment directories
 venv/               # Python virtual environment folder (could be named .venv too)
-backend/venv/       # Virtual environment in the backend folder (if exists)
+backend/venv/*       # Virtual environment in the backend folder (if exists)
 
 # Ignore IDE and text editor configuration files
 .idea/              # JetBrains IDE files (e.g., PhpStorm, IntelliJ)
 .vscode/            # Visual Studio Code settings folder
 
-# Ignore frontend build dependencies
-lock.json et node_modules)
+# Ignore frontend build dependencies (package-lock.json et node_modules)
 package-lock.json
 node_modules/
 
@@ -32,4 +31,4 @@ __pycache__/        # Python's cache folder that stores bytecode files
 
 # Ignore environment files related to Conda (optional)
 # If you don't want to version your environment configuration
-backend/venv/       # Conda or other Python environment folder (if used)
+backend/venv/*       # Conda or other Python environment folder (if used)
