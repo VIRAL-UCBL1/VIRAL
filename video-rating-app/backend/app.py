@@ -11,35 +11,47 @@ CORS(app, resources={r"/*": {"origins": "*"}})
 # Video and rating folders
 VIDEO_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), "videos")
 RATE_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), "rate")
+VALIDATION_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), "validation")
 
 # Ensure the existence of required folders
 os.makedirs(VIDEO_FOLDER, exist_ok=True)
 os.makedirs(RATE_FOLDER, exist_ok=True)
+os.makedirs(VALIDATION_FOLDER, exist_ok=True)
+
+
 
 # Function to retrieve unrated videos for the user
 def get_videos(user):
     rated_videos = set()
     user_file = os.path.join(RATE_FOLDER, f"{user}.csv")
-
-    # Load already rated videos
+    # Lire les vidéos déjà notées (avec leur source)
     if os.path.exists(user_file):
         with open(user_file, "r", newline="") as file:
             reader = csv.reader(file)
-            next(reader, None)  # Skip header
+            next(reader, None)
             for row in reader:
-                rated_videos.add(row[0])  # Store names of rated videos
+                # row[0] = video name, row[1] = environment, row[3] = source
+                rated_videos.add((row[0], row[1], row[3] if len(row) > 3 else "videos"))
+                
+    def collect_unrated(folder, source_name):
+        available = []
+        for env in os.listdir(folder):
+            env_path = os.path.join(folder, env)
+            if os.path.isdir(env_path):
+                for video in os.listdir(env_path):
+                    if video.endswith(('.mp4', '.avi', '.mov', '.webm')):
+                        key = (video, env, source_name)
+                        if key not in rated_videos:
+                            available.append((video, env, source_name))
+        return available
 
-    # Retrieve available videos by environment
-    available_videos = []
-    for env in os.listdir(VIDEO_FOLDER):
-        env_path = os.path.join(VIDEO_FOLDER, env)
-        print("Environment:", env_path)  # Debug: Display environment path
-        if os.path.isdir(env_path):  # Ensure it's a directory (environment)
-            for video in os.listdir(env_path):
-                if video.endswith(('.mp4', '.avi', '.mov', '.webm')) and video not in rated_videos:
-                    available_videos.append((video, env))  # Add (video, environment)
-    print("Available videos:", available_videos)  # Debug: Display available videos
-    return available_videos
+    # Priorité : validation d'abord
+    validation_videos = collect_unrated(VALIDATION_FOLDER, "validation")
+    if validation_videos:
+        return validation_videos
+
+    # Sinon, on retourne les vidéos normales
+    return collect_unrated(VIDEO_FOLDER, "videos")
 
 # Route to fetch an unrated video
 @app.route("/video", methods=["GET"])
@@ -53,19 +65,21 @@ def serve_video():
         return jsonify({"error": "No videos available to rate"}), 404
 
     # Randomly select a video
-    video_name, environment = random.choice(videos)
+    video_name, environment, source = random.choice(videos)
 
-    # Load environment-specific instruction text
+    base_folder = VALIDATION_FOLDER if source == "validation" else VIDEO_FOLDER
+
+    # Texte
     instruction_text = ""
-    instruction_file = os.path.join(VIDEO_FOLDER, environment, "indication.txt")
+    instruction_file = os.path.join(base_folder, environment, "indication.txt")
     if os.path.exists(instruction_file):
         with open(instruction_file, "r", encoding="utf-8") as f:
             instruction_text = f.read().strip()
 
-    # Look for an instruction image (e.g., instruction.png or instruction.jpg)
+    # Image
     instruction_image = ""
     for ext in [".png", ".jpg", ".jpeg", ".webp"]:
-        candidate = os.path.join(VIDEO_FOLDER, environment, f"instruction{ext}")
+        candidate = os.path.join(base_folder, environment, f"instruction{ext}")
         if os.path.exists(candidate):
             instruction_image = f"http://127.0.0.1:5000/videos/{environment}/instruction{ext}"
             break
@@ -74,7 +88,8 @@ def serve_video():
     "video": video_name,
     "environment": environment,
     "instructionText": instruction_text,
-    "instructionImage": instruction_image
+    "instructionImage": instruction_image,
+    "source": source
 })
 
 
@@ -85,6 +100,7 @@ def rate_video():
     video_name = data.get("video")
     rating = data.get("rating")
     user = data.get("user")
+    source = data.get("source", "videos")
     environment = data.get("environment")
 
     if not video_name or not rating or not user or not environment:
@@ -96,12 +112,12 @@ def rate_video():
     if not os.path.exists(user_file):
         with open(user_file, "w", newline="") as file:
             writer = csv.writer(file)
-            writer.writerow(["video_name", "environment", "rating"])  # Add environment
+            writer.writerow(["video_name", "environment", "rating", "source"])  # Add environment
 
     # Append rating
     with open(user_file, "a", newline="") as file:
         writer = csv.writer(file)
-        writer.writerow([video_name, environment, rating])  # Store environment
+        writer.writerow([video_name, environment, rating, source])  # Store environment
 
     return jsonify({"success": True})
 

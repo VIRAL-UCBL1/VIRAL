@@ -54,6 +54,7 @@ const environment = ref(""); // Stores the video environment
 const noMoreVideos = ref(false);
 const instructionText = ref(""); // Stores environment instructions
 const instructionImage = ref(""); // Stores environment image
+const source = ref("videos"); // par défaut
 const username = ref(localStorage.getItem("username") || "");
 const selectedRating = ref(3);
 
@@ -70,6 +71,7 @@ const fetchVideo = async () => {
       videoSrc.value = `http://127.0.0.1:5000/videos/${environment.value}/${response.data.video}`;
       instructionText.value = response.data.instructionText || "";
       instructionImage.value = response.data.instructionImage || "";
+      source.value = response.data.source || "videos";
       noMoreVideos.value = false;
     } else {
       noMoreVideos.value = true;
@@ -84,9 +86,10 @@ const rateVideo = async () => {
   try {
     await axios.post("http://127.0.0.1:5000/rate", {
       video: currentVideo.value,
-      environment: environment.value, // Include environment in request
+      environment: environment.value,
       rating: selectedRating.value,
       user: username.value,
+      source: source.value,
     });
     fetchVideo(); // Load a new video after rating
   } catch (error) {
