@@ -2,10 +2,16 @@
   <div class="container">
     <!-- Instructions Section -->
     <div class="instructions" v-if="!noMoreVideos">
-      <h3>Instructions:</h3>
-      <p>{{ instruction }}</p>
+      <h3>Instructions :</h3>
+      <p v-if="instructionText">{{ instructionText }}</p>
+      <img
+        v-if="instructionImage"
+        :src="instructionImage"
+        alt="Instruction visuelle"
+        class="instruction-image"
+      />
     </div>
-
+    <!-- Video Player Section -->
     <div class="video-container">
       <div v-if="noMoreVideos">
         <h2>Thank you for voting!</h2>
@@ -46,7 +52,8 @@ const videoSrc = ref("");
 const currentVideo = ref("");
 const environment = ref(""); // Stores the video environment
 const noMoreVideos = ref(false);
-const instruction = ref(""); // Stores environment instructions
+const instructionText = ref(""); // Stores environment instructions
+const instructionImage = ref(""); // Stores environment image
 const username = ref(localStorage.getItem("username") || "");
 const selectedRating = ref(3);
 
@@ -61,7 +68,8 @@ const fetchVideo = async () => {
       currentVideo.value = response.data.video;
       environment.value = response.data.environment; // Store environment
       videoSrc.value = `http://127.0.0.1:5000/videos/${environment.value}/${response.data.video}`;
-      instruction.value = response.data.instruction; // Retrieve instruction
+      instructionText.value = response.data.instructionText || "";
+      instructionImage.value = response.data.instructionImage || "";
       noMoreVideos.value = false;
     } else {
       noMoreVideos.value = true;
@@ -104,6 +112,16 @@ onMounted(fetchVideo);
   padding: 15px;
   border-radius: 5px;
 }
+
+.instruction-image {
+  width: 100%;
+  max-height: 300px;
+  object-fit: contain;
+  margin-top: 10px;
+  border: 1px solid #555;
+  border-radius: 5px;
+}
+
 
 .video-container {
   width: 70%;

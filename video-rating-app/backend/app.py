@@ -55,18 +55,28 @@ def serve_video():
     # Randomly select a video
     video_name, environment = random.choice(videos)
 
-    # Load environment-specific instructions
+    # Load environment-specific instruction text
+    instruction_text = ""
     instruction_file = os.path.join(VIDEO_FOLDER, environment, "indication.txt")
-    instruction = "No instructions available"
     if os.path.exists(instruction_file):
         with open(instruction_file, "r", encoding="utf-8") as f:
-            instruction = f.read().strip()
+            instruction_text = f.read().strip()
+
+    # Look for an instruction image (e.g., instruction.png or instruction.jpg)
+    instruction_image = ""
+    for ext in [".png", ".jpg", ".jpeg", ".webp"]:
+        candidate = os.path.join(VIDEO_FOLDER, environment, f"instruction{ext}")
+        if os.path.exists(candidate):
+            instruction_image = f"http://127.0.0.1:5000/videos/{environment}/instruction{ext}"
+            break
 
     return jsonify({
-        "video": video_name,
-        "environment": environment,
-        "instruction": instruction
-    })
+    "video": video_name,
+    "environment": environment,
+    "instructionText": instruction_text,
+    "instructionImage": instruction_image
+})
+
 
 # Route to rate a video
 @app.route("/rate", methods=["POST"])
