@@ -56,11 +56,11 @@ def get_videos(user):
 # Route to fetch an unrated video
 @app.route("/video", methods=["GET"])
 def serve_video():
-    user = request.args.get("user")
-    if not user:
-        return jsonify({"error": "User is required"}), 400
+    username = request.args.get("username")
+    if not username:
+        return jsonify({"error": "username is required"}), 400
 
-    videos = get_videos(user)
+    videos = get_videos(username)
     if not videos:
         return jsonify({"error": "No videos available to rate"}), 404
 
@@ -99,15 +99,15 @@ def rate_video():
     data = request.json
     video_name = data.get("video")
     rating = data.get("rating")
-    user = data.get("user")
+    username = data.get("username")
     source = data.get("source", "videos")
     environment = data.get("environment")
 
-    if not video_name or not rating or not user or not environment:
+    if not video_name or rating is None or not username or not environment:
         return jsonify({"error": "Invalid data"}), 400
 
-    user_file = os.path.join(RATE_FOLDER, f"{user}.csv")
-    
+    user_file = os.path.join(RATE_FOLDER, f"{username}.csv")
+
     # Write header if file does not exist
     if not os.path.exists(user_file):
         with open(user_file, "w", newline="") as file:

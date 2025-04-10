@@ -1,60 +1,66 @@
 <template>
-    <div class="container">
-      <h2>Bienvenue !</h2> <!-- Welcome message in French -->
-      <p>Entrez votre prénom et nom pour commencer à évaluer les vidéos.</p> <!-- Instruction to enter first and last name in French -->
-  
-      <!-- Input fields for first name and last name with two-way data binding -->
-      <input v-model="firstName" type="text" placeholder="Prénom" />  <!-- First name input -->
-      <input v-model="lastName" type="text" placeholder="Nom" />  <!-- Last name input -->
-      <!-- Button to start rating videos -->
-      <button @click="startRating">Commencer</button> <!-- Start button to begin rating -->
-    </div>
+  <div class="container">
+    <h2>Bienvenue !</h2>
+    <p>Entrez votre prénom, nom et éventuellement une seed pour reprendre votre session.</p>
+
+    <input v-model="firstName" type="text" placeholder="Prénom" />
+    <input v-model="lastName" type="text" placeholder="Nom" />
+    <input v-model="userSeed" type="text" placeholder="Seed (facultatif)" />
+
+    <button @click="startRating">Commencer</button>
+  </div>
 </template>
-  
+
 <script setup lang="ts">
-import { ref } from "vue"; // Import Vue's ref function to create reactive references
-import { useRouter } from "vue-router"; // Import useRouter for navigation
+import { ref } from "vue";
+import { useRouter } from "vue-router";
 
-const router = useRouter();  // Initialize the router
-const firstName = ref("");  // Reactive reference for the first name input
-const lastName = ref("");  // Reactive reference for the last name input
+const router = useRouter();
+const firstName = ref("");
+const lastName = ref("");
+const userSeed = ref("");
 
-// Function to start the rating process
+const generateSeed = (): string => {
+  return Math.random().toString(36).substring(2, 10).toUpperCase();
+};
+
 const startRating = () => {
-  // Check if both first name and last name are filled out
   if (firstName.value.trim() && lastName.value.trim()) {
-    // Create a username by combining first name and last name
-    const username = `${firstName.value}_${lastName.value}`;
-    // Store the username in local storage
+    const seed = userSeed.value.trim() || generateSeed();
+
+    const username = `${firstName.value.trim()}_${lastName.value.trim()}_${seed}`;
+
+    // Stockage en localStorage
+    localStorage.setItem("seed", seed);
+    localStorage.setItem("firstName", firstName.value.trim());
+    localStorage.setItem("lastName", lastName.value.trim());
     localStorage.setItem("username", username);
-    // Redirect to the rating page
-    router.push("/rate"); // Redirection to the rating page
+
+    // Rediriger vers la page de notation
+    router.push("/rate");
   } else {
-    // If the fields are empty, show an alert message
-    alert("Veuillez entrer un prénom et un nom !"); // Alert in French
+    alert("Veuillez entrer un prénom et un nom !");
   }
 };
 </script>
-  
+
 <style scoped>
-/* Center the container and add padding */
 .container {
   text-align: center;
   padding: 20px;
 }
 
-/* Style for input fields */
 input {
   display: block;
   margin: 10px auto;
   padding: 8px;
   font-size: 16px;
+  width: 250px;
 }
 
-/* Style for the button */
 button {
   padding: 10px 15px;
   font-size: 18px;
-  cursor: pointer;  /* Change the cursor to pointer when hovering over the button */
+  cursor: pointer;
 }
 </style>

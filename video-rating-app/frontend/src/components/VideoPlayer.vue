@@ -1,6 +1,5 @@
 <template>
   <div class="container">
-    <!-- Instructions Section -->
     <div class="instructions" v-if="!noMoreVideos">
       <h3>Instructions :</h3>
       <p v-if="instructionText">{{ instructionText }}</p>
@@ -11,36 +10,44 @@
         class="instruction-image"
       />
     </div>
-    <!-- Video Player Section -->
+
     <div class="video-container">
+      <div class="video-header">
+        <div class="video-meta">
+          <h3>Environment: {{ environment }}</h3>
+          <video v-if="videoSrc" :src="videoSrc" controls autoplay></video>
+        </div>
+        <div class="session-info">
+          <p><strong>Votre seed :</strong> {{ seed }}</p>
+          <p>Pour reprendre votre session plus tard, entrez cette seed sur la page d’accueil.</p>
+        </div>
+      </div>
+
       <div v-if="noMoreVideos">
         <h2>Thank you for voting!</h2>
         <p>There are no more videos available at the moment.</p>
       </div>
-      <div v-else>
-        <h3>Environment: {{ environment }}</h3> <!-- Displaying environment -->
-        <video v-if="videoSrc" :src="videoSrc" controls autoplay></video>
 
-        <div class="rating-container">
-          <p class="rating-instruction">
-            Veuillez donner une note à cette vidéo pour indiquer si celle-ci respecte les consignes affichées à gauche de la vidéo :
-          </p>
-          <div class="rating-buttons">
-            <button
-              v-for="n in 5"
-              :key="n"
-              :class="{ selected: selectedRating === n }"
-              @click="selectedRating = n"
-            >
-              {{ n }}
-            </button>
-          </div>
-          <button class="submit-button" @click="rateVideo">Soumettre</button>
+      <div v-else class="rating-section">
+        <p class="rating-instruction">
+          Veuillez donner une note à cette vidéo pour indiquer si celle-ci respecte les consignes affichées à gauche de la vidéo :
+        </p>
+        <div class="rating-buttons">
+          <button
+            v-for="n in 5"
+            :key="n"
+            :class="{ selected: selectedRating === n }"
+            @click="selectedRating = n"
+          >
+            {{ n }}
+          </button>
         </div>
+        <button class="submit-button" @click="rateVideo">Soumettre</button>
       </div>
     </div>
   </div>
 </template>
+
 
 <script setup lang="ts">
 import axios from "axios";
@@ -55,8 +62,10 @@ const noMoreVideos = ref(false);
 const instructionText = ref(""); // Stores environment instructions
 const instructionImage = ref(""); // Stores environment image
 const source = ref("videos"); // par défaut
+const seed = ref(localStorage.getItem("seed") || "");
 const username = ref(localStorage.getItem("username") || "");
 const selectedRating = ref(3);
+
 
 if (!username.value) {
   router.push("/");
@@ -64,7 +73,7 @@ if (!username.value) {
 
 const fetchVideo = async () => {
   try {
-    const response = await axios.get(`http://127.0.0.1:5000/video?user=${username.value}`);
+    const response = await axios.get(`http://127.0.0.1:5000/video?username=${username.value}`);
     if (response.data.video) {
       currentVideo.value = response.data.video;
       environment.value = response.data.environment; // Store environment
@@ -88,7 +97,7 @@ const rateVideo = async () => {
       video: currentVideo.value,
       environment: environment.value,
       rating: selectedRating.value,
-      user: username.value,
+      username: username.value, // <- identifiant complet ici
       source: source.value,
     });
     fetchVideo(); // Load a new video after rating
@@ -128,6 +137,21 @@ onMounted(fetchVideo);
 
 .video-container {
   width: 70%;
+  display: flex;
+  flex-direction: column;
+  text-align: center; /* Essayez de centrer les éléments enfants */
+}
+
+.video-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  width: 100%; /* Make sure it takes the full width of the video container */
+}
+
+.video-meta {
+  flex: 1;
 }
 
 video {
@@ -135,16 +159,26 @@ video {
   max-height: 500px;
 }
 
+.rating-section {
+  flex-direction: column;
+  align-items: center; /* Center items vertically within the rating section */
+  width: 100%; /* Ensure it takes full width to center properly */
+  margin-top: 20px; /* Add some space above the rating section */
+  display: inline-block; /* Changez l'affichage pour que text-align fonctionne */
+}
+
 .rating-instruction {
   font-weight: bold;
   text-align: center;
   margin-bottom: 10px;
+  width: 80%; /* Adjust width as needed */
 }
 
 .rating-buttons {
   display: flex;
   justify-content: center;
   gap: 10px;
+  margin-bottom: 15px; /* Add some space below the buttons */
 }
 
 .rating-buttons button {
@@ -162,7 +196,6 @@ video {
 }
 
 .submit-button {
-  margin-top: 15px;
   padding: 10px 20px;
   font-size: 16px;
   background-color: #28a745;
@@ -195,5 +228,22 @@ button {
 
 button:hover {
   background-color: #0056b3;
+}
+
+
+.session-info {
+  width: 30%;
+  font-size: 14px;
+  color: #ddd;
+  background: #444;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+
+.session-info .note {
+  font-style: italic;
+  font-size: 12px;
+  color: #bbb;
 }
 </style>
