@@ -6,23 +6,30 @@ This project allows displaying locally stored videos and rating them from 1 to 5
 ## Project Structure
 ```
 video-rating-app/
-│── frontend/             # Vue.js Application (Frontend part of the app)
-│   ├── index.html        # Main HTML page for the frontend
-│   ├── src/              # Vue.js source code
-│   │   ├── App.vue       # Main component of the application
-│   │   ├── main.ts       # Entry point for the Vue.js application
-│   ├── vite.config.ts    # Configuration file for Vite (build tool)
-│   ├── package.json      # Dependencies and scripts for frontend
-│   ├── tsconfig.json     # TypeScript configuration for the frontend
 │
-│── backend/              # Flask API (Backend server to handle requests)
-│   ├── app.py            # Main file for running the Flask server
-│   ├── requirements.txt  # Python dependencies for the backend
-│   ├── rate/             # Folder to store ratings data (e.g., CSV file)
-│   ├── videos/           # Folder containing the video files to be rated
+├── backend/                      # Flask API backend
+│   ├── app.py                    # Main entry point for the Flask server
+│   ├── requirements.txt          # Python dependencies
+│   ├── rate/                     # Rating data (CSV files are ignored)
+│   ├── validation/               # Data validation or processing logic
+│   └── videos/                   # Folder for video files (present but ignored)
 │
-│── start.sh              # Shell script to start the application on UNIX systems
-│── start_wsl.sh          # Shell script to start the application in WSL (Windows Subsystem for Linux)
+├── frontend/                     # Vue.js frontend application
+│   ├── index.html                # Main HTML page
+│   ├── public/                   # Static public files
+│   ├── src/                      # Vue.js source code (components, views, etc.)
+│   ├── vite.config.ts            # Vite build tool configuration
+│   ├── package.json              # Frontend dependencies & scripts
+│   ├── tsconfig.json             # Base TypeScript configuration
+│   ├── tsconfig.app.json         # App-specific TS config
+│   ├── tsconfig.node.json        # TS config for Node-based tooling
+│   └── README.md                 # Frontend app documentation
+│
+├── .gitignore                   # Git ignore rules
+├── package.json                 # Global scripts or dependencies (if any)
+├── Readme.md                    # Main project documentation
+├── start.sh                     # Shell script to start the app (Unix)
+└── start_wsl.sh                 # Script to start the app on WSL
 ```
 
 
@@ -78,23 +85,30 @@ Ce projet permet d'afficher des vidéos stockées localement et de les évaluer 
 ## Structure du Projet
 ```
 video-rating-app/
-│── frontend/             # Application Vue.js (Partie frontend de l'application)
-│   ├── index.html        # Page HTML principale pour le frontend
-│   ├── src/              # Code source Vue.js
-│   │   ├── App.vue       # Composant principal de l'application
-│   │   ├── main.ts       # Point d'entrée pour l'application Vue.js
-│   ├── vite.config.ts    # Fichier de configuration de Vite (outil de build)
-│   ├── package.json      # Dépendances et scripts pour le frontend
-│   ├── tsconfig.json     # Configuration TypeScript pour le frontend
 │
-│── backend/              # API Flask (Serveur backend pour gérer les requêtes)
-│   ├── app.py            # Fichier principal pour lancer le serveur Flask
-│   ├── requirements.txt  # Dépendances Python pour le backend
-│   ├── rate/             # Dossier pour stocker les données de notes (par exemple, fichier CSV)
-│   ├── videos/           # Dossier contenant les fichiers vidéo à évaluer
+├── backend/                      # Backend Flask API
+│   ├── app.py                    # Point d'entrée du serveur Flask
+│   ├── requirements.txt          # Dépendances Python
+│   ├── rate/                     # Données de notation (sans les fichiers CSV)
+│   ├── validation/               # Logique de validation ou traitement des données
+│   └── videos/                   # Vidéos à noter (présent dans l’arborescence mais ignoré)
 │
-│── start.sh              # Script shell pour démarrer l'application sur des systèmes UNIX
-│── start_wsl.sh          # Script shell pour démarrer l'application dans WSL (Windows Subsystem for Linux)
+├── frontend/                     # Application Vue.js (frontend)
+│   ├── index.html                # Page HTML principale
+│   ├── public/                   # Fichiers statiques publics
+│   ├── src/                      # Code source Vue.js
+│   ├── vite.config.ts            # Configuration Vite
+│   ├── package.json              # Dépendances & scripts frontend
+│   ├── tsconfig.json             # Config de base TypeScript
+│   ├── tsconfig.app.json         # Config TS spécifique à l’app
+│   ├── tsconfig.node.json        # Config TS pour outils côté Node
+│   └── README.md                 # Infos sur l'application frontend
+│
+├── .gitignore                   # Liste des fichiers/dossiers à ignorer par Git
+├── package.json                 # Scripts ou dépendances globales
+├── Readme.md                    # Documentation principale du projet
+├── start.sh                     # Script de démarrage Unix
+└── start_wsl.sh                 # Script de démarrage pour WSL
 
 ```
 

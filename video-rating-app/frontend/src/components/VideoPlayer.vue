@@ -1,36 +1,43 @@
 <template>
   <div class="container">
+    <!-- Bloc instructions (visible uniquement si vidéos restantes) -->
     <div class="instructions" v-if="!noMoreVideos">
-      <h3>Instructions :</h3>
+      <h3>Instructions:</h3>
       <p v-if="instructionText">{{ instructionText }}</p>
       <img
         v-if="instructionImage"
         :src="instructionImage"
-        alt="Instruction visuelle"
+        alt="Visual instruction"
         class="instruction-image"
       />
     </div>
 
     <div class="video-container">
+      <!-- Bloc info vidéo et seed -->
       <div class="video-header">
-        <div class="video-meta">
+        <!-- Affichage info vidéo seulement si on a encore des vidéos -->
+        <div class="video-meta" v-if="!noMoreVideos">
           <h3>Environment: {{ environment }}</h3>
           <video v-if="videoSrc" :src="videoSrc" controls autoplay></video>
         </div>
+
+        <!-- Bloc seed visible tout le temps -->
         <div class="session-info">
-          <p><strong>Votre seed :</strong> {{ seed }}</p>
-          <p>Pour reprendre votre session plus tard, entrez cette seed sur la page d’accueil.</p>
+          <p><strong>Your seed:</strong> {{ seed }}</p>
+          <p>To resume your session later, enter this seed on the homepage.</p>
         </div>
       </div>
 
-      <div v-if="noMoreVideos">
+      <!-- Message de fin -->
+      <div v-if="noMoreVideos" class="end-message">
         <h2>Thank you for voting!</h2>
         <p>There are no more videos available at the moment.</p>
       </div>
 
+      <!-- Bloc notation -->
       <div v-else class="rating-section">
         <p class="rating-instruction">
-          Veuillez donner une note à cette vidéo pour indiquer si celle-ci respecte les consignes affichées à gauche de la vidéo :
+          Please rate this video to indicate whether it follows the instructions shown to the left:
         </p>
         <div class="rating-buttons">
           <button
@@ -42,11 +49,12 @@
             {{ n }}
           </button>
         </div>
-        <button class="submit-button" @click="rateVideo">Soumettre</button>
+        <button class="submit-button" @click="rateVideo">Submit</button>
       </div>
     </div>
   </div>
 </template>
+
 
 
 <script setup lang="ts">
@@ -136,7 +144,7 @@ onMounted(fetchVideo);
 
 
 .video-container {
-  width: 70%;
+  width: 100%;
   display: flex;
   flex-direction: column;
   text-align: center; /* Essayez de centrer les éléments enfants */
@@ -144,12 +152,11 @@ onMounted(fetchVideo);
 
 .video-header {
   display: flex;
-  justify-content: space-between;
   align-items: flex-start;
   gap: 20px;
-  width: 100%; /* Make sure it takes the full width of the video container */
+  width: 100%; /* Prend toute la largeur du conteneur vidéo */
+  /* Modification ici pour gérer l'espace différemment */
 }
-
 .video-meta {
   flex: 1;
 }
@@ -231,13 +238,16 @@ button:hover {
 }
 
 
+
 .session-info {
-  width: 30%;
+  width: auto; /* Ajuste la largeur au contenu */
   font-size: 14px;
   color: #ddd;
   background: #444;
   padding: 10px;
   border-radius: 5px;
+  /* Empêche le bloc seed de grandir et de prendre tout l'espace */
+  flex-shrink: 0;
 }
 
 

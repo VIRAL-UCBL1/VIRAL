@@ -1,13 +1,13 @@
 <template>
   <div class="container">
-    <h2>Bienvenue !</h2>
-    <p>Entrez votre prénom, nom et éventuellement une seed pour reprendre votre session.</p>
+    <h2>Welcome!</h2>
+    <p>Enter your first name, last name, and optionally a seed to resume your session.</p>
 
-    <input v-model="firstName" type="text" placeholder="Prénom" />
-    <input v-model="lastName" type="text" placeholder="Nom" />
-    <input v-model="userSeed" type="text" placeholder="Seed (facultatif)" />
+    <input v-model="firstName" type="text" placeholder="First Name" />
+    <input v-model="lastName" type="text" placeholder="Last Name" />
+    <input v-model="userSeed" type="text" placeholder="Seed (optional)" />
 
-    <button @click="startRating">Commencer</button>
+    <button @click="startRating">Start</button>
   </div>
 </template>
 
