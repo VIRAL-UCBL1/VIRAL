@@ -7,6 +7,11 @@ export default defineConfig({
   server: {
     host: '0.0.0.0',
     port: 5173,
-    strictPort: true
+    strictPort: true,
+    allowedHosts: [
+      'localhost',
+      '127.0.0.1',
+      'https://viral-ucbl1.duckdns.org/'
+    ]
   }
 })
