@@ -2,25 +2,15 @@ version: '3.8'
 
 services:
   backend:
-    build:
-      context: ./backend
+    image: back-viral:latest
     ports:
       - "5000:5000"
     volumes:
-      - ./backend:/app
-      - /home/docker/viral-XXX/Y:/app/videos  # 🔁 Le volume que tu veux ajouter
-    working_dir: /app
-    command: python app.py
+      - /home/docker/viral-XXX/Y:/app/videos
     environment:
       - FLASK_ENV=development
 
   frontend:
-    build:
-      context: ./frontend
+    image: front-viral:latest
     ports:
       - "5173:5173"
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
-    working_dir: /app
-    command: npm run dev
