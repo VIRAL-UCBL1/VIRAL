@@ -81,7 +81,7 @@ def serve_video():
     for ext in [".png", ".jpg", ".jpeg", ".webp"]:
         candidate = os.path.join(base_folder, environment, f"instruction{ext}")
         if os.path.exists(candidate):
-            instruction_image = API_BASE_URL+"/videos/{environment}/instruction{ext}"
+            instruction_image = f"API_BASE_URL+/videos/{environment}/instruction{ext}"
             break
 
     return jsonify({
