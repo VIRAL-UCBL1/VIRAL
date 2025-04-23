@@ -81,11 +81,11 @@ if (!username.value) {
 
 const fetchVideo = async () => {
   try {
-    const response = await axios.get(`http://127.0.0.1:5000/video?username=${username.value}`);
+    const response = await axios.get(`http://172.26.0.3:5000/video?username=${username.value}`);
     if (response.data.video) {
       currentVideo.value = response.data.video;
       environment.value = response.data.environment; // Store environment
-      videoSrc.value = `http://127.0.0.1:5000/videos/${environment.value}/${response.data.video}`;
+      videoSrc.value = `http://172.26.0.3:5000/videos/${environment.value}/${response.data.video}`;
       instructionText.value = response.data.instructionText || "";
       instructionImage.value = response.data.instructionImage || "";
       source.value = response.data.source || "videos";
@@ -101,7 +101,7 @@ const fetchVideo = async () => {
 
 const rateVideo = async () => {
   try {
-    await axios.post("http://127.0.0.1:5000/rate", {
+    await axios.post("http://172.26.0.3:5000/rate", {
       video: currentVideo.value,
       environment: environment.value,
       rating: selectedRating.value,
