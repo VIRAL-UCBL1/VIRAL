@@ -12,7 +12,7 @@ CORS(app, resources={r"/*": {"origins": "*"}})
 VIDEO_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), "videos")
 RATE_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), "rate")
 VALIDATION_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), "validation")
-API_BASE_URL = "http://backend:5000"
+API_BASE_URL = "https://ekoverleaf.duckdns.org/"
 # Ensure the existence of required folders
 os.makedirs(VIDEO_FOLDER, exist_ok=True)
 os.makedirs(RATE_FOLDER, exist_ok=True)
