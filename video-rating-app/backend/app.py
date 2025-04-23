@@ -12,7 +12,7 @@ CORS(app, resources={r"/*": {"origins": "*"}})
 VIDEO_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), "videos")
 RATE_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), "rate")
 VALIDATION_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), "validation")
-
+API_BASE_URL = "http://backend:5000"
 # Ensure the existence of required folders
 os.makedirs(VIDEO_FOLDER, exist_ok=True)
 os.makedirs(RATE_FOLDER, exist_ok=True)
@@ -81,7 +81,7 @@ def serve_video():
     for ext in [".png", ".jpg", ".jpeg", ".webp"]:
         candidate = os.path.join(base_folder, environment, f"instruction{ext}")
         if os.path.exists(candidate):
-            instruction_image = f"http://172.26.0.3:5000/videos/{environment}/instruction{ext}"
+            instruction_image = fAPI_BASE_URL+"/videos/{environment}/instruction{ext}"
             break
 
     return jsonify({
