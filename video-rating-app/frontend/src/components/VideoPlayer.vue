@@ -74,18 +74,18 @@ const seed = ref(localStorage.getItem("seed") || "");
 const username = ref(localStorage.getItem("username") || "");
 const selectedRating = ref(3);
 
-
+const API_BASE_URL =  "http://backend:5000"; // Base URL for the API
 if (!username.value) {
   router.push("/");
 }
 
 const fetchVideo = async () => {
   try {
-    const response = await axios.get(`http://172.26.0.3:5000/video?username=${username.value}`);
+    const response = await axios.get(API_BASE_URL+`/video?username=${username.value}`);
     if (response.data.video) {
       currentVideo.value = response.data.video;
       environment.value = response.data.environment; // Store environment
-      videoSrc.value = `http://172.26.0.3:5000/videos/${environment.value}/${response.data.video}`;
+      videoSrc.value = API_BASE_URL+`/videos/${environment.value}/${response.data.video}`;
       instructionText.value = response.data.instructionText || "";
       instructionImage.value = response.data.instructionImage || "";
       source.value = response.data.source || "videos";
@@ -101,7 +101,7 @@ const fetchVideo = async () => {
 
 const rateVideo = async () => {
   try {
-    await axios.post("http://172.26.0.3:5000/rate", {
+    await axios.post(API_BASE_URL+"/rate", {
       video: currentVideo.value,
       environment: environment.value,
       rating: selectedRating.value,
