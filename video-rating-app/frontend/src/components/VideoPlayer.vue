@@ -74,7 +74,7 @@ const seed = ref(localStorage.getItem("seed") || "");
 const username = ref(localStorage.getItem("username") || "");
 const selectedRating = ref(3);
 
-const API_BASE_URL =  "http://backend:5000"; // Base URL for the API
+const API_BASE_URL =  "https://ekoverleaf.duckdns.org"; // Base URL for the API
 if (!username.value) {
   router.push("/");
 }
