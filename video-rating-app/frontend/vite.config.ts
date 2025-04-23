@@ -11,6 +11,7 @@ export default defineConfig({
     allowedHosts: [
       'localhost',
       '127.0.0.1',
+      'viral-ucbl1.duckdns.org',
       'https://viral-ucbl1.duckdns.org/'
     ]
   }
