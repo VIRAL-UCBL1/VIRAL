@@ -8,6 +8,7 @@ services:
     volumes:
       - /home/docker/viral/results/videos:/app/videos
       - /home/docker/viral/results/validation:/app/validation
+      - /home/docker/viral/results/:/app/rate 
     environment:
       - FLASK_ENV=development
 
