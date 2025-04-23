@@ -6,7 +6,8 @@ services:
     ports:
       - "5000:5000"
     volumes:
-      - /home/docker/viral/results:/app/videos
+      - /home/docker/viral/results/videos:/app/videos
+      - /home/docker/viral/results/validation:/app/validation
     environment:
       - FLASK_ENV=development
 
