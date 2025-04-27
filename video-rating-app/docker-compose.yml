@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  backend:
+    image: back-viral:latest
+    ports:
+      - "5000:5000"
+    volumes:
+      - /home/docker/viral/results/videos:/app/videos
+      - /home/docker/viral/results/validation:/app/validation
+      - /home/docker/viral/results/:/app/rate 
+    environment:
+      - FLASK_ENV=development
+
+  frontend:
+    image: front-viral:latest
+    ports:
+      - "5173:5173"

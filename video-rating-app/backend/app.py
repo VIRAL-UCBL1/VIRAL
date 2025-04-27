@@ -1,0 +1,134 @@
+import csv
+import os
+import random
+
+from flask import Flask, jsonify, request, send_from_directory
+from flask_cors import CORS
+
+app = Flask(__name__)
+CORS(app, resources={r"/*": {"origins": "*"}})
+
+# Video and rating folders
+VIDEO_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), "videos")
+RATE_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), "rate")
+VALIDATION_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), "validation")
+API_BASE_URL = "https://ekoverleaf.duckdns.org/"
+# Ensure the existence of required folders
+os.makedirs(VIDEO_FOLDER, exist_ok=True)
+os.makedirs(RATE_FOLDER, exist_ok=True)
+os.makedirs(VALIDATION_FOLDER, exist_ok=True)
+
+
+
+# Function to retrieve unrated videos for the user
+def get_videos(user):
+    rated_videos = set()
+    user_file = os.path.join(RATE_FOLDER, f"{user}.csv")
+    # Lire les vidéos déjà notées (avec leur source)
+    if os.path.exists(user_file):
+        with open(user_file, "r", newline="") as file:
+            reader = csv.reader(file)
+            next(reader, None)
+            for row in reader:
+                # row[0] = video name, row[1] = environment, row[3] = source
+                rated_videos.add((row[0], row[1], row[3] if len(row) > 3 else "videos"))
+                
+    def collect_unrated(folder, source_name):
+        available = []
+        for env in os.listdir(folder):
+            env_path = os.path.join(folder, env)
+            if os.path.isdir(env_path):
+                for video in os.listdir(env_path):
+                    if video.endswith(('.mp4', '.avi', '.mov', '.webm')):
+                        key = (video, env, source_name)
+                        if key not in rated_videos:
+                            available.append((video, env, source_name))
+        return available
+
+    # Priorité : validation d'abord
+    validation_videos = collect_unrated(VALIDATION_FOLDER, "validation")
+    if validation_videos:
+        return validation_videos
+
+    # Sinon, on retourne les vidéos normales
+    return collect_unrated(VIDEO_FOLDER, "videos")
+
+# Route to fetch an unrated video
+@app.route("/video", methods=["GET"])
+def serve_video():
+    username = request.args.get("username")
+    if not username:
+        return jsonify({"error": "username is required"}), 400
+
+    videos = get_videos(username)
+    if not videos:
+        return jsonify({"error": "No videos available to rate"}), 404
+
+    # Randomly select a video
+    video_name, environment, source = random.choice(videos)
+
+    base_folder = VALIDATION_FOLDER if source == "validation" else VIDEO_FOLDER
+
+    # Texte
+    instruction_text = ""
+    instruction_file = os.path.join(base_folder, environment, "indication.txt")
+    if os.path.exists(instruction_file):
+        with open(instruction_file, "r", encoding="utf-8") as f:
+            instruction_text = f.read().strip()
+
+    # Image
+    instruction_image = ""
+    for ext in [".png", ".jpg", ".jpeg", ".webp"]:
+        candidate = os.path.join(base_folder, environment, f"instruction{ext}")
+        if os.path.exists(candidate):
+            instruction_image = f"{API_BASE_URL}/videos/{environment}/instruction{ext}"
+            break
+
+    return jsonify({
+    "video": video_name,
+    "environment": environment,
+    "instructionText": instruction_text,
+    "instructionImage": instruction_image,
+    "source": source
+})
+
+
+# Route to rate a video
+@app.route("/rate", methods=["POST"])
+def rate_video():
+    data = request.json
+    video_name = data.get("video")
+    rating = data.get("rating")
+    username = data.get("username")
+    source = data.get("source", "videos")
+    environment = data.get("environment")
+
+    if not video_name or rating is None or not username or not environment:
+        return jsonify({"error": "Invalid data"}), 400
+
+    user_file = os.path.join(RATE_FOLDER, f"{username}.csv")
+
+    # Write header if file does not exist
+    if not os.path.exists(user_file):
+        with open(user_file, "w", newline="") as file:
+            writer = csv.writer(file)
+            writer.writerow(["video_name", "environment", "rating", "source"])  # Add environment
+
+    # Append rating
+    with open(user_file, "a", newline="") as file:
+        writer = csv.writer(file)
+        writer.writerow([video_name, environment, rating, source])  # Store environment
+
+    return jsonify({"success": True})
+
+# Route to serve a video from an environment
+@app.route("/videos/<environment>/<filename>")
+def get_video_file(environment, filename):
+    video_path = os.path.join(VIDEO_FOLDER, environment, filename)
+    if os.path.exists(video_path):
+        return send_from_directory(os.path.join(VIDEO_FOLDER, environment), filename, as_attachment=False)
+    return jsonify({"error": "Video not found"}), 404
+
+# Start the Flask server
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000, debug=True)
