@@ -59,4 +59,4 @@ if __name__ == '__main__':
         "https" : "socks5h://localhost:1080",
     }
     clientVideo = ClienVideoLVLM(proxies)
-    print(clientVideo.generate_simple_response('In this video, an object is in motion. Describe the motion of the object', 'records/Hopper-v5/rl-video-episode-0.mp4'))
+    print(clientVideo.generate_simple_response('In this video, an object is in motion. Describe the motion of the object', 'records/LunarLander-v3/LunarLander-v3_375235-episode-0.mp4'))

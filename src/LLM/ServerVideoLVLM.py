@@ -36,7 +36,6 @@ def _execute_ollama_ps():
         print("stdout 'ollama ps':")
         print(output)
 
-        # Utilisation d'une expression régulière pour extraire le premier nom
         match = re.search(
             r"NAME\s+ID\s+SIZE\s+PROCESSOR\s+UNTIL\s+(.+?)\s+", output, re.DOTALL
         )

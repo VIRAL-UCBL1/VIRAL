@@ -256,7 +256,7 @@ class PolicyTrainer:
         print(f"nb_success: {nb_success/nb_episodes}")
         env.close()
 
-    def start_vd(self, policy_path: str, nb_episodes: int = 3):
+    def start_vd(self, policy_path: str, nb_episodes: int = 3, idx: int = 0):
         """
         Start the test of a policy to evaluate its performances
         
@@ -268,15 +268,15 @@ class PolicyTrainer:
         if os.name == "posix":
             self.multi_process.append(
                 Process(
-                    target=self.test_policy_video, args=(policy_path, nb_episodes)
+                    target=self.test_policy_video, args=(policy_path, nb_episodes, idx)
                 )
             )
             self.multi_process[-1].start()
             self.multi_process[-1].join()
         else:
-            self.test_policy_video(policy_path, nb_episodes)
+            self.test_policy_video(policy_path, nb_episodes, idx)
 
-    def test_policy_video(self, policy_path: str, nb_episodes: int = 3):
+    def test_policy_video(self, policy_path: str, nb_episodes: int = 3, idx: int = 0):
         """
         Visualize the test of a policy to evaluate its performances
         
@@ -287,7 +287,7 @@ class PolicyTrainer:
         """
         env = make(self.env_name, render_mode='rgb_array')
         env = RecordVideo(
-            env, video_folder=f"records/{self.env_name}", episode_trigger=lambda e: True
+            env, video_folder=f"records/{self.env_name}", name_prefix=f"{idx}_{self.env_name}_{self.seed}", episode_trigger=lambda e: True, video_length=45*30
         )
         if self.algo == Algo.PPO:
             policy = PPO.load(policy_path)
