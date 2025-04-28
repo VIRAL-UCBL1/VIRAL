@@ -75,7 +75,7 @@ By default, the observation space is `Box(-Inf, Inf, (8,), float64)` with the fo
         """
         if info.get("terminated", False):
             return False, True
-        elif info.get("x_position", 0) > 2.0:
+        elif info.get("x_position", 0) > 1.0:
             return True, False
         else:
             return False, False

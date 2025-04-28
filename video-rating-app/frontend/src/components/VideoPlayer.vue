@@ -1,6 +1,11 @@
 <template>
-  <div class="container">
-    <!-- Bloc instructions (visible uniquement si vidéos restantes) -->
+  <!-- Bloc pseudonym visible tout le temps -->
+  <div class="session-info">
+          <p><strong>Your pseudonym:</strong> {{ pseudonym }}</p>
+          <p><strong>Your Score:</strong> {{ score }}</p>
+          <p>To resume your session later, enter this pseudonym on the homepage.</p>
+        </div>
+        <!-- Bloc instructions (visible uniquement si vidéos restantes) -->
     <div class="instructions" v-if="!noMoreVideos">
       <h3>Instructions:</h3>
       <p v-if="instructionText">{{ instructionText }}</p>
@@ -11,9 +16,10 @@
         class="instruction-image"
       />
     </div>
+  <div class="container">
 
     <div class="video-container">
-      <!-- Bloc info vidéo et seed -->
+      <!-- Bloc info vidéo et pseudonym -->
       <div class="video-header">
         <!-- Affichage info vidéo seulement si on a encore des vidéos -->
         <div class="video-meta" v-if="!noMoreVideos">
@@ -21,15 +27,12 @@
           <video v-if="videoSrc" :src="videoSrc" controls autoplay></video>
         </div>
 
-        <!-- Bloc seed visible tout le temps -->
-        <div class="session-info">
-          <p><strong>Your seed:</strong> {{ seed }}</p>
-          <p>To resume your session later, enter this seed on the homepage.</p>
-        </div>
+        
       </div>
-
-      <!-- Message de fin -->
-      <div v-if="noMoreVideos" class="end-message">
+    </div>
+  </div>
+  <!-- Message de fin -->
+  <div v-if="noMoreVideos" class="end-message">
         <h2>Thank you for voting!</h2>
         <p>There are no more videos available at the moment.</p>
       </div>
@@ -37,7 +40,20 @@
       <!-- Bloc notation -->
       <div v-else class="rating-section">
         <p class="rating-instruction">
-          Please rate this video to indicate whether it follows the instructions shown to the left:
+          Do you understand the instructions ?
+        </p>
+        <div class="rating-buttons">
+          <button
+            v-for="n in 5"
+            :key="n"
+            :class="{ selected: selectedUnderstand === n }"
+            @click="selectedUnderstand = n"
+          >
+            {{ n }}
+          </button>
+        </div>
+        <p class="rating-instruction">
+          Please rate this video to indicate whether it follows the instructions:
         </p>
         <div class="rating-buttons">
           <button
@@ -49,10 +65,14 @@
             {{ n }}
           </button>
         </div>
+        <p class="rating-instruction">
+          Additional comment:
+        </p>
+        <div class="rating-buttons">
+          <textarea class="instructions" v-model="comment"></textarea>
+        </div>
         <button class="submit-button" @click="rateVideo">Submit</button>
       </div>
-    </div>
-  </div>
 </template>
 
 
@@ -70,18 +90,44 @@ const noMoreVideos = ref(false);
 const instructionText = ref(""); // Stores environment instructions
 const instructionImage = ref(""); // Stores environment image
 const source = ref("videos"); // par défaut
-const seed = ref(localStorage.getItem("seed") || "");
-const username = ref(localStorage.getItem("username") || "");
+const pseudonym = ref(localStorage.getItem("pseudonym") || "");
 const selectedRating = ref(3);
+const selectedUnderstand = ref(5);
+const comment = ref("");
+const score = ref("0/120")
 
-const API_BASE_URL =  "https://ekoverleaf.duckdns.org"; // Base URL for the API
-if (!username.value) {
+const API_BASE_URL =  "http://localhost:5000" //"https://ekoverleaf.duckdns.org"; // Base URL for the API
+if (!pseudonym.value) {
   router.push("/");
+}
+
+function getCategory(str: string) {
+    const categories = ['LunarLander-v3', 'highway-fast-v0', 'Hopper-v5', 'Swimmer-v5'];
+
+    for (const category of categories) {
+        if (str.startsWith(category + '-')) {
+            return category;
+        }
+    }
+
+    return 'Env';
+}
+
+function getsource(str: string) {
+    const sources = ['text_image', 'text', 'image'];
+
+    for (const source of sources) {
+        if (str.endsWith(source)) {
+            return source;
+        }
+    }
+
+    return 'Videos';
 }
 
 const fetchVideo = async () => {
   try {
-    const response = await axios.get(API_BASE_URL+`/video?username=${username.value}`);
+    const response = await axios.get(API_BASE_URL+`/video?username=${pseudonym.value}`);
     if (response.data.video) {
       currentVideo.value = response.data.video;
       environment.value = response.data.environment; // Store environment
@@ -89,7 +135,25 @@ const fetchVideo = async () => {
       instructionText.value = response.data.instructionText || "";
       instructionImage.value = response.data.instructionImage || "";
       source.value = response.data.source || "videos";
-      noMoreVideos.value = false;
+      source.value = getsource(environment.value)
+      environment.value = getCategory(environment.value)
+    } else {
+      noMoreVideos.value = true;
+    }
+  } catch (error) {
+    console.error("Error loading video", error);
+    noMoreVideos.value = true;
+  }
+};
+
+const fetchScore = async () => {
+  try {
+    const response = await axios.get(API_BASE_URL+`/score?username=${pseudonym.value}`);
+    if (response.data.score) {
+      score.value = String(response.data.score+"/120");
+      if (response.data.score>120){
+        noMoreVideos.value = true;
+      }
     } else {
       noMoreVideos.value = true;
     }
@@ -104,17 +168,21 @@ const rateVideo = async () => {
     await axios.post(API_BASE_URL+"/rate", {
       video: currentVideo.value,
       environment: environment.value,
+      understand: selectedUnderstand.value,
+      comment: comment.value,
       rating: selectedRating.value,
-      username: username.value, // <- identifiant complet ici
+      username: pseudonym.value, // <- identifiant complet ici
       source: source.value,
     });
     fetchVideo(); // Load a new video after rating
+    fetchScore();
   } catch (error) {
     console.error("Error submitting rating", error);
     noMoreVideos.value = true;
   }
 };
 
+onMounted(fetchScore);
 onMounted(fetchVideo);
 </script>
 
@@ -126,7 +194,9 @@ onMounted(fetchVideo);
 }
 
 .instructions {
-  width: 30%;
+  display: inline-block;
+  width: 80%;
+  margin-top: 20px;
   background: #333;
   color: white;
   padding: 15px;
@@ -177,8 +247,8 @@ video {
 .rating-instruction {
   font-weight: bold;
   text-align: center;
-  margin-bottom: 10px;
-  width: 80%; /* Adjust width as needed */
+  /* margin-bottom: 10px; */
+  /* width: 80%; */
 }
 
 .rating-buttons {
@@ -192,6 +262,7 @@ video {
   padding: 10px 15px;
   font-size: 16px;
   background-color: #ddd;
+  color: black;
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -246,7 +317,7 @@ button:hover {
   background: #444;
   padding: 10px;
   border-radius: 5px;
-  /* Empêche le bloc seed de grandir et de prendre tout l'espace */
+  /* Empêche le bloc pseudonym de grandir et de prendre tout l'espace */
   flex-shrink: 0;
 }
 

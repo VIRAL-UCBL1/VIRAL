@@ -176,7 +176,7 @@ class PolicyTrainer:
         """
         all_rewards = []
         nb_success = 0
-        env = make(self.env_name)
+        env = make(self.env_name, exclude_current_positions_from_observation=False)
         for _ in range(nb_episodes):
             obs, _ = env.reset()
             episode_rewards = 0
@@ -285,7 +285,7 @@ class PolicyTrainer:
             nb_episodes (int, optional): the number of episodes to test. Defaults to 3.
             
         """
-        env = make(self.env_name, render_mode='rgb_array')
+        env = make(self.env_name, render_mode='rgb_array', exclude_current_positions_from_observation=False)
         env = RecordVideo(
             env, video_folder=f"records/{self.env_name}", name_prefix=f"{idx}_{self.env_name}_{self.seed}", episode_trigger=lambda e: True, video_length=45*30
         )
@@ -317,7 +317,7 @@ class PolicyTrainer:
         """
         if self.nb_vec_envs == 1:
             self.logger.debug("simple env")
-            env = gym.make(self.env_name) # , terminate_when_unhealthy=False
+            env = gym.make(self.env_name, exclude_current_positions_from_observation=False) # , terminate_when_unhealthy=False
             env = CustomRewardWrapper(env, self.success_func, reward_func)
         else:
             env = make_vec_env(
@@ -325,6 +325,7 @@ class PolicyTrainer:
                 n_envs=self.nb_vec_envs,
                 wrapper_class=CustomRewardWrapper,
                 wrapper_kwargs={"success_func": self.success_func, "llm_reward_function": reward_func},
+                env_kwargs={'exclude_current_positions_from_observation': False}
                 # env_kwargs={'terminate_when_unhealthy': False}
             )
         if self.algo == Algo.PPO:

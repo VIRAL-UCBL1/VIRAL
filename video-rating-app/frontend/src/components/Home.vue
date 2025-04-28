@@ -1,11 +1,9 @@
 <template>
   <div class="container">
     <h2>Welcome!</h2>
-    <p>Enter your first name, last name, and optionally a seed to resume your session.</p>
+    <p>Enter your pseudonym</p>
 
-    <input v-model="firstName" type="text" placeholder="First Name" />
-    <input v-model="lastName" type="text" placeholder="Last Name" />
-    <input v-model="userSeed" type="text" placeholder="Seed (optional)" />
+    <input v-model="pseudonym" type="text" placeholder="Pseudonym" />
 
     <button @click="startRating">Start</button>
   </div>
@@ -16,30 +14,20 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
-const firstName = ref("");
-const lastName = ref("");
-const userSeed = ref("");
-
-const generateSeed = (): string => {
-  return Math.random().toString(36).substring(2, 10).toUpperCase();
-};
+const pseudonym = ref("");
 
 const startRating = () => {
-  if (firstName.value.trim() && lastName.value.trim()) {
-    const seed = userSeed.value.trim() || generateSeed();
+  if (pseudonym.value.trim()) {
 
-    const username = `${firstName.value.trim()}_${lastName.value.trim()}_${seed}`;
+    const username = `${pseudonym.value.trim()}`;
 
     // Stockage en localStorage
-    localStorage.setItem("seed", seed);
-    localStorage.setItem("firstName", firstName.value.trim());
-    localStorage.setItem("lastName", lastName.value.trim());
-    localStorage.setItem("username", username);
+    localStorage.setItem("pseudonym", pseudonym.value.trim());
 
     // Rediriger vers la page de notation
     router.push("/rate");
   } else {
-    alert("Veuillez entrer un prénom et un nom !");
+    alert("Veuillez entrer votre pseudonym !");
   }
 };
 </script>
