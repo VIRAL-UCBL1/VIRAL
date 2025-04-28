@@ -96,7 +96,7 @@ const selectedUnderstand = ref(5);
 const comment = ref("");
 const score = ref("0/120")
 
-const API_BASE_URL =  "http://localhost:5000" //"https://ekoverleaf.duckdns.org"; // Base URL for the API
+const API_BASE_URL =  "https://ekoverleaf.duckdns.org"; // Base URL for the API
 if (!pseudonym.value) {
   router.push("/");
 }
