@@ -158,11 +158,9 @@ const fetchScore = async () => {
         response.data.score += 1
       }
       score.value = String(response.data.score+"/120");
-      if (response.data.score>120){
+      if (response.data.score > 120){
         noMoreVideos.value = true;
       }
-    } else {
-      noMoreVideos.value = true;
     }
   } catch (error) {
     console.error("Error loading video", error);
