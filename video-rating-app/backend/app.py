@@ -179,7 +179,8 @@ def get_score():
     if os.path.exists(user_file):
         with open(user_file, "r") as file:
             line_count = sum(1 for line in file)
-    return jsonify({"score": line_count-1})
+    line_count -= (1 if line_count != 0 else 0)
+    return jsonify({"score": line_count})
 
 
 # Route to rate a video

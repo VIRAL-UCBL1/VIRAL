@@ -2,7 +2,7 @@
   <!-- Bloc pseudonym visible tout le temps -->
   <div class="session-info">
           <p><strong>Your pseudonym:</strong> {{ pseudonym }}</p>
-          <p><strong>Your Score:</strong> {{ score }}</p>
+          <p><strong>Your progression:</strong> {{ score }}</p>
           <p>To resume your session later, enter this pseudonym on the homepage.</p>
         </div>
         <!-- Bloc instructions (visible uniquement si vidéos restantes) -->
@@ -43,6 +43,7 @@
           Do you understand the instructions ?
         </p>
         <div class="rating-buttons">
+          <p> Totally misunderstand </p>
           <button
             v-for="n in 5"
             :key="n"
@@ -51,11 +52,13 @@
           >
             {{ n }}
           </button>
+          <p> Totally understand </p>
         </div>
         <p class="rating-instruction">
           Please rate this video to indicate whether it follows the instructions:
         </p>
         <div class="rating-buttons">
+          <p> Totally unfollows </p>
           <button
             v-for="n in 5"
             :key="n"
@@ -64,12 +67,13 @@
           >
             {{ n }}
           </button>
+          <p> Totally follows </p>
         </div>
         <p class="rating-instruction">
           Additional comment:
         </p>
         <div class="rating-buttons">
-          <textarea class="instructions" v-model="comment"></textarea>
+          <textarea class="instructions" v-model="comment" placeholder="write your comment"></textarea>
         </div>
         <button class="submit-button" @click="rateVideo">Submit</button>
       </div>
@@ -150,6 +154,9 @@ const fetchScore = async () => {
   try {
     const response = await axios.get(API_BASE_URL+`/score?username=${pseudonym.value}`);
     if (response.data.score) {
+      if (response.data.score < 0) {
+        response.data.score += 1
+      }
       score.value = String(response.data.score+"/120");
       if (response.data.score>120){
         noMoreVideos.value = true;
@@ -176,6 +183,7 @@ const rateVideo = async () => {
     });
     fetchVideo(); // Load a new video after rating
     fetchScore();
+    comment.value = ""
   } catch (error) {
     console.error("Error submitting rating", error);
     noMoreVideos.value = true;
@@ -197,8 +205,6 @@ onMounted(fetchVideo);
   display: inline-block;
   width: 80%;
   margin-top: 20px;
-  background: #333;
-  color: white;
   padding: 15px;
   border-radius: 5px;
 }
