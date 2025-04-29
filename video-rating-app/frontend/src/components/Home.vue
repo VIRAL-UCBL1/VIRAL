@@ -1,14 +1,14 @@
 <template>
   <div class="container">
     <h2>FEUILLE D'INFORMATION DU PARTICIPANT </h2>
-<h3>VIRAL – Intégration visionnaire pour la conception et l'apprentissage de récompenses</h3>
+<h3>VIRAL – Vision-grounded Integration for Reward design And Learning</h3>
  
  
-Investigateur principal : Valentin Cuzin-Rambaud
+Investigateur principal : Valentin Cuzin-Rambaud, Emilien Komlenovic, Alexandre Faure
 <br/>
-Superviseur(s) [pour les étudiants] : Dr. Bruno Yun
+Superviseur: Dr. Bruno Yun
 <br/><br/>
-Je suis Valentin Cuzin-Rambaud, étudiant en Master 2 IA à l'Université Claude Bernard Lyon 1, Département d'informatique.  Je vous invite à considérer la participation au projet de recherche "VIRAL" – Intégration visionnaire pour la conception et l'apprentissage de récompenses”.  Ci-dessous, vous trouverez des informations sur le projet pour vous aider à décider si vous souhaitez y participer.
+Je suis Valentin Cuzin-Rambaud, étudiant en Master 2 IA à l'Université Claude Bernard Lyon 1, Département d'informatique.  Je vous invite à considérer la participation au projet de recherche "VIRAL" – Vision-grounded Integration for Reward design And Learning”.  Ci-dessous, vous trouverez des informations sur le projet pour vous aider à décider si vous souhaitez y participer.
 <br/><br/>
 La participation au projet de recherche est entièrement volontaire.  Vous pouvez vous retirer du projet à tout moment, sans avoir à donner de raison.
  
