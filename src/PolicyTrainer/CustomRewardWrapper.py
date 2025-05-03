@@ -38,6 +38,7 @@ class CustomRewardWrapper(gym.Wrapper):
         if self.llm_reward_function is not None and self.success_func is not None:
             info['TimeLimit.truncated'] = truncated
             info['terminated'] = terminated
+            info["obs"] = observation
             is_success = 0
             is_failure = 0
             if terminated or truncated:

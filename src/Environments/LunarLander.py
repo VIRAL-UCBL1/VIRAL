@@ -71,10 +71,13 @@ class LunarLander(EnvType):
         # print(base_env.lander)  # print the lander object
 
         # check if the lander is awake
-        if not base_env.lander.awake:
+        # print('test', type(info["obs"]), info["obs"])
+        if not base_env.lander.awake and abs(info["obs"][0]) <= 0.5:
             return True, False
-        else:
+        elif base_env.game_over or abs(info["obs"][0]) >= 1.0:
             return False, True
+        else:
+            return False, False
 
     def objective_metric(self, states) -> list[dict[str, float]]:
         """
