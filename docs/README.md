@@ -1,19 +1,30 @@
-# Welcome to VIRAL
+# Welcome to **VIRAL**
 
-## VIRAL
+## About VIRAL
 
-Vision-grounded Integration for Reward design And Learning is inspired by [DREFUN-V](assets/initial_idea.pdf). This project aims to create a framework for reward function generation in Gymnasium environments, utilizing and VideoLLM in order to  enchance aligment too. Below, you can see how the framework is structured.
+**VIRAL** (Vision-grounded Integration for Reward design And Learning) is a framework for automatic reward function design in Gymnasium environments. Inspired by [DREFUN-V](assets/initial_idea.pdf), this project explores the use of VideoLLMs to improve reward alignment in reinforcement learning.
 
-## Diagram
+The following diagram presents an overview of the framework:
 
-![alt text](assets/Framework-VIRAL.svg)
+## Framework Overview
 
-For more details about the diagram, you can refer to our paper: [paper](assets/VIRAL.pdf)
+![VIRAL Framework](assets/Pipeline.png)  
+For a detailed explanation, please refer to our [paper](assets/VIRAL.pdf).
 
-## Further Understanding
+## Repository Structure
 
-You can visit our website, which provides installation instructions as well as project documentation:  
-- [Documentation](https://viral-ucbl1.github.io/)
+This repository contains the source code of the VIRAL framework. Additional resources include:  
+- **Project website and documentation**: [website](https://github.com/VIRAL-UCBL1/VIRAL-UCBL1.github.io)
+- **Experimental results**: [results repository](https://github.com/VIRAL-UCBL1/results)  
 
-We also provide a link to the course by Mr. YUN that we attended:  
-- [Course](https://bruno-yun.notion.site/Theory-and-Practical-Applications-of-Large-Language-Models-570124290ae1402ab94b567bfb9b7a08)
+## Learn More
+
+Visit our website for:  
+- Installation instructions  
+- Complete documentation  
+- Access to the project paper  
+
+👉 [Documentation & Website](https://viral-ucbl1.github.io/)
+
+We also recommend checking out the course that guided this project:  
+👉 [Theory and Practical Applications of Large Language Models – by Bruno YUN](https://bruno-yun.notion.site/Theory-and-Practical-Applications-of-Large-Language-Models-570124290ae1402ab94b567bfb9b7a08)
