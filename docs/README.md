@@ -2,7 +2,7 @@
 
 ## ▶️ Watch the Demo Video
 
-[![Click to watch the VIRAL demo on YouTube](https://img.youtube.com/vi/Hqo82CxVT38/0.jpg)](https://www.youtube.com/watch?v=Hqo82CxVT38)
+[![Click to watch the VIRAL demo on YouTube](https://img.youtube.com/vi/Hqo82CxVT38/0.jpg)](https://youtu.be/BBIB4bEVSjE)
 
 *Click the image above to watch our demo video on YouTube.*
 
